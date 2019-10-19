@@ -1,7 +1,6 @@
 ---
 title: Hello World
 date: '2019-05-01'
-category: rants
 tags:
   - helloworld
 cover: ./helloworld.png
@@ -37,7 +36,7 @@ const BlogIndex = ({ data, location, pageContext }) => {
       <SEO keywords={[`blog`, `gatsby`, `javascript`, `react`]} title="Main" />
       <PostList
         data={posts}
-        page={pageContext}
+        pageContext={pageContext}
         pageListSize={pageListSize}
         path="/"
       />

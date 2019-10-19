@@ -14,9 +14,9 @@ const StyledPagination = styled.nav`
   }
 `;
 
-const Pagination = ({ page, path, listSize }) => {
-  const totalPage = page.numberOfPages;
-  const activePage = page.humanPageNumber;
+const Pagination = ({ pageContext, path, listSize }) => {
+  const totalPage = pageContext.numberOfPages;
+  const activePage = pageContext.humanPageNumber;
 
   const startPage = parseInt((activePage - 1) / listSize) * listSize + 1;
   const endPage =
