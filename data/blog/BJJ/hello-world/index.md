@@ -1,7 +1,6 @@
 ---
 title: Hello World
 date: '2019-05-01'
-category: rants
 tags:
   - helloworld
 cover: ./helloworld.png

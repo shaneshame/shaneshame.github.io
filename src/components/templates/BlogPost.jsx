@@ -71,14 +71,9 @@ const PostFooter = styled.div`
 const BlogPost = props => {
   const post = props.data.markdownRemark;
   const siteTitle = props.data.site.siteMetadata.title;
-  const {
-    title,
-    date,
-    category,
-    tags,
-    cover,
-  } = props.data.markdownRemark.frontmatter;
+  const { title, date, tags, cover } = props.data.markdownRemark.frontmatter;
   const { recent } = props.pageContext;
+  const category = post.fields.category;
 
   return (
     <Layout activeMenu={category} location={props.location} title={siteTitle}>
@@ -111,22 +106,19 @@ const BlogPost = props => {
 export default BlogPost;
 
 export const pageQuery = graphql`
-  query BlogPostBySlug($slug: String!) {
+  query BlogPostBySlug($category: String!, $slug: String!) {
     site {
       siteMetadata {
-        title
         authorNickName
+        title
       }
     }
-    markdownRemark(fields: { slug: { eq: $slug } }) {
-      id
+    markdownRemark(
+      fields: { category: { eq: $category }, slug: { eq: $slug } }
+    ) {
       excerpt(format: MARKDOWN)
-      html
       frontmatter {
-        title
         date(formatString: "YYYY-MM-DD")
-        category
-        tags
         cover {
           childImageSharp {
             fluid(maxWidth: 500) {
@@ -134,7 +126,11 @@ export const pageQuery = graphql`
             }
           }
         }
+        tags
+        title
       }
+      html
+      id
     }
   }
 `;

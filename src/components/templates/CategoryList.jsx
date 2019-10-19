@@ -7,7 +7,10 @@ import SEO from '../SEO';
 import Layout from './Layout';
 
 const CategoryList = ({ location, pageContext, data }) => {
-  const { category } = pageContext;
+  console.log('CategoryList');
+  console.log('pageContext', pageContext);
+  console.log('data', data);
+  const category = 'Test';
 
   return (
     <Layout
@@ -31,7 +34,7 @@ const CategoryList = ({ location, pageContext, data }) => {
 export default CategoryList;
 
 export const pageQuery = graphql`
-  query($skip: Int!, $limit: Int!, $category: String) {
+  query($skip: Int!, $limit: Int!, $category: String!) {
     site {
       siteMetadata {
         pageListSize
@@ -39,7 +42,7 @@ export const pageQuery = graphql`
     }
     allMarkdownRemark(
       sort: { fields: [frontmatter___date], order: DESC }
-      filter: { frontmatter: { category: { eq: $category } } }
+      filter: { fields: { category: { eq: $category } } }
       skip: $skip
       limit: $limit
     ) {
@@ -47,14 +50,11 @@ export const pageQuery = graphql`
       edges {
         node {
           fields {
+            category
             slug
           }
           excerpt(format: MARKDOWN)
           frontmatter {
-            title
-            date(formatString: "YYYY-MM-DD")
-            category
-            tags
             cover {
               childImageSharp {
                 fixed(width: 120, height: 120) {
@@ -62,6 +62,9 @@ export const pageQuery = graphql`
                 }
               }
             }
+            date(formatString: "YYYY-MM-DD")
+            tags
+            title
           }
         }
       }

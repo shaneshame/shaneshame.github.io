@@ -17,11 +17,12 @@
     "url": "git+https://github.com/shaneshame/shaneshame.github.io.git"
   },
   "scripts": {
-    "band": "yarn build && yarn deploy",
+    "band": "yarn clean && yarn build && yarn deploy",
     "build": "gatsby build",
-    "clean": "node ./node_modules/gh-pages/bin/gh-pages-clean",
+    "clean": "rm -rf ./.cache && rm -rf ./public",
+    "deep-clean": "yarn clean && node ./node_modules/gh-pages/bin/gh-pages-clean",
     "deploy": "gh-pages -b master -d public",
-    "dev": "gatsby develop"
+    "dev": "rm -rf ./.cache && gatsby develop"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.25",

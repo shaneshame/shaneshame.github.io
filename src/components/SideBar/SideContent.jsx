@@ -56,19 +56,23 @@ const SideContent = ({ activeMenu }) => (
   <StaticQuery
     query={query}
     render={data => {
-      const category = data.site.siteMetadata.category;
+      const categories = data.allMarkdownRemark.nodes.map(
+        node => node.fields.category
+      );
+
       return (
         <StyledSideContent>
-          {category.map(node => {
-            const isActive = activeMenu === node.id;
+          {categories.map(category => {
+            const isActive = activeMenu === category;
+            console.log('category', category);
             return (
               <Category
                 active={isActive ? 1 : 0}
-                key={node.id}
-                to={`/${node.id}`}
+                key={category}
+                to={`/${category}`}
               >
-                <i className={`fas ${node.icon} fa-fw`} />
-                <span>{node.id}</span>
+                <i className={`fas hashtag fa-fw`} />
+                <span>{category}</span>
               </Category>
             );
           })}
@@ -80,12 +84,10 @@ const SideContent = ({ activeMenu }) => (
 
 const query = graphql`
   query {
-    site {
-      siteMetadata {
-        title
-        category {
-          id
-          icon
+    allMarkdownRemark {
+      nodes {
+        fields {
+          category
         }
       }
     }

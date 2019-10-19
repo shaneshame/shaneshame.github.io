@@ -42,13 +42,13 @@ export const pageQuery = graphql`
       edges {
         node {
           fields {
+            category
             slug
           }
           excerpt(format: MARKDOWN)
           frontmatter {
             title
             date(formatString: "YYYY-MM-DD")
-            category
             tags
             cover {
               childImageSharp {

@@ -14,19 +14,19 @@ const siteConfig = {
   authorNickName: 'ShaneShame',
   authorFullName: 'Shane Schaefer',
   authorDescription: 'Gamezr',
-  photo: 'content/assets/shane.jpg',
+  photo: 'data/assets/shane.jpg',
 
   // icon : FontAwesome
-  category: [
-    {
-      id: 'notes',
-      icon: 'fa-atlas',
-    },
-    {
-      id: 'rants',
-      icon: 'fa-toilet-paper',
-    },
-  ],
+  // category: [
+  //   {
+  //     id: 'notes',
+  //     icon: 'fa-atlas',
+  //   },
+  //   {
+  //     id: 'rants',
+  //     icon: 'fa-toilet-paper',
+  //   },
+  // ],
 
   social: {
     email: 'tf2shane@gmail.com',
@@ -40,20 +40,19 @@ const siteConfig = {
 
 module.exports = {
   siteMetadata: {
-    siteUrl: siteConfig.url,
-    title: siteConfig.title,
-    lang: siteConfig.lang,
-    description: siteConfig.description,
+    authorDescription: siteConfig.authorDescription,
+    authorFullName: siteConfig.authorFullName,
+    authorNickName: siteConfig.authorNickName,
+    copyright: siteConfig.copyright,
     defaultKeywords: siteConfig.defaultKeywords,
     defaultMetaImage: siteConfig.defaultMetaImage,
-    copyright: siteConfig.copyright,
-    authorNickName: siteConfig.authorNickName,
-    authorFullName: siteConfig.authorFullName,
-    authorDescription: siteConfig.authorDescription,
-    photo: siteConfig.photo,
-    social: siteConfig.social,
-    category: siteConfig.category,
+    description: siteConfig.description,
+    lang: siteConfig.lang,
     pageListSize: siteConfig.pageListSize,
+    photo: siteConfig.photo,
+    siteUrl: siteConfig.url,
+    social: siteConfig.social,
+    title: siteConfig.title,
   },
   plugins: [
     'gatsby-plugin-lodash',
@@ -62,15 +61,7 @@ module.exports = {
     {
       resolve: `gatsby-source-filesystem`,
       options: {
-        path: `${__dirname}/content/blog`,
-        name: `blog`,
-      },
-    },
-    {
-      resolve: `gatsby-source-filesystem`,
-      options: {
-        path: `${__dirname}/content/assets`,
-        name: `assets`,
+        path: `${__dirname}/data/`,
       },
     },
     `gatsby-remark-copy-linked-files`,
@@ -121,17 +112,17 @@ module.exports = {
         ],
       },
     },
-    {
-      resolve: 'gatsby-plugin-root-import',
-      options: {
-        content: `${__dirname}/content`,
-        src: `${__dirname}/src`,
-        components: `${__dirname}/src/components`,
-        pages: `${__dirname}/src/pages`,
-        utils: `${__dirname}/src/utils`,
-        themes: `${__dirname}/src/themes`,
-      },
-    },
+    // {
+    //   resolve: 'gatsby-plugin-root-import',
+    //   options: {
+    //     components: `${__dirname}/src/components`,
+    //     data: `${__dirname}/data`,
+    //     pages: `${__dirname}/src/pages`,
+    //     src: `${__dirname}/src`,
+    //     themes: `${__dirname}/src/themes`,
+    //     utils: `${__dirname}/src/utils`,
+    //   },
+    // },
     {
       resolve: `gatsby-plugin-google-analytics`,
       options: {

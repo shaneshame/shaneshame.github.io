@@ -46,6 +46,7 @@ const Thumbnail = styled(Image)`
 const PostListItem = ({ node }) => {
   const isCover = !!node.frontmatter.cover;
   const path = node.fields.slug;
+  const category = node.fields.category;
 
   return (
     <PostItem to={path}>
@@ -54,10 +55,7 @@ const PostListItem = ({ node }) => {
           <TextEllipsis line={1} text={node.frontmatter.title} />
         </h2>
         <TextEllipsis line={2} text={node.excerpt} />
-        <PostInfo
-          category={node.frontmatter.category}
-          date={node.frontmatter.date}
-        />
+        <PostInfo category={category} date={node.frontmatter.date} />
       </TextContents>
       {isCover && (
         <div>
