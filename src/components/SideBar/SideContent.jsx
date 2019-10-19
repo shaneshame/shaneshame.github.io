@@ -28,7 +28,7 @@ const StyledSideContent = styled.nav`
   }
 `;
 
-const Category = styled(Link)`
+const CategoryLink = styled(Link)`
   background-color: ${props =>
     props.active && props.theme.side.category.activeBack};
   color: ${props =>
@@ -64,16 +64,15 @@ const SideContent = ({ activeMenu }) => (
         <StyledSideContent>
           {categories.map(category => {
             const isActive = activeMenu === category;
-            console.log('category', category);
             return (
-              <Category
+              <CategoryLink
                 active={isActive ? 1 : 0}
                 key={category}
                 to={`/${category}`}
               >
-                <i className={`fas hashtag fa-fw`} />
+                <i className="fas fa-hashtag fa-fw" />
                 <span>{category}</span>
-              </Category>
+              </CategoryLink>
             );
           })}
         </StyledSideContent>

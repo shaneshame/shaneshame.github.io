@@ -56,6 +56,8 @@ const RecentPostItem = ({ data }) => {
   const link = data.node.fields.slug;
   const node = data.node.frontmatter;
   const image = !!node.cover ? node.cover.childImageSharp.fixed.src : '';
+  console.log('RecentPostItem data', data);
+  // console.log('RecentPostItem image', image);
 
   return (
     <Container>

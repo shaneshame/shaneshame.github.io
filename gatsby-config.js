@@ -16,18 +16,6 @@ const siteConfig = {
   authorDescription: 'Gamezr',
   photo: 'data/assets/shane.jpg',
 
-  // icon : FontAwesome
-  // category: [
-  //   {
-  //     id: 'notes',
-  //     icon: 'fa-atlas',
-  //   },
-  //   {
-  //     id: 'rants',
-  //     icon: 'fa-toilet-paper',
-  //   },
-  // ],
-
   social: {
     email: 'tf2shane@gmail.com',
     github: 'https://github.com/shaneshame',
@@ -61,7 +49,13 @@ module.exports = {
     {
       resolve: `gatsby-source-filesystem`,
       options: {
-        path: `${__dirname}/data/`,
+        path: `${__dirname}/data/blog`,
+      },
+    },
+    {
+      resolve: `gatsby-source-filesystem`,
+      options: {
+        path: `${__dirname}/data/assets`,
       },
     },
     `gatsby-remark-copy-linked-files`,

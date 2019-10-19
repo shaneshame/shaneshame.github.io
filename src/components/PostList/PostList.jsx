@@ -3,13 +3,23 @@ import React from 'react';
 import Pagination from '../Pagination';
 import PostListItem from './PostListItem';
 
-const PostList = ({ data, page, pageListSize, path }) => {
+const PostList = ({ data, pageContext, pageListSize, path }) => {
   return (
     <React.Fragment>
       {data.map(({ node }) => (
-        <PostListItem key={node.fields.slug} node={node} />
+        <PostListItem
+          category={pageContext.category}
+          key={node.fields.slug}
+          node={node}
+        />
       ))}
-      {page && <Pagination listSize={pageListSize} page={page} path={path} />}
+      {pageContext && (
+        <Pagination
+          listSize={pageListSize}
+          pageContext={pageContext}
+          path={path}
+        />
+      )}
     </React.Fragment>
   );
 };

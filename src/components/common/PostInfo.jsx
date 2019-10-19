@@ -26,7 +26,6 @@ const Container = styled.div`
 `;
 
 const PostInfo = ({ category, date, link, size }) => {
-  console.log('PostInfo category', category);
   return (
     <Container size={size}>
       {category && (

@@ -36,7 +36,7 @@ const BlogIndex = ({ data, location, pageContext }) => {
       <SEO keywords={[`blog`, `gatsby`, `javascript`, `react`]} title="Main" />
       <PostList
         data={posts}
-        page={pageContext}
+        pageContext={pageContext}
         pageListSize={pageListSize}
         path="/"
       />

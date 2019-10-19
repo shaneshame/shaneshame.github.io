@@ -14,7 +14,7 @@ const TagsTemplate = ({ location, pageContext, data }) => {
         <SEO keywords={[tag]} title={`Tag: ${tag}`} />
         <PostList
           data={data.allMarkdownRemark.edges}
-          page={pageContext}
+          pageContext={pageContext}
           pageListSize={data.site.siteMetadata.pageListSize}
           path={`/tags/${tag}`}
         />
@@ -33,23 +33,19 @@ export const pageQuery = graphql`
       }
     }
     allMarkdownRemark(
-      sort: { fields: [frontmatter___date], order: DESC }
       filter: { frontmatter: { tags: { in: [$tag] } } }
-      skip: $skip
       limit: $limit
+      skip: $skip
+      sort: { fields: [frontmatter___date], order: DESC }
     ) {
       totalCount
       edges {
         node {
           fields {
-            category
             slug
           }
           excerpt(format: MARKDOWN)
           frontmatter {
-            title
-            date(formatString: "YYYY-MM-DD")
-            tags
             cover {
               childImageSharp {
                 fixed(width: 120, height: 120) {
@@ -57,6 +53,9 @@ export const pageQuery = graphql`
                 }
               }
             }
+            date(formatString: "YYYY-MM-DD")
+            tags
+            title
           }
         }
       }

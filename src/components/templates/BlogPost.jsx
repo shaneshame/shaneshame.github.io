@@ -68,15 +68,16 @@ const PostFooter = styled.div`
   }
 `;
 
-const BlogPost = props => {
-  const post = props.data.markdownRemark;
-  const siteTitle = props.data.site.siteMetadata.title;
-  const { title, date, tags, cover } = props.data.markdownRemark.frontmatter;
-  const { recent } = props.pageContext;
-  const category = post.fields.category;
+const BlogPost = ({ data, location, pageContext }) => {
+  const post = data.markdownRemark;
+  const { title, date, tags, cover } = post.frontmatter;
+
+  const siteTitle = data.site.siteMetadata.title;
+
+  const { category, recent } = pageContext;
 
   return (
-    <Layout activeMenu={category} location={props.location} title={siteTitle}>
+    <Layout activeMenu={category} location={location} title={siteTitle}>
       <SEO
         description={post.excerpt}
         image={!!cover && cover.childImageSharp.fluid.src}
@@ -109,7 +110,6 @@ export const pageQuery = graphql`
   query BlogPostBySlug($category: String!, $slug: String!) {
     site {
       siteMetadata {
-        authorNickName
         title
       }
     }
@@ -117,6 +117,9 @@ export const pageQuery = graphql`
       fields: { category: { eq: $category }, slug: { eq: $slug } }
     ) {
       excerpt(format: MARKDOWN)
+      fields {
+        category
+      }
       frontmatter {
         date(formatString: "YYYY-MM-DD")
         cover {

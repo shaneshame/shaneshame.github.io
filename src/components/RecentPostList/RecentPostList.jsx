@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 import RecentPostItem from './RecentPostItem';
 
-const PostList = styled.div`
+const Container = styled.div`
   #title {
     color: ${props => props.theme.recentpostlist.header};
     font-weight: bold;
@@ -23,14 +23,14 @@ const PostList = styled.div`
 
 const RecentPostList = ({ category, data }) => {
   return (
-    <PostList>
+    <Container>
       <div id="title">
         Recent "<Link to={`/${category}`}>{category}</Link>" Posts
       </div>
       {data.map((node, index) => (
         <RecentPostItem data={node} key={index} />
       ))}
-    </PostList>
+    </Container>
   );
 };
 

@@ -7,10 +7,7 @@ import SEO from '../SEO';
 import Layout from './Layout';
 
 const CategoryList = ({ location, pageContext, data }) => {
-  console.log('CategoryList');
-  console.log('pageContext', pageContext);
-  console.log('data', data);
-  const category = 'Test';
+  const { category } = pageContext;
 
   return (
     <Layout
@@ -22,7 +19,7 @@ const CategoryList = ({ location, pageContext, data }) => {
         <SEO keywords={[category]} title={sentenceCase(category)} />
         <PostList
           data={data.allMarkdownRemark.edges}
-          page={pageContext}
+          pageContext={pageContext}
           pageListSize={data.site.siteMetadata.pageListSize}
           path={`/${category}`}
         />
