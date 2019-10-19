@@ -2,6 +2,8 @@ const path = require(`path`);
 const { createFilePath } = require(`gatsby-source-filesystem`);
 const { paginate } = require(`gatsby-awesome-pagination`);
 
+const CATEGORY_COVER = 'icon.png';
+
 const getSlugParent = slug => {
   const slugParentString = slug.substring(1, slug.length - 1);
   const parentArray = slugParentString.split('/');
@@ -135,6 +137,7 @@ exports.createPages = async ({ graphql, actions }) => {
       component: path.resolve('./src/components/templates/CategoryList.jsx'),
       context: {
         category: `${cat}`,
+        categoryCover: `${cat}/${CATEGORY_COVER}`,
       },
       createPage,
       items: catEdges,

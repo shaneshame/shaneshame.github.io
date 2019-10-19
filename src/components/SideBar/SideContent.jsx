@@ -83,7 +83,7 @@ const SideContent = ({ activeMenu }) => (
 
 const query = graphql`
   query {
-    allMarkdownRemark {
+    allMarkdownRemark(sort: { fields: [fields___category], order: ASC }) {
       nodes {
         fields {
           category
