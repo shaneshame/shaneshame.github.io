@@ -21,12 +21,12 @@ A list of IP addresses for jump servers in the US. Visit the communities' websit
 | ---------- | --------------------------- | ------------------- |
 | US East    | Dedicated jump_academy2 map | 74.91.127.161:27015 |
 | US East    | Soldier Easy + Medium       | 162.248.89.19:27015 |
-| US East    | Demo Easy + Medium          | 74.91.112.17        |
+| US East    | Demo Easy + Medium          | 74.91.112.17:27015  |
 | US Central | Dedicated jump_academy2 map | 74.201.57.140:27015 |
 | US Central | Soldier Easy + Medium       | 66.151.244.34:27015 |
 | US West    | Dedicated jump_academy2 map | 66.150.155.82:27015 |
-| US West    | Soldier Easy + Medium       | 162.248.93.23       |
-| US West    | Demo Easy + Medium          | 66.150.155.12       |
+| US West    | Soldier Easy + Medium       | 162.248.93.23:27015 |
+| US West    | Demo Easy + Medium          | 66.150.155.12:27015 |
 
 ## [East Coast Jumpers](https://steamcommunity.com/groups/ECJump)
 
