@@ -106,17 +106,18 @@ module.exports = {
         ],
       },
     },
-    // {
-    //   resolve: 'gatsby-plugin-root-import',
-    //   options: {
-    //     components: `${__dirname}/src/components`,
-    //     data: `${__dirname}/data`,
-    //     pages: `${__dirname}/src/pages`,
-    //     src: `${__dirname}/src`,
-    //     themes: `${__dirname}/src/themes`,
-    //     utils: `${__dirname}/src/utils`,
-    //   },
-    // },
+    {
+      resolve: 'gatsby-plugin-root-import',
+      options: {
+        // components: `${__dirname}/src/components`,
+        // data: `${__dirname}/data`,
+        // pages: `${__dirname}/src/pages`,
+        // src: `${__dirname}/src`,
+        // themes: `${__dirname}/src/themes`,
+        utils: `${__dirname}/src/utils`,
+        nodeUtil: `${__dirname}/src/utils/nodeUtil`,
+      },
+    },
     {
       resolve: `gatsby-plugin-google-analytics`,
       options: {

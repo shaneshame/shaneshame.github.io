@@ -1,3 +1,4 @@
+const { pathCase, replaceTrailingSlash } = require('./src/utils/nodeUtil');
 const path = require(`path`);
 const { createFilePath } = require(`gatsby-source-filesystem`);
 const { paginate } = require(`gatsby-awesome-pagination`);
@@ -21,7 +22,7 @@ exports.onCreateNode = ({ actions, getNode, node }) => {
     createNodeField({
       name: `slug`,
       node,
-      value: slug,
+      value: pathCase(slug),
     });
 
     createNodeField({
@@ -133,16 +134,17 @@ exports.createPages = async ({ graphql, actions }) => {
 
   category.forEach(cat => {
     const catEdges = posts.filter(({ node }) => node.fields.category === cat);
+    const catPath = pathCase(cat);
     paginate({
       component: path.resolve('./src/components/templates/CategoryList.jsx'),
       context: {
         category: `${cat}`,
-        categoryCover: `${cat}/${CATEGORY_COVER}`,
+        categoryCover: `${catPath}/${CATEGORY_COVER}`,
       },
       createPage,
       items: catEdges,
       itemsPerPage: siteConfig.postsPerPage,
-      pathPrefix: `/${cat}`,
+      pathPrefix: `/${catPath}`,
     });
   });
 
@@ -164,13 +166,12 @@ exports.createPages = async ({ graphql, actions }) => {
 };
 
 // Replacing '/' would result in empty string which is invalid
-const replacePath = path => (path === `/` ? path : path.replace(/\/$/, ``));
 
 exports.onCreatePage = ({ actions, page }) => {
   const { createPage, deletePage } = actions;
   const oldPage = Object.assign({}, page);
   // Remove trailing slash unless page is /
-  page.path = replacePath(page.path);
+  page.path = replaceTrailingSlash(page.path);
   if (page.path !== oldPage.path) {
     // Replace new page with old page
     deletePage(oldPage);

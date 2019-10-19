@@ -1,4 +1,5 @@
 import { graphql, Link, StaticQuery } from 'gatsby';
+import { PATH_NORMALIZER, pathCase } from 'nodeUtil';
 import React from 'react';
 import styled from 'styled-components';
 
@@ -52,6 +53,28 @@ const CategoryLink = styled(Link)`
   }
 `;
 
+const PRIORITIES = [];
+const LOW_PRIORITIES = ['misc'];
+
+const getRank = item => {
+  if (LOW_PRIORITIES.includes(PATH_NORMALIZER(item))) {
+    return -10;
+  }
+
+  for (let i = 0; i < PRIORITIES.length; i += 1) {
+    let rank = PRIORITIES.length - i;
+    if (PATH_NORMALIZER(PRIORITIES[i]) === PATH_NORMALIZER(item)) {
+      return rank;
+    }
+  }
+
+  return 0;
+};
+
+const byPriority = (a, b) => {
+  return getRank(b) - getRank(a);
+};
+
 const SideContent = ({ activeMenu }) => (
   <StaticQuery
     query={query}
@@ -62,13 +85,13 @@ const SideContent = ({ activeMenu }) => (
 
       return (
         <StyledSideContent>
-          {categories.map(category => {
+          {categories.sort(byPriority).map(category => {
             const isActive = activeMenu === category;
             return (
               <CategoryLink
                 active={isActive ? 1 : 0}
                 key={category}
-                to={`/${category}`}
+                to={`/${pathCase(category)}`}
               >
                 <i className="fas fa-hashtag fa-fw" />
                 <span>{category}</span>
