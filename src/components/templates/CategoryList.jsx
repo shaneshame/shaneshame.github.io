@@ -25,7 +25,7 @@ const CategoryList = ({ location, pageContext, data }) => {
       title={`Category: ${category}`}
     >
       <div>
-        <SEO keywords={[category]} title={sentenceCase(category)} />
+        <SEO keywords={[category]} title={category} />
         {headerImagePath && <HeaderImage fluid={headerImagePath} />}
         <PostList
           data={data.allMarkdownRemark.edges}
