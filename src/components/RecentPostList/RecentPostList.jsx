@@ -1,4 +1,5 @@
 import { Link } from 'gatsby';
+import { pathCase } from 'nodeUtil';
 import React from 'react';
 import styled from 'styled-components';
 
@@ -25,7 +26,7 @@ const RecentPostList = ({ category, data }) => {
   return (
     <Container>
       <div id="title">
-        Recent "<Link to={`/${category}`}>{category}</Link>" Posts
+        Recent "<Link to={`/${pathCase(category)}`}>{category}</Link>" Posts
       </div>
       {data.map((node, index) => (
         <RecentPostItem data={node} key={index} />

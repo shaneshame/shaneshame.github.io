@@ -30,11 +30,7 @@ const PostInfo = ({ category, date, link, size }) => {
     <Container size={size}>
       {category && (
         <React.Fragment>
-          {link ? (
-            <Link to={`/${category}`}>{category}</Link>
-          ) : (
-            <span>{category}</span>
-          )}
+          {link ? <Link to={link}>{category}</Link> : <span>{category}</span>}
           <Circle size={'3'} />
         </React.Fragment>
       )}

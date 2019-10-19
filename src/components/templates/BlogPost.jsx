@@ -1,4 +1,5 @@
 import { graphql } from 'gatsby';
+import { pathCase } from 'nodeUtil';
 import React from 'react';
 import styled from 'styled-components';
 
@@ -70,7 +71,7 @@ const PostFooter = styled.div`
 
 const BlogPost = ({ data, location, pageContext }) => {
   const post = data.markdownRemark;
-  const { title, date, tags, cover } = post.frontmatter;
+  const { cover, date, tags, title } = post.frontmatter;
 
   const siteTitle = data.site.siteMetadata.title;
 
@@ -86,7 +87,11 @@ const BlogPost = ({ data, location, pageContext }) => {
       />
       <PostHeader>
         <h1>{title}</h1>
-        <PostInfo category={category} date={date} link />
+        <PostInfo
+          category={category}
+          date={date}
+          link={`/${pathCase(category)}`}
+        />
         <hr />
       </PostHeader>
       <PostContent>

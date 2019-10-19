@@ -1,10 +1,10 @@
 import { graphql } from 'gatsby';
 import Image from 'gatsby-image';
 import { get } from 'lodash';
+import { pathCase } from 'nodeUtil';
 import React from 'react';
 import styled from 'styled-components';
 
-import { sentenceCase } from '../../utils';
 import PostList from '../PostList';
 import SEO from '../SEO';
 import Layout from './Layout';
@@ -31,7 +31,7 @@ const CategoryList = ({ location, pageContext, data }) => {
           data={data.allMarkdownRemark.edges}
           pageContext={pageContext}
           pageListSize={data.site.siteMetadata.pageListSize}
-          path={`/${category}`}
+          path={`/${pathCase(category)}`}
         />
       </div>
     </Layout>
