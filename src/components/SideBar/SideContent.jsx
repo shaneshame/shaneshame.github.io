@@ -28,7 +28,7 @@ const StyledSideContent = styled.nav`
   }
 `;
 
-const Category = styled(Link)`
+const CategoryLink = styled(Link)`
   background-color: ${props =>
     props.active && props.theme.side.category.activeBack};
   color: ${props =>
@@ -56,20 +56,23 @@ const SideContent = ({ activeMenu }) => (
   <StaticQuery
     query={query}
     render={data => {
-      const category = data.site.siteMetadata.category;
+      const categories = data.allMarkdownRemark.nodes.map(
+        node => node.fields.category
+      );
+
       return (
         <StyledSideContent>
-          {category.map(node => {
-            const isActive = activeMenu === node.id;
+          {categories.map(category => {
+            const isActive = activeMenu === category;
             return (
-              <Category
+              <CategoryLink
                 active={isActive ? 1 : 0}
-                key={node.id}
-                to={`/${node.id}`}
+                key={category}
+                to={`/${category}`}
               >
-                <i className={`fas ${node.icon} fa-fw`} />
-                <span>{node.id}</span>
-              </Category>
+                <i className="fas fa-hashtag fa-fw" />
+                <span>{category}</span>
+              </CategoryLink>
             );
           })}
         </StyledSideContent>
@@ -80,12 +83,10 @@ const SideContent = ({ activeMenu }) => (
 
 const query = graphql`
   query {
-    site {
-      siteMetadata {
-        title
-        category {
-          id
-          icon
+    allMarkdownRemark(sort: { fields: [fields___category], order: ASC }) {
+      nodes {
+        fields {
+          category
         }
       }
     }

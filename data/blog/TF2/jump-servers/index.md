@@ -1,7 +1,6 @@
 ---
 title: Jump Servers
 date: '2019-10-12'
-category: notes
 tags:
   - TF2
   - notes

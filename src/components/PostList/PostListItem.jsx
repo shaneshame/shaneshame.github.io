@@ -5,7 +5,7 @@ import styled from 'styled-components';
 
 import { PostInfo, TextEllipsis } from '../common';
 
-const PostItem = styled(Link)`
+const PostLink = styled(Link)`
   display: flex;
   justify-content: space-between;
   margin-bottom: 40px;
@@ -43,28 +43,25 @@ const Thumbnail = styled(Image)`
   width: 120px;
 `;
 
-const PostListItem = ({ node }) => {
+const PostListItem = ({ category, node }) => {
   const isCover = !!node.frontmatter.cover;
-  const path = node.fields.slug;
+  const { slug } = node.fields;
 
   return (
-    <PostItem to={path}>
+    <PostLink to={slug}>
       <TextContents>
         <h2>
           <TextEllipsis line={1} text={node.frontmatter.title} />
         </h2>
         <TextEllipsis line={2} text={node.excerpt} />
-        <PostInfo
-          category={node.frontmatter.category}
-          date={node.frontmatter.date}
-        />
+        <PostInfo category={category} date={node.frontmatter.date} />
       </TextContents>
       {isCover && (
         <div>
           <Thumbnail fixed={node.frontmatter.cover.childImageSharp.fixed} />
         </div>
       )}
-    </PostItem>
+    </PostLink>
   );
 };
 

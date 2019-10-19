@@ -1,13 +1,22 @@
 import { graphql } from 'gatsby';
+import Image from 'gatsby-image';
+import { get } from 'lodash';
 import React from 'react';
+import styled from 'styled-components';
 
 import { sentenceCase } from '../../utils';
 import PostList from '../PostList';
 import SEO from '../SEO';
 import Layout from './Layout';
 
+const HeaderImage = styled(Image)`
+  margin: 0 auto;
+  width: 240px;
+`;
+
 const CategoryList = ({ location, pageContext, data }) => {
   const { category } = pageContext;
+  const headerImagePath = get(data, 'file.childImageSharp.fluid');
 
   return (
     <Layout
@@ -17,9 +26,10 @@ const CategoryList = ({ location, pageContext, data }) => {
     >
       <div>
         <SEO keywords={[category]} title={sentenceCase(category)} />
+        {headerImagePath && <HeaderImage fluid={headerImagePath} />}
         <PostList
           data={data.allMarkdownRemark.edges}
-          page={pageContext}
+          pageContext={pageContext}
           pageListSize={data.site.siteMetadata.pageListSize}
           path={`/${category}`}
         />
@@ -31,7 +41,14 @@ const CategoryList = ({ location, pageContext, data }) => {
 export default CategoryList;
 
 export const pageQuery = graphql`
-  query($skip: Int!, $limit: Int!, $category: String) {
+  query($skip: Int!, $limit: Int!, $category: String!, $categoryCover: String) {
+    file(relativePath: { eq: $categoryCover }) {
+      childImageSharp {
+        fluid(maxWidth: 240) {
+          ...GatsbyImageSharpFluid
+        }
+      }
+    }
     site {
       siteMetadata {
         pageListSize
@@ -39,7 +56,7 @@ export const pageQuery = graphql`
     }
     allMarkdownRemark(
       sort: { fields: [frontmatter___date], order: DESC }
-      filter: { frontmatter: { category: { eq: $category } } }
+      filter: { fields: { category: { eq: $category } } }
       skip: $skip
       limit: $limit
     ) {
@@ -51,10 +68,6 @@ export const pageQuery = graphql`
           }
           excerpt(format: MARKDOWN)
           frontmatter {
-            title
-            date(formatString: "YYYY-MM-DD")
-            category
-            tags
             cover {
               childImageSharp {
                 fixed(width: 120, height: 120) {
@@ -62,6 +75,9 @@ export const pageQuery = graphql`
                 }
               }
             }
+            date(formatString: "YYYY-MM-DD")
+            tags
+            title
           }
         }
       }

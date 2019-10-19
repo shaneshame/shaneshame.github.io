@@ -6,7 +6,7 @@ import SEO from '../SEO';
 import Layout from './Layout';
 
 const BlogIndex = ({ data, location, pageContext }) => {
-  const { title, pageListSize } = data.site.siteMetadata;
+  const { pageListSize, title } = data.site.siteMetadata;
   const posts = data.allMarkdownRemark.edges;
 
   return (
@@ -14,7 +14,7 @@ const BlogIndex = ({ data, location, pageContext }) => {
       <SEO keywords={[`blog`, `gatsby`, `javascript`, `react`]} title="Main" />
       <PostList
         data={posts}
-        page={pageContext}
+        pageContext={pageContext}
         pageListSize={pageListSize}
         path="/"
       />
@@ -46,7 +46,6 @@ export const pageQuery = graphql`
           frontmatter {
             date(formatString: "YYYY-MM-DD")
             title
-            category
             cover {
               childImageSharp {
                 fixed(width: 120, height: 120) {
