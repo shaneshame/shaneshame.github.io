@@ -64,6 +64,7 @@ export const pageQuery = graphql`
       edges {
         node {
           fields {
+            category
             slug
           }
           excerpt(format: MARKDOWN)

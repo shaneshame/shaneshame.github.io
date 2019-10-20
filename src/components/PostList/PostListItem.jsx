@@ -24,7 +24,7 @@ const TextContents = styled.div`
     padding-bottom: 0;
   }
 
-  p:nth-child(2) {
+  span:nth-child(2) {
     color: ${props => props.theme.postlistitem.content};
   }
 
@@ -46,6 +46,7 @@ const Thumbnail = styled(Image)`
 const PostListItem = ({ category, node }) => {
   const isCover = !!node.frontmatter.cover;
   const { slug } = node.fields;
+  console.log('PostListItem category', category);
 
   return (
     <PostLink to={slug}>

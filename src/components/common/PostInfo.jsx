@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import { Circle } from '../common';
 
 const Container = styled.div`
-  font-size: ${props => (props.size ? props.size + 'px' : '13px')};
+  font-size: ${props => (props.size ? props.size : 13)}px;
 
   span {
     vertical-align: middle;
