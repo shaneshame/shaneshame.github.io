@@ -88,7 +88,7 @@ const MainOverlay = styled.div`
   }
 `;
 
-const Layout = ({ activeMenu, children, title }) => {
+const Layout = ({ activeMenu, children, subTitle, title }) => {
   const [isMobileOpen, setMobileOpen] = useState(false);
   const isDarkMode = false;
 
@@ -105,7 +105,11 @@ const Layout = ({ activeMenu, children, title }) => {
       </SideBar>
       <Main>
         {isMobileOpen && <MainOverlay onClick={handleToggleSide} />}
-        <MainHeader onClick={handleToggleSide} title={title} />
+        <MainHeader
+          onClick={handleToggleSide}
+          subTitle={subTitle}
+          title={title}
+        />
         <MainContent>{children}</MainContent>
       </Main>
     </ThemeProvider>

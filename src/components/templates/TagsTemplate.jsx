@@ -7,15 +7,16 @@ import Layout from './Layout';
 
 const TagsTemplate = ({ location, pageContext, data }) => {
   const { tag } = pageContext;
+  const { pageListSize, title } = data.site.siteMetadata;
 
   return (
-    <Layout location={location} title={`Tag: ${tag}`}>
+    <Layout location={location} subTitle={`#${tag}`} title={title}>
       <div>
         <SEO keywords={[tag]} title={`Tag: ${tag}`} />
         <PostList
           data={data.allMarkdownRemark.edges}
           pageContext={pageContext}
-          pageListSize={data.site.siteMetadata.pageListSize}
+          pageListSize={pageListSize}
           path={`/tags/${tag}`}
         />
       </div>
@@ -30,6 +31,7 @@ export const pageQuery = graphql`
     site {
       siteMetadata {
         pageListSize
+        title
       }
     }
     allMarkdownRemark(
