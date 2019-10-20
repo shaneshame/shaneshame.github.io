@@ -6,9 +6,19 @@ const HeadingLink = styled(Link)`
   color: inherit;
 `;
 
-const Heading = styled.h2`
+const Heading = styled.h3`
   margin: 0 0 0 10px;
-  padding: 0;
+  padding: 0 0 1px 0;
+
+  &.subtitle {
+    :before {
+      border: 0.5px solid ${props => props.theme.main.header.text};
+      content: '';
+      height: 100%;
+      margin-right: 10px;
+      position: relative;
+    }
+  }
 `;
 
 const StyledMainHeader = styled.header`
@@ -41,7 +51,7 @@ const MenuButton = styled.button`
   }
 `;
 
-const MainHeader = ({ onClick, title }) => {
+const MainHeader = ({ onClick, subTitle, title }) => {
   return (
     <StyledMainHeader>
       <MenuButton onClick={onClick}>
@@ -50,6 +60,15 @@ const MainHeader = ({ onClick, title }) => {
       <HeadingLink to="/">
         <Heading>{title}</Heading>
       </HeadingLink>
+      {subTitle && (
+        <div
+          css={`
+            position: relative;
+          `}
+        >
+          <Heading className="subtitle">{subTitle}</Heading>
+        </div>
+      )}
     </StyledMainHeader>
   );
 };

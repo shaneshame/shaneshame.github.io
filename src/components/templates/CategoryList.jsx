@@ -16,13 +16,15 @@ const HeaderImage = styled(Image)`
 
 const CategoryList = ({ location, pageContext, data }) => {
   const { category } = pageContext;
+  const siteTitle = data.site.siteMetadata.title;
   const headerImagePath = get(data, 'file.childImageSharp.fluid');
 
   return (
     <Layout
       activeMenu={category}
       location={location}
-      title={`Category: ${category}`}
+      subTitle={category}
+      title={siteTitle}
     >
       <div>
         <SEO keywords={[category]} title={category} />
@@ -52,6 +54,7 @@ export const pageQuery = graphql`
     site {
       siteMetadata {
         pageListSize
+        title
       }
     }
     allMarkdownRemark(
