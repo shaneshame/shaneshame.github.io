@@ -14,7 +14,7 @@ const StyledPagination = styled.nav`
   }
 `;
 
-const Pagination = ({ pageContext, path, listSize }) => {
+const Pagination = ({ listSize, pageContext, path }) => {
   const totalPage = pageContext.numberOfPages;
   const activePage = pageContext.humanPageNumber;
 
@@ -31,34 +31,28 @@ const Pagination = ({ pageContext, path, listSize }) => {
   let pgs = [];
 
   for (let i = startPage; i <= endPage; i++) {
-    let pageNum = i !== 1 ? `/${i}` : '';
+    let pageNum = i !== 1 ? `${i}` : '';
 
-    if (i === activePage) {
-      pgs.push(
-        <PageButton active={true} key={i} link={`${path}${pageNum}`}>
-          {i}
-        </PageButton>
-      );
-    } else {
-      pgs.push(
-        <PageButton key={i} link={`${path}${pageNum}`}>
-          {i}
-        </PageButton>
-      );
-    }
+    pgs.push(
+      <PageButton active={i === activePage} key={i} link={`${path}${pageNum}`}>
+        {i}
+      </PageButton>
+    );
   }
+
+  const prevListPath = prevList && prevList > 1 ? `/${prevList}` : '';
 
   return (
     <StyledPagination>
       <ul>
         {prevList && (
-          <PageButton link={`${path}/${prevList}`}>
+          <PageButton link={`${path}${prevListPath}`}>
             <i className="fas fa-chevron-left" />
           </PageButton>
         )}
         {pgs.length > 0 && pgs}
         {nextList && (
-          <PageButton link={`${path}/${nextList}`}>
+          <PageButton link={`${path}${nextList}`}>
             <i className="fas fa-chevron-right" />
           </PageButton>
         )}

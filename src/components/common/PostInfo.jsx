@@ -1,4 +1,5 @@
 import { Link } from 'gatsby';
+import { pathCase } from 'nodeUtil';
 import React from 'react';
 import styled from 'styled-components';
 
@@ -30,7 +31,11 @@ const PostInfo = ({ category, date, link, size }) => {
     <Container size={size}>
       {category && (
         <React.Fragment>
-          {link ? <Link to={link}>{category}</Link> : <span>{category}</span>}
+          {link ? (
+            <Link to={`/${pathCase(category)}`}>{category}</Link>
+          ) : (
+            <span>{category}</span>
+          )}
           <Circle size={'3'} />
         </React.Fragment>
       )}

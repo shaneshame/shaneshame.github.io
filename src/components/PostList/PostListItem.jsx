@@ -5,7 +5,7 @@ import styled from 'styled-components';
 
 import { PostInfo, TextEllipsis } from '../common';
 
-const PostLink = styled(Link)`
+const PostContainer = styled.div`
   display: flex;
   justify-content: space-between;
   margin-bottom: 40px;
@@ -22,6 +22,10 @@ const TextContents = styled.div`
     margin: 0;
     margin-bottom: 5px;
     padding-bottom: 0;
+
+    span {
+      height: 100%;
+    }
   }
 
   span:nth-child(2) {
@@ -44,25 +48,28 @@ const Thumbnail = styled(Image)`
 `;
 
 const PostListItem = ({ category, node }) => {
-  const isCover = !!node.frontmatter.cover;
+  const { cover, date, title } = node.frontmatter;
   const { slug } = node.fields;
-  console.log('PostListItem category', category);
 
   return (
-    <PostLink to={slug}>
+    <PostContainer to={slug}>
       <TextContents>
-        <h2>
-          <TextEllipsis line={1} text={node.frontmatter.title} />
-        </h2>
-        <TextEllipsis line={2} text={node.excerpt} />
-        <PostInfo category={category} date={node.frontmatter.date} />
+        <Link to={slug}>
+          <h2>
+            <TextEllipsis line={1} text={title} />
+          </h2>
+          <TextEllipsis line={2} text={node.excerpt} />
+        </Link>
+        <PostInfo category={category} date={date} link />
       </TextContents>
-      {isCover && (
+      {!!cover && (
         <div>
-          <Thumbnail fixed={node.frontmatter.cover.childImageSharp.fixed} />
+          <Link to={slug}>
+            <Thumbnail fixed={cover.childImageSharp.fixed} />
+          </Link>
         </div>
       )}
-    </PostLink>
+    </PostContainer>
   );
 };
 
