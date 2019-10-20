@@ -89,7 +89,7 @@ class HandleClickOutside extends React.Component {
 
 const ClickOutsideHandler = onClickOutside(HandleClickOutside);
 
-const SideHeader = () => {
+const SideHeader = ({ closeMobile }) => {
   const [isBioOpen, setBioOpen] = useState(false);
 
   const handleToggleBio = () => {
@@ -107,7 +107,9 @@ const SideHeader = () => {
         const node = data.site.siteMetadata;
         return (
           <Container>
-            <BlogTitle to="/">{node.title}</BlogTitle>
+            <BlogTitle onClick={closeMobile} to="/">
+              {node.title}
+            </BlogTitle>
             <BioContainer>
               <ClickOutsideHandler isOpen={isBioOpen} onClose={handleCloseBio}>
                 <Author changeColor={isBioOpen} onClick={handleToggleBio}>

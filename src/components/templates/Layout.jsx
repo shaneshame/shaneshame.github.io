@@ -100,7 +100,7 @@ const Layout = ({ activeMenu, children, subTitle, title }) => {
     <ThemeProvider theme={isDarkMode ? darkTheme : lightTheme}>
       <GlobalStyle mobileOpen={isMobileOpen} />
       <SideBar mobileOpen={isMobileOpen}>
-        <SideHeader />
+        <SideHeader closeMobile={() => setMobileOpen(false)} />
         <SideContent activeMenu={activeMenu} />
       </SideBar>
       <Main>
