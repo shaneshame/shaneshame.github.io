@@ -3,7 +3,7 @@ import Image from 'gatsby-image';
 import React from 'react';
 import styled from 'styled-components';
 
-import { PostInfo, TextEllipsis } from '../common';
+import { PostInfo } from '../common';
 
 const PostContainer = styled.div`
   display: flex;
@@ -47,6 +47,11 @@ const Thumbnail = styled(Image)`
   width: 120px;
 `;
 
+const Excerpt = styled.p`
+  color: ${props => props.theme.postlistitem.content};
+  margin: 0;
+`;
+
 const PostListItem = ({ category, node }) => {
   const { cover, date, title } = node.frontmatter;
   const { slug } = node.fields;
@@ -55,10 +60,8 @@ const PostListItem = ({ category, node }) => {
     <PostContainer to={slug}>
       <TextContents>
         <Link to={slug}>
-          <h2>
-            <TextEllipsis line={1} text={title} />
-          </h2>
-          <TextEllipsis line={2} text={node.excerpt} />
+          <h2>{title}</h2>
+          <Excerpt>{node.excerpt}</Excerpt>
         </Link>
         <PostInfo category={category} date={date} link />
       </TextContents>

@@ -2,8 +2,6 @@ import { Link } from 'gatsby';
 import React from 'react';
 import styled from 'styled-components';
 
-import { TextEllipsis } from '../common';
-
 const Container = styled.div`
   padding: 0 10px 10px 10px;
   width: 100%;
@@ -54,15 +52,21 @@ const Cover = styled(Link)`
 
 const RecentPostItem = ({ data }) => {
   const link = data.node.fields.slug;
-  const node = data.node.frontmatter;
-  const image = !!node.cover ? node.cover.childImageSharp.fixed.src : '';
+  const { cover, date, title } = data.node.frontmatter;
+  const image = !!cover ? cover.childImageSharp.fixed.src : '';
 
   return (
     <Container>
       <Cover image={image} to={link}>
         <div>
-          <TextEllipsis line={2} text={node.title} />
-          <span>{node.date}</span>
+          <p
+            css={`
+              margin: 0;
+            `}
+          >
+            {title}
+          </p>
+          <span>{date}</span>
         </div>
       </Cover>
     </Container>
