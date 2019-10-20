@@ -11,7 +11,7 @@ I finished my first week of Brazilian Jiu Jitsu. I've been very focused on the p
 
 <!-- endexcerpt -->
 
-## Fighting
+### Fighting
 
 This is learning what it's like to fight, not just technique and exercise. Half of my motivation for getting into BJJ was for the exercise, and when I'm on the mats everything is so new that I've been overwhelmed focusing on learning technique. The fighting mindset is just as important I think, and I'm going to work on that next week.
 
