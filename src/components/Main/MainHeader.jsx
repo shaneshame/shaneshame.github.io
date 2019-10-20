@@ -4,19 +4,27 @@ import styled from 'styled-components';
 
 const HeadingLink = styled(Link)`
   color: inherit;
+  display: inline-block;
 `;
 
 const Heading = styled.h3`
+  font-size: 18px;
+  font-weight: 400;
   margin: 0 0 0 10px;
   padding: 0 0 1px 0;
 
   &.subtitle {
+    font-weight: 300;
+    margin: 0 0 0 20px;
+
     :before {
       border: 0.5px solid ${props => props.theme.main.header.text};
       content: '';
-      height: 100%;
-      margin-right: 10px;
-      position: relative;
+      height: 30px;
+      left: 10px;
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
     }
   }
 `;
@@ -51,24 +59,32 @@ const MenuButton = styled.button`
   }
 `;
 
+const HeadingContainer = styled.div`
+  display: inline-block;
+  line-height: 0;
+`;
+
 const MainHeader = ({ onClick, subTitle, title }) => {
   return (
     <StyledMainHeader>
       <MenuButton onClick={onClick}>
         <i className="fas fa-bars fa-lg" />
       </MenuButton>
-      <HeadingLink to="/">
-        <Heading>{title}</Heading>
-      </HeadingLink>
-      {subTitle && (
-        <div
-          css={`
-            position: relative;
-          `}
-        >
-          <Heading className="subtitle">{subTitle}</Heading>
-        </div>
-      )}
+      <HeadingContainer>
+        <HeadingLink to="/">
+          <Heading>{title}</Heading>
+        </HeadingLink>
+        {subTitle && (
+          <div
+            css={`
+              display: inline-block;
+              position: relative;
+            `}
+          >
+            <Heading className="subtitle">{subTitle}</Heading>
+          </div>
+        )}
+      </HeadingContainer>
     </StyledMainHeader>
   );
 };
