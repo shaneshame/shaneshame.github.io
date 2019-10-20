@@ -27,9 +27,11 @@ const Pagination = ({ listSize, pageContext, path }) => {
   const activePage = pageContext.humanPageNumber;
   const totalPage = pageContext.numberOfPages;
 
-  const startPage = Math.min(activePage, totalPage - (listSize - 1));
-  const endPage =
-    startPage + listSize - 1 < totalPage ? startPage + listSize - 1 : totalPage;
+  const startPage = Math.max(
+    1,
+    Math.min(activePage, totalPage - (listSize - 1))
+  );
+  const endPage = Math.min(startPage + listSize - 1, totalPage);
 
   const pathToPrev = pageContext.previousPagePath || '/';
   const pathToNext =

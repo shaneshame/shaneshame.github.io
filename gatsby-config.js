@@ -23,7 +23,7 @@ const siteConfig = {
 
   googleAnalyticsId: process.env.GOOGLE_ANALYTICS_ID,
 
-  pageListSize: 2,
+  pageListSize: 3,
 };
 
 module.exports = {
