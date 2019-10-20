@@ -34,7 +34,7 @@ exports.onCreateNode = ({ actions, getNode, node }) => {
 };
 
 const siteConfig = {
-  postsPerPage: 5,
+  postsPerPage: 1,
 };
 
 exports.createPages = async ({ graphql, actions }) => {
