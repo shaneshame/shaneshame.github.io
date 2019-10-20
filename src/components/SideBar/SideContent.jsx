@@ -1,7 +1,7 @@
 import { graphql, Link, StaticQuery } from 'gatsby';
-import { PATH_NORMALIZER, pathCase } from 'nodeUtil';
 import React from 'react';
 import styled from 'styled-components';
+import { byCategoryPriority, pathCase } from 'utils';
 
 const StyledSideContent = styled.nav`
   background-color: ${props => props.theme.side.defaultBack};
@@ -53,28 +53,6 @@ const CategoryLink = styled(Link)`
   }
 `;
 
-const PRIORITIES = [];
-const LOW_PRIORITIES = ['misc'];
-
-const getRank = item => {
-  if (LOW_PRIORITIES.includes(PATH_NORMALIZER(item))) {
-    return -10;
-  }
-
-  for (let i = 0; i < PRIORITIES.length; i += 1) {
-    let rank = PRIORITIES.length - i;
-    if (PATH_NORMALIZER(PRIORITIES[i]) === PATH_NORMALIZER(item)) {
-      return rank;
-    }
-  }
-
-  return 0;
-};
-
-const byPriority = (a, b) => {
-  return getRank(b) - getRank(a);
-};
-
 const SideContent = ({ activeMenu }) => (
   <StaticQuery
     query={query}
@@ -85,7 +63,7 @@ const SideContent = ({ activeMenu }) => (
 
       return (
         <StyledSideContent>
-          {categories.sort(byPriority).map(category => {
+          {categories.sort(byCategoryPriority).map(category => {
             const isActive = activeMenu === category;
             return (
               <CategoryLink
