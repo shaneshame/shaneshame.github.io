@@ -105,7 +105,7 @@ const Layout = ({ activeMenu, children, title }) => {
       </SideBar>
       <Main>
         {isMobileOpen && <MainOverlay onClick={handleToggleSide} />}
-        <MainHeader onClick={handleToggleSide}>{title}</MainHeader>
+        <MainHeader onClick={handleToggleSide} title={title} />
         <MainContent>{children}</MainContent>
       </Main>
     </ThemeProvider>

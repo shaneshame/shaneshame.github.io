@@ -1,7 +1,18 @@
+import { Link } from 'gatsby';
 import React from 'react';
 import styled from 'styled-components';
 
+const HeadingLink = styled(Link)`
+  color: inherit;
+`;
+
+const Heading = styled.h2`
+  margin: 0 0 0 10px;
+  padding: 0;
+`;
+
 const StyledMainHeader = styled.header`
+  align-items: center;
   background-color: ${props => props.theme.main.header.back};
   color: ${props => props.theme.main.header.text};
   display: flex;
@@ -30,12 +41,15 @@ const MenuButton = styled.button`
   }
 `;
 
-const MainHeader = ({ onClick }) => {
+const MainHeader = ({ onClick, title }) => {
   return (
     <StyledMainHeader>
       <MenuButton onClick={onClick}>
         <i className="fas fa-bars fa-lg" />
       </MenuButton>
+      <HeadingLink to="/">
+        <Heading>{title}</Heading>
+      </HeadingLink>
     </StyledMainHeader>
   );
 };
