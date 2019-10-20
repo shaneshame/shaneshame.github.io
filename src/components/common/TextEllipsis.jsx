@@ -1,11 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const StyledText = styled.p`
+const StyledText = styled.span`
   -webkit-box-orient: vertical;
-  color: inherit;
+  color: ${props => props.color || 'inherit'};
   display: -webkit-box;
-  height: ${props => props.line * 24 || 24}px;
+  height: 100%;
   -webkit-line-clamp: ${props => props.line || 1};
   line-height: 24px;
   margin-bottom: 5px;

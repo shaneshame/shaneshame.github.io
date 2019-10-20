@@ -41,6 +41,7 @@ export const pageQuery = graphql`
         node {
           excerpt(format: MARKDOWN)
           fields {
+            category
             slug
           }
           frontmatter {
