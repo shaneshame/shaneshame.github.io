@@ -1,4 +1,7 @@
-import { identity } from 'lodash';
+import { get, identity } from 'lodash';
+import { PATH_NORMALIZER } from 'nodeUtil';
+
+import { CATEGORY_PRIORITIES } from './config';
 
 export const upperFirst = (str = '') => {
   return `${str[0].toUpperCase()}${str.slice(1)}`;
@@ -11,4 +14,26 @@ export const mapPath = (path = '', iteratee = identity) => {
     .split('/')
     .map(iteratee)
     .join('/');
+};
+
+const getRank = item => {
+  const lowPriorities = get(CATEGORY_PRIORITIES, 'low', []);
+  const highPriorities = get(CATEGORY_PRIORITIES, 'high', []);
+
+  if (lowPriorities.includes(PATH_NORMALIZER(item))) {
+    return -10;
+  }
+
+  for (let i = 0; i < highPriorities.length; i += 1) {
+    let rank = highPriorities.length - i;
+    if (PATH_NORMALIZER(highPriorities[i]) === PATH_NORMALIZER(item)) {
+      return rank;
+    }
+  }
+
+  return 0;
+};
+
+export const byCategoryPriority = (a, b) => {
+  return getRank(b) - getRank(a);
 };
