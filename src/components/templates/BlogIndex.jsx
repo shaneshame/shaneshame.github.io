@@ -25,17 +25,17 @@ const BlogIndex = ({ data, location, pageContext }) => {
 export default BlogIndex;
 
 export const pageQuery = graphql`
-  query($skip: Int!, $limit: Int!) {
+  query($limit: Int!, $skip: Int!) {
     site {
       siteMetadata {
-        title
         pageListSize
+        title
       }
     }
     allMarkdownRemark(
-      sort: { fields: [frontmatter___date], order: DESC }
-      skip: $skip
       limit: $limit
+      skip: $skip
+      sort: { fields: [frontmatter___date], order: DESC }
     ) {
       edges {
         node {
@@ -45,8 +45,6 @@ export const pageQuery = graphql`
             slug
           }
           frontmatter {
-            date(formatString: "YYYY-MM-DD")
-            title
             cover {
               childImageSharp {
                 fixed(width: 120, height: 120) {
@@ -54,6 +52,8 @@ export const pageQuery = graphql`
                 }
               }
             }
+            date(formatString: "YYYY-MM-DD")
+            title
           }
         }
       }

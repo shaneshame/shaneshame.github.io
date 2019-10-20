@@ -23,7 +23,7 @@ const siteConfig = {
 
   googleAnalyticsId: process.env.GOOGLE_ANALYTICS_ID,
 
-  pageListSize: 1,
+  pageListSize: 2,
 };
 
 module.exports = {
@@ -44,6 +44,7 @@ module.exports = {
   },
   plugins: [
     'gatsby-plugin-lodash',
+    `gatsby-plugin-styled-components`,
     `gatsby-transformer-sharp`,
     `gatsby-plugin-sharp`,
     {
@@ -132,9 +133,6 @@ module.exports = {
       options: {
         pathToConfigModule: `src/utils/typography`,
       },
-    },
-    {
-      resolve: `gatsby-plugin-styled-components`,
     },
   ],
 };

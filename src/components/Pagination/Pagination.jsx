@@ -1,7 +1,12 @@
+import { range } from 'lodash';
 import React from 'react';
 import styled from 'styled-components';
 
-import PageButton from './PageButton';
+import PageButtonDefault from './PageButton';
+
+const PageButton = styled(PageButtonDefault)`
+  visibility: ${props => (props.visible === false ? 'hidden' : 'visible')};
+`;
 
 const StyledPagination = styled.nav`
   margin: 1em auto;
@@ -14,48 +19,40 @@ const StyledPagination = styled.nav`
   }
 `;
 
-const Pagination = ({ listSize, pageContext, path }) => {
-  const totalPage = pageContext.numberOfPages;
-  const activePage = pageContext.humanPageNumber;
+const pagePath = (path, page) => {
+  return page > 1 ? `${path}${page}` : path;
+};
 
-  const startPage = parseInt((activePage - 1) / listSize) * listSize + 1;
+const Pagination = ({ listSize, pageContext, path }) => {
+  const activePage = pageContext.humanPageNumber;
+  const totalPage = pageContext.numberOfPages;
+
+  const startPage = Math.min(activePage, totalPage - (listSize - 1));
   const endPage =
     startPage + listSize - 1 < totalPage ? startPage + listSize - 1 : totalPage;
 
-  const totalList = Math.ceil(totalPage / listSize);
-  const currentList = parseInt((activePage - 1) / listSize) + 1;
-
-  const prevList = currentList <= 1 ? null : (currentList - 1) * listSize;
-  const nextList = currentList < totalList ? currentList * listSize + 1 : null;
-
-  let pgs = [];
-
-  for (let i = startPage; i <= endPage; i++) {
-    let pageNum = i !== 1 ? `${i}` : '';
-
-    pgs.push(
-      <PageButton active={i === activePage} key={i} link={`${path}${pageNum}`}>
-        {i}
-      </PageButton>
-    );
-  }
-
-  const prevListPath = prevList && prevList > 1 ? `/${prevList}` : '';
+  const pathToPrev = pageContext.previousPagePath || '/';
+  const pathToNext =
+    pageContext.nextPagePath || `/${pageContext.numberOfPages}`;
 
   return (
     <StyledPagination>
       <ul>
-        {prevList && (
-          <PageButton link={`${path}${prevListPath}`}>
-            <i className="fas fa-chevron-left" />
+        <PageButton link={pathToPrev} visible={activePage !== 1}>
+          <i className="fas fa-chevron-left" />
+        </PageButton>
+        {range(startPage, endPage + 1).map(pageNumber => (
+          <PageButton
+            active={pageNumber === activePage}
+            key={pageNumber}
+            link={pagePath(path, pageNumber)}
+          >
+            {pageNumber}
           </PageButton>
-        )}
-        {pgs.length > 0 && pgs}
-        {nextList && (
-          <PageButton link={`${path}${nextList}`}>
-            <i className="fas fa-chevron-right" />
-          </PageButton>
-        )}
+        ))}
+        <PageButton link={pathToNext} visible={activePage !== totalPage}>
+          <i className="fas fa-chevron-right" />
+        </PageButton>
       </ul>
     </StyledPagination>
   );

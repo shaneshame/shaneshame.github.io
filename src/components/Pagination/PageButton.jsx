@@ -29,9 +29,9 @@ const StyledButton = styled.li`
   }
 `;
 
-const PageButton = ({ active, children, link }) => {
+const PageButton = ({ active, children, className, link }) => {
   return (
-    <StyledButton active={active}>
+    <StyledButton active={active} className={className}>
       <StyledLink to={link}>{children}</StyledLink>
     </StyledButton>
   );
