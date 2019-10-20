@@ -107,7 +107,7 @@ const SideHeader = () => {
         const node = data.site.siteMetadata;
         return (
           <Container>
-            <BlogTitle to={'/'}>{node.title}</BlogTitle>
+            <BlogTitle to="/">{node.title}</BlogTitle>
             <BioContainer>
               <ClickOutsideHandler isOpen={isBioOpen} onClose={handleCloseBio}>
                 <Author changeColor={isBioOpen} onClick={handleToggleBio}>

@@ -5,7 +5,7 @@ require('dotenv').config({
 /* eslint-disable sort-keys */
 const siteConfig = {
   url: 'https://shaneshame.gihub.io',
-  title: 'Shane',
+  title: 'Shane Shame',
   lang: 'en',
   description: 'Shane Shame',
   defaultKeywords: [`blog`, `gatsby`, `javascript`, `react`, `tf2`],
