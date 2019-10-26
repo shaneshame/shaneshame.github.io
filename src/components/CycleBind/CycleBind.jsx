@@ -196,8 +196,9 @@ const CycleBind = () => {
         Copy <i className="fas fa-copy" />
       </Button>
       <ButtonLink
+        disabled={!cycleScript}
         download={downloadAttrs.download}
-        href={downloadAttrs.href}
+        href={cycleScript && downloadAttrs.href}
         rel="noopener noreferrer"
         target="_blank"
       >
