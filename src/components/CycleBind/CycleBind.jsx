@@ -147,15 +147,17 @@ const CycleBind = () => {
 
   const getDownloadAttributes = debounce(
     contents => {
-      const file = new Blob([contents], { type: 'text/plain' });
-      const url = URL.createObjectURL(file);
+      const file =
+        typeof Blob !== 'undefined'
+          ? new Blob([contents], { type: 'text/plain' })
+          : null;
+      const url = file ? URL.createObjectURL(file) : '';
 
       return {
         download: bindName ? `${bindName.toLowerCase()}.cfg` : 'cyclebind.cfg',
         href: url,
         revoke: () => {
-          console.log('revoking');
-          URL.revokeObjectURL(url);
+          url && URL.revokeObjectURL(url);
         },
       };
     },
