@@ -10,7 +10,7 @@ const TagsTemplate = ({ location, pageContext, data }) => {
   const { pageListSize, title } = data.site.siteMetadata;
 
   return (
-    <Layout location={location} subTitle={`#${tag}`} title={title}>
+    <Layout isArticle location={location} subTitle={`#${tag}`} title={title}>
       <div>
         <SEO keywords={[tag]} title={`Tag: ${tag}`} />
         <PostList

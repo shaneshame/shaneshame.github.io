@@ -4,6 +4,7 @@ import styled, {
   css,
   ThemeProvider,
 } from 'styled-components';
+import { media } from 'utils';
 
 import darkTheme from '../../themes/dark';
 import lightTheme from '../../themes/light';
@@ -45,7 +46,7 @@ const GlobalStyle = createGlobalStyle`
 
 const SideBar = styled.div`
   background-color: ${props => props.theme.side.defaultBack};
-  color: ${props => props.theme.side.defaultText} !important;
+  color: ${props => props.theme.side.defaultText};
   height: 100%;
   left: 0;
   margin-left: ${props => (props.mobileOpen ? 0 : '-280px')};
@@ -56,19 +57,18 @@ const SideBar = styled.div`
   transition: margin 0.5s;
   z-index: 3;
 
-  @media all and (min-width: 992px) {
-    min-width: 280px;
-    margin-left: 0 !important;
+  ${media.desktop} {
+    margin-left: 0;
   }
 `;
 
 const Main = styled.div`
-  color: ${props => props.theme.main.defaultText} !important;
+  color: ${props => props.theme.main.defaultText};
   margin-left: 0;
   margin-top: 50px;
 
-  @media all and (min-width: 992px) {
-    margin-left: 280px !important;
+  ${media.desktop} {
+    margin-left: 280px;
     margin-top: 0;
   }
 `;
@@ -83,12 +83,18 @@ const MainOverlay = styled.div`
   width: 100%;
   z-index: 2;
 
-  @media all and (min-width: 992px) {
+  ${media.desktop} {
     display: none;
   }
 `;
 
-const Layout = ({ activeMenu, children, subTitle, title }) => {
+const Layout = ({
+  activeMenu,
+  children,
+  isArticle = false,
+  subTitle,
+  title,
+}) => {
   const [isMobileOpen, setMobileOpen] = useState(false);
   const isDarkMode = false;
 
@@ -110,7 +116,7 @@ const Layout = ({ activeMenu, children, subTitle, title }) => {
           subTitle={subTitle}
           title={title}
         />
-        <MainContent>{children}</MainContent>
+        <MainContent isArticle={isArticle !== false}>{children}</MainContent>
       </Main>
     </ThemeProvider>
   );

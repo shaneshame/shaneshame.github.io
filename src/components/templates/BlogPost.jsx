@@ -78,7 +78,12 @@ const BlogPost = ({ data, location, pageContext }) => {
   const { category, recent } = pageContext;
 
   return (
-    <Layout activeMenu={category} location={location} title={siteTitle}>
+    <Layout
+      activeMenu={category}
+      isArticle
+      location={location}
+      title={siteTitle}
+    >
       <SEO
         description={post.excerpt}
         image={!!cover && cover.childImageSharp.fluid.src}
