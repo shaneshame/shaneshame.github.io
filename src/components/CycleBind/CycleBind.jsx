@@ -1,7 +1,8 @@
-import { Link } from 'gatsby';
 import { debounce } from 'lodash';
 import React, { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
+
+import { Button, ButtonLink } from '../common';
 
 const countLines = text => (text ? text.split('\n').length : 0);
 
@@ -60,33 +61,11 @@ const Label = styled.label`
 `;
 
 const TextArea = styled.textarea`
+  display: block;
   font-family: Consolas, Monaco, Lucida Console, Liberation Mono,
     DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New;
   font-size: ${props => props.fontSize || 9}px;
-  width: 100%;
-`;
-
-const Button = styled.button`
-  box-shadow: 0px 2px 2px 0px black;
-  margin: 5px 0;
-  padding: 2px 10px;
-`;
-
-const LinkButton = styled.a`
-  background-image: linear-gradient(#f0f0f0, rgb(221, 221, 221));
-  border: 1px outset rgb(221, 221, 221);
-  box-shadow: 0px 2px 2px 0px black;
-  color: #000;
-  cursor: pointer;
-  display: inline-block;
-  height: 34px;
-  margin-left: 5px;
-  padding: 2px 10px;
-  text-decoration: none;
-
-  &:hover {
-    background-image: linear-gradient(#dddddd, #cccccc);
-  }
+  width: 40%;
 `;
 
 const validateLines = lines => {
@@ -214,47 +193,66 @@ const CycleBind = () => {
     };
   }, [downloadAttrs, handleGenerateScript, textAreaValue]);
 
+  const Section = styled.section``;
+
   return (
     <Container>
       <Header>CycleBind</Header>
-      <Label>
-        Name for bind (optional):&nbsp;
-        <Input onChange={handleChangeBindName} type="text" value={bindName} />
-      </Label>
-      <SectionHeader>Input</SectionHeader>
-      <Label>
-        Each output on a new line. Max {MAX_CHARS_PER_LINE} characters per line.
-        For art use {BEST_CHARS_PER_LINE}.
-        <TextArea
-          cols={120}
-          fontSize={fontSize}
-          onChange={handleTextAreaChange}
-          rows={Math.max(MIN_ROWS, countLines(textAreaValue))}
-          value={textAreaValue}
-        />
-      </Label>
-      <LinkButton
+      <Label for="bind-name">Name for bind (optional):&nbsp;</Label>
+      <Input
+        id="bind-name"
+        onChange={handleChangeBindName}
+        type="text"
+        value={bindName}
+      />
+      <Button
+        css={`
+          margin-left: 5px;
+        `}
+      >
+        Copy <i className="fas fa-copy" />
+      </Button>
+      <ButtonLink
         download={downloadAttrs.download}
         href={downloadAttrs.href}
         rel="noopener noreferrer"
         target="_blank"
       >
-        Download .cfg file
-      </LinkButton>
-      <SectionHeader>Output</SectionHeader>
-      <Label
-        css={`
-          margin-top: 10px;
-        `}
-      >
-        Replace `KEY` with the key you'll use:
+        Download <i className="fas fa-download" />
+      </ButtonLink>
+      <Section>
+        <SectionHeader>Input</SectionHeader>
+        <Label for="cycle-text">
+          Each output on a new line. Max {MAX_CHARS_PER_LINE} characters per
+          line. For art use {BEST_CHARS_PER_LINE}.
+        </Label>
+        <TextArea
+          cols={120}
+          fontSize={fontSize}
+          id="cycle-text"
+          onChange={handleTextAreaChange}
+          rows={Math.max(MIN_ROWS, countLines(textAreaValue))}
+          value={textAreaValue}
+        />
+      </Section>
+      <Section>
+        <SectionHeader>Output</SectionHeader>
+        <Label
+          css={`
+            margin-top: 10px;
+          `}
+          for="cycle-script"
+        >
+          Replace `KEY` with the key you'll use:
+        </Label>
         <TextArea
           fontSize={fontSize}
+          id="cycle-script"
           readOnly
           rows={Math.max(MIN_ROWS, countLines(cycleBind))}
           value={cycleBind}
         />
-      </Label>
+      </Section>
     </Container>
   );
 };
