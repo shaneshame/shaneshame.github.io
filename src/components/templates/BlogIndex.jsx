@@ -10,7 +10,7 @@ const BlogIndex = ({ data, location, pageContext }) => {
   const posts = data.allMarkdownRemark.edges;
 
   return (
-    <Layout location={location} title={title}>
+    <Layout isArticle location={location} title={title}>
       <SEO keywords={[`blog`, `gatsby`, `javascript`, `react`]} title="Main" />
       <PostList
         data={posts}

@@ -1,12 +1,13 @@
 import { Link } from 'gatsby';
 import React from 'react';
 import styled from 'styled-components';
+import { media } from 'utils';
 
 const Container = styled.div`
   padding: 0 10px 10px 10px;
   width: 100%;
 
-  @media all and (min-width: 992px) {
+  ${media.desktop} {
     display: ${props => props.display || 'inline-block'};
     width: 25%;
   }
@@ -45,7 +46,7 @@ const Cover = styled(Link)`
     }
   }
 
-  @media all and (min-width: 992px) {
+  ${media.desktop} {
     height: 120px;
   }
 `;

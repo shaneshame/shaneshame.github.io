@@ -22,6 +22,7 @@ const CategoryList = ({ location, pageContext, data }) => {
   return (
     <Layout
       activeMenu={category}
+      isArticle
       location={location}
       subTitle={category}
       title={siteTitle}

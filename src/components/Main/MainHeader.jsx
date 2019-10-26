@@ -1,6 +1,7 @@
 import { Link } from 'gatsby';
 import React from 'react';
 import styled from 'styled-components';
+import { media } from 'utils';
 
 const HeadingLink = styled(Link)`
   color: inherit;
@@ -40,7 +41,7 @@ const StyledMainHeader = styled.header`
   width: 100%;
   z-index: 1;
 
-  @media all and (min-width: 992px) {
+  ${media.desktop} {
     display: none;
   }
 `;
