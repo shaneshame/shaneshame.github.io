@@ -88,13 +88,7 @@ const MainOverlay = styled.div`
   }
 `;
 
-const Layout = ({
-  activeMenu,
-  children,
-  isArticle = false,
-  subTitle,
-  title,
-}) => {
+const Layout = ({ activeMenu, children, isArticle, subTitle, title }) => {
   const [isMobileOpen, setMobileOpen] = useState(false);
   const isDarkMode = false;
 
@@ -116,7 +110,7 @@ const Layout = ({
           subTitle={subTitle}
           title={title}
         />
-        <MainContent isArticle={isArticle !== false}>{children}</MainContent>
+        <MainContent isArticle={isArticle}>{children}</MainContent>
       </Main>
     </ThemeProvider>
   );

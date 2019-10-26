@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { styles } from 'utils';
 
 const Button = styled.button`
   box-shadow: inset 0px 1px 0px 0px #9fb4f2;
@@ -15,24 +14,24 @@ const Button = styled.button`
   text-decoration: none;
   text-shadow: 0px 1px 0px #283966;
 
-  &:hover {
+  &:hover:not([disabled]) {
     background: linear-gradient(to bottom, #476e9e 5%, #7892c2 100%);
     background-color: #476e9e;
   }
 
-  &:active {
+  &:active:not([disabled]) {
     position: relative;
     top: 1px;
   }
 
   &:disabled {
-    background: linear-gradient(to bottom, #7892c2 5%, #476e9e 100%);
-    color: black;
+    background: linear-gradient(to bottom, #ededed 5%, #dfdfdf 100%);
+    border: 1px solid #dedede;
+    box-shadow: none;
+    color: #adadad;
+    cursor: initial;
+    text-shadow: none;
   }
 `;
-
-Button.defaultProps = {
-  disabled: false,
-};
 
 export default Button;

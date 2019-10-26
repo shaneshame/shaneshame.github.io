@@ -23,9 +23,7 @@ const StyledMainContent = styled.section`
 
 const MainContent = ({ isArticle, children }) => {
   return (
-    <StyledMainContent isArticle={isArticle !== false}>
-      {children}
-    </StyledMainContent>
+    <StyledMainContent isArticle={isArticle}>{children}</StyledMainContent>
   );
 };
 

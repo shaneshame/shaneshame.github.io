@@ -1,6 +1,8 @@
+import clsx from 'clsx';
+import React from 'react';
 import styled from 'styled-components';
 
-const ButtonLink = styled.a`
+const ButtonLinkBase = styled.a`
   box-shadow: inset 0px 1px 0px 0px #9fb4f2;
   background: linear-gradient(to bottom, #7892c2 5%, #476e9e 100%);
   background-color: #7892c2;
@@ -14,15 +16,42 @@ const ButtonLink = styled.a`
   text-decoration: none;
   text-shadow: 0px 1px 0px #283966;
 
-  &:hover {
+  &:hover:not(&.disabled) {
     background: linear-gradient(to bottom, #476e9e 5%, #7892c2 100%);
     background-color: #476e9e;
   }
 
-  &:active {
+  &:active:not(&.disabled) {
     position: relative;
     top: 1px;
   }
+
+  &.disabled {
+    background: linear-gradient(to bottom, #ededed 5%, #dfdfdf 100%);
+    border: 1px solid #dedede;
+    box-shadow: none;
+    color: #adadad;
+    cursor: default;
+    text-shadow: none;
+  }
 `;
+
+const ButtonLink = ({ className, disabled, ...rest }) => {
+  console.log(
+    'disabled',
+    disabled,
+    clsx(className, {
+      disabled,
+    })
+  );
+  return (
+    <ButtonLinkBase
+      {...rest}
+      className={clsx(className, {
+        disabled,
+      })}
+    />
+  );
+};
 
 export default ButtonLink;
