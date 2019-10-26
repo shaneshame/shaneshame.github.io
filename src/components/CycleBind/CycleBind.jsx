@@ -1,4 +1,5 @@
 import { Link } from 'gatsby';
+import { debounce } from 'lodash';
 import React, { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
 
@@ -7,6 +8,17 @@ const countLines = text => (text ? text.split('\n').length : 0);
 const MAX_CHARS_PER_LINE = 127;
 const BEST_CHARS_PER_LINE = 82;
 const MIN_ROWS = 10;
+
+const alertLength = debounce(
+  line => {
+    alert(`Line greater than ${MAX_CHARS_PER_LINE} characters: ${line}`);
+  },
+  5000,
+  {
+    leading: true,
+  }
+);
+
 const EXAMPLE_BIND = `⢀⢀⢀⢀⢀⢀⢀⢀⢀⣠⠞⠋⢀⢀⢀⢀⢀⢀⢀⢀⢀⢀⢀⢀⢀⢀⢀⢀⠉⠳⢄
 ⢀⢀⢀⢀⢀⢀⢀⢀⣶⠉⢀⢀⢀⣀⣀⣀⣀⢀⢀⢀⢀⢀⢀⣀⣀⣀⣀⡀⢀⢀⠈⣶
 ⢀⢀⢀⢀⢀⢀⢀⢀⣿⢀⢰⣿⣿⣿⠿⢿⣿⣿⢀⢀⢀⢀⣿⣿⡿⠿⣿⣿⣿⡆⢀⣿
@@ -60,11 +72,12 @@ const Button = styled.button`
   padding: 2px 10px;
 `;
 
-const LinkButton = styled(Link)`
+const LinkButton = styled.a`
   background-image: linear-gradient(#f0f0f0, rgb(221, 221, 221));
   border: 1px outset rgb(221, 221, 221);
   box-shadow: 0px 2px 2px 0px black;
   color: #000;
+  cursor: pointer;
   display: inline-block;
   height: 34px;
   margin-left: 5px;
@@ -79,7 +92,7 @@ const LinkButton = styled(Link)`
 const validateLines = lines => {
   lines.forEach(line => {
     if (line.length > MAX_CHARS_PER_LINE) {
-      alert(`Line greater than ${MAX_CHARS_PER_LINE} characters: ${line}`);
+      alertLength(line);
       return false;
     }
   });
@@ -132,14 +145,23 @@ const CycleBind = () => {
   const [bindName, setBindName] = useState('');
   const [cycleBind, setCycleBind] = useState('');
 
-  const getDownloadAttributes = contents => {
-    const file = new Blob([contents], { type: 'text/plain' });
+  const getDownloadAttributes = debounce(
+    contents => {
+      const file = new Blob([contents], { type: 'text/plain' });
+      const url = URL.createObjectURL(file);
 
-    return {
-      download: bindName ? `${bindName.toLowerCase()}.cfg` : 'cyclebind.cfg',
-      to: URL.createObjectURL(file),
-    };
-  };
+      return {
+        download: bindName ? `${bindName.toLowerCase()}.cfg` : 'cyclebind.cfg',
+        href: url,
+        revoke: () => {
+          console.log('revoking');
+          URL.revokeObjectURL(url);
+        },
+      };
+    },
+    500,
+    { leading: true }
+  );
 
   const handleTextAreaChange = e => {
     const text = e.target.value;
@@ -180,9 +202,15 @@ const CycleBind = () => {
     )
   );
 
+  const downloadAttrs = getDownloadAttributes(cycleBind);
+
   useEffect(() => {
     handleGenerateScript(textAreaValue);
-  }, [handleGenerateScript, textAreaValue]);
+
+    return () => {
+      downloadAttrs.revoke();
+    };
+  }, [downloadAttrs, handleGenerateScript, textAreaValue]);
 
   return (
     <Container>
@@ -203,8 +231,12 @@ const CycleBind = () => {
           value={textAreaValue}
         />
       </Label>
-      <Button>Test</Button>
-      <LinkButton {...getDownloadAttributes(cycleBind)} target="_blank">
+      <LinkButton
+        download={downloadAttrs.download}
+        href={downloadAttrs.href}
+        rel="noopener noreferrer"
+        target="_blank"
+      >
         Download .cfg file
       </LinkButton>
       <SectionHeader>Output</SectionHeader>
