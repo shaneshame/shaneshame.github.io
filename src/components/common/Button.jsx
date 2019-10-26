@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { styles } from 'utils';
 
 const Button = styled.button`
   box-shadow: inset 0px 1px 0px 0px #9fb4f2;
@@ -23,6 +24,15 @@ const Button = styled.button`
     position: relative;
     top: 1px;
   }
+
+  &:disabled {
+    background: linear-gradient(to bottom, #7892c2 5%, #476e9e 100%);
+    color: black;
+  }
 `;
+
+Button.defaultProps = {
+  disabled: false,
+};
 
 export default Button;

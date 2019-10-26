@@ -1,6 +1,7 @@
 import { debounce } from 'lodash';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
+import { media } from 'utils';
 
 import { Button, ButtonLink } from '../common';
 import {
@@ -12,25 +13,30 @@ import {
   validateLines,
 } from './util';
 
-const EXAMPLE_BIND = `⢀⢀⢀⢀⢀⢀⢀⢀⢀⣠⠞⠋⢀⢀⢀⢀⢀⢀⢀⢀⢀⢀⢀⢀⢀⢀⢀⢀⠉⠳⢄
-⢀⢀⢀⢀⢀⢀⢀⢀⣶⠉⢀⢀⢀⣀⣀⣀⣀⢀⢀⢀⢀⢀⢀⣀⣀⣀⣀⡀⢀⢀⠈⣶
-⢀⢀⢀⢀⢀⢀⢀⢀⣿⢀⢰⣿⣿⣿⠿⢿⣿⣿⢀⢀⢀⢀⣿⣿⡿⠿⣿⣿⣿⡆⢀⣿
-⢀⢀⢀⢀⢀⢀⢀⢀⠉⢶⡈⠛⠻⠿⠶⢾⡿⠉⢀⣶⣶⡀⠉⢿⡷⠶⠿⠟⠛⢁⡰⠉
-⢀⢀⢀⢀⢀⢀⢀⢀⢀⣾⠁⣀⣰⣦⣉⡁⢀⢀⠘⠛⠛⠃⢀⢀⠈⢉⣰⣦⣀⠈⢳
-⢀⢀⢀⢀⢀⢀⣠⠤⠴⣿⡄⠉⠙⠣⣿⡙⠒⣶⠒⣶⠒⠒⣶⠒⢲⣏⠟⠋⠉⢠⡾⠓⠒⠢⣀
-⢀⢀⢀⢀⠠⣟⣤⣤⣄⣈⡙⠓⢤⣄⣀⡈⠉⠛⠒⠛⠒⠒⠛⠚⢉⣁⣠⣤⠾⠁⢀⣤⣾⣯⠲⢄⡀
-⢀⢀⢀⣠⢼⣿⣿⣿⡿⣿⣿⣦⣬⡙⠻⠿⣿⣟⠛⠛⠛⢛⣿⣿⠿⠿⢋⣉⣠⣼⣿⠿⣻⣿⣷⣬⡿⣀
-⢀⡰⣏⣾⣿⣿⣿⣿⡇⣿⣿⣿⣿⡇⠿⠇⣶⣿⠓⠒⠲⢾⡷⠰⠆⣿⣿⣿⣿⡿⠟⢀⣿⣿⣿⣿⣷⣬⠱⣆
-⣾⠃⣿⣿⣿⣿⣿⣿⣇⣬⣷⣶⣶⣶⢻⣷⠟⣿⢀⢀⢀⢸⡇⣾⡇⣿⢿⣿⣤⣶⣾⡀⢿⣿⣿⣿⣿⣿⡆⣿
-⠙⠢⣍⠻⢿⣿⣿⡇⣿⣿⣿⣿⣿⣿⣰⢞⡃⣿⢀⢀⢀⢸⡇⣛⢣⡟⣼⣿⣿⣿⣿⣿⢸⣿⣿⣿⣿⠿⢃⡿
-⢀⢀⢀⠙⢦⣄⣿⡇⠻⢿⣿⣿⣿⣿⣿⠸⠃⠿⢶⣶⣶⣾⣃⠟⢰⣿⣿⣿⣿⣿⡿⠋⣸⡿⠿⣯⣥⠞⠁
-⢀⢀⢀⢀⢀⠉⠙⠛⠦⣤⣬⣭⣭⣭⣽⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⢿⣿⣿⣿⡦⣴⠋⠙⠛⠁
-⢀⢀⢀⢀⢀⢀⢀⢰⡏⣾⡟⠃⣼⣿⣿⣿⣿⣿⣿⣟⢿⣿⣿⣿⣿⡇⢸⣿⣿⣿⣷⠉⡆
-⢀⢀⢀⢀⢀⢀⢀⡼⣧⣿⠇⣠⣿⣿⣿⣿⣿⣿⡇⣿⣼⢿⣿⣿⣿⡇⠈⣿⣿⣿⣿⣶⢳⡄
-⢀⢀⢀⢀⢀⢀⢸⡇⣿⣿⢀⣿⣿⣿⣿⣿⣿⣿⢰⡏⣿⢸⣿⣿⣿⣷⢀⣿⣿⣿⣿⣿⢸⡇
-⢀⢀⢀⢀⢀⢀⠈⠳⠶⠶⠶⣿⣿⣿⣿⣿⣿⣿⠞⠁⠻⢾⣿⣿⣿⣿⣤⣤⣿⡿⠶⠶⠞⠃
-⢀⢀⢀⢀⢀⡤⠚⠉⠉⠙⠒⠯⣉⠉⣶⢀⢀⢀⢀⢀⢀⢀⢀⣼⠃⠉⠉⠉⣩⠽⠖⠚⠉⠉⠒⠢⣄
-⢀⢀⢀⢀⢀⢀⢀⢀⢀⢀⢀⣀⠤⠔⠒⠊⠉⠉⠉⠉⠉⠉⠉⠉⠑⠒⠢⠤⣀`;
+const FONT_MIN = 9;
+const FONT_MAX = 13;
+
+// const EXAMPLE_BIND = `⢀⢀⢀⢀⢀⢀⢀⢀⢀⣠⠞⠋⢀⢀⢀⢀⢀⢀⢀⢀⢀⢀⢀⢀⢀⢀⢀⢀⠉⠳⢄
+// ⢀⢀⢀⢀⢀⢀⢀⢀⣶⠉⢀⢀⢀⣀⣀⣀⣀⢀⢀⢀⢀⢀⢀⣀⣀⣀⣀⡀⢀⢀⠈⣶
+// ⢀⢀⢀⢀⢀⢀⢀⢀⣿⢀⢰⣿⣿⣿⠿⢿⣿⣿⢀⢀⢀⢀⣿⣿⡿⠿⣿⣿⣿⡆⢀⣿
+// ⢀⢀⢀⢀⢀⢀⢀⢀⠉⢶⡈⠛⠻⠿⠶⢾⡿⠉⢀⣶⣶⡀⠉⢿⡷⠶⠿⠟⠛⢁⡰⠉
+// ⢀⢀⢀⢀⢀⢀⢀⢀⢀⣾⠁⣀⣰⣦⣉⡁⢀⢀⠘⠛⠛⠃⢀⢀⠈⢉⣰⣦⣀⠈⢳
+// ⢀⢀⢀⢀⢀⢀⣠⠤⠴⣿⡄⠉⠙⠣⣿⡙⠒⣶⠒⣶⠒⠒⣶⠒⢲⣏⠟⠋⠉⢠⡾⠓⠒⠢⣀
+// ⢀⢀⢀⢀⠠⣟⣤⣤⣄⣈⡙⠓⢤⣄⣀⡈⠉⠛⠒⠛⠒⠒⠛⠚⢉⣁⣠⣤⠾⠁⢀⣤⣾⣯⠲⢄⡀
+// ⢀⢀⢀⣠⢼⣿⣿⣿⡿⣿⣿⣦⣬⡙⠻⠿⣿⣟⠛⠛⠛⢛⣿⣿⠿⠿⢋⣉⣠⣼⣿⠿⣻⣿⣷⣬⡿⣀
+// ⢀⡰⣏⣾⣿⣿⣿⣿⡇⣿⣿⣿⣿⡇⠿⠇⣶⣿⠓⠒⠲⢾⡷⠰⠆⣿⣿⣿⣿⡿⠟⢀⣿⣿⣿⣿⣷⣬⠱⣆
+// ⣾⠃⣿⣿⣿⣿⣿⣿⣇⣬⣷⣶⣶⣶⢻⣷⠟⣿⢀⢀⢀⢸⡇⣾⡇⣿⢿⣿⣤⣶⣾⡀⢿⣿⣿⣿⣿⣿⡆⣿
+// ⠙⠢⣍⠻⢿⣿⣿⡇⣿⣿⣿⣿⣿⣿⣰⢞⡃⣿⢀⢀⢀⢸⡇⣛⢣⡟⣼⣿⣿⣿⣿⣿⢸⣿⣿⣿⣿⠿⢃⡿
+// ⢀⢀⢀⠙⢦⣄⣿⡇⠻⢿⣿⣿⣿⣿⣿⠸⠃⠿⢶⣶⣶⣾⣃⠟⢰⣿⣿⣿⣿⣿⡿⠋⣸⡿⠿⣯⣥⠞⠁
+// ⢀⢀⢀⢀⢀⠉⠙⠛⠦⣤⣬⣭⣭⣭⣽⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⢿⣿⣿⣿⡦⣴⠋⠙⠛⠁
+// ⢀⢀⢀⢀⢀⢀⢀⢰⡏⣾⡟⠃⣼⣿⣿⣿⣿⣿⣿⣟⢿⣿⣿⣿⣿⡇⢸⣿⣿⣿⣷⠉⡆
+// ⢀⢀⢀⢀⢀⢀⢀⡼⣧⣿⠇⣠⣿⣿⣿⣿⣿⣿⡇⣿⣼⢿⣿⣿⣿⡇⠈⣿⣿⣿⣿⣶⢳⡄
+// ⢀⢀⢀⢀⢀⢀⢸⡇⣿⣿⢀⣿⣿⣿⣿⣿⣿⣿⢰⡏⣿⢸⣿⣿⣿⣷⢀⣿⣿⣿⣿⣿⢸⡇
+// ⢀⢀⢀⢀⢀⢀⠈⠳⠶⠶⠶⣿⣿⣿⣿⣿⣿⣿⠞⠁⠻⢾⣿⣿⣿⣿⣤⣤⣿⡿⠶⠶⠞⠃
+// ⢀⢀⢀⢀⢀⡤⠚⠉⠉⠙⠒⠯⣉⠉⣶⢀⢀⢀⢀⢀⢀⢀⢀⣼⠃⠉⠉⠉⣩⠽⠖⠚⠉⠉⠒⠢⣄
+// ⢀⢀⢀⢀⢀⢀⢀⢀⢀⢀⢀⣀⠤⠔⠒⠊⠉⠉⠉⠉⠉⠉⠉⠉⠑⠒⠢⠤⣀`;
+
+const EXAMPLE_BIND = '';
 
 const Container = styled.div`
   position: relative;
@@ -58,29 +64,50 @@ const TextArea = styled.textarea`
     DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New;
   font-size: ${props => props.fontSize || 9}px;
   overflow: auto;
+  padding: 5px;
   width: 100%;
 `;
 
 const Section = styled.section`
-  &:not(:first-of-type) {
-    margin-left: 20px;
+  ${media.tablet} {
+    &:not(:first-of-type) {
+      margin-left: 20px;
+    }
   }
 `;
 
 const SectionsContainer = styled.div`
   display: flex;
+  margin-top: 20px;
 `;
 
-const GuideList = styled.ul``;
+const RulesList = styled.ul`
+  ${props => props.height && `height: ${props.height}px;`};
+`;
 
-const GuideItem = styled.li`
+const RulesItem = styled.li`
   margin: 0;
 `;
 
 const CycleBind = () => {
-  const [textAreaValue, setTextAreaValue] = useState(EXAMPLE_BIND);
   const [bindName, setBindName] = useState('');
-  const [cycleBind, setCycleBind] = useState('');
+  const [cycleText, setTextAreaValue] = useState(EXAMPLE_BIND);
+  const [cycleScript, setCycleBind] = useState('');
+  const [rulesHeight, setRulesHeight] = useState();
+
+  const inputRulesRef = useRef(null);
+  const outputRulesRef = useRef(null);
+
+  const updateRulesHeight = () => {
+    if (inputRulesRef.current && outputRulesRef.current) {
+      setRulesHeight(
+        Math.max(
+          inputRulesRef.current.clientHeight,
+          outputRulesRef.current.clientHeight
+        )
+      );
+    }
+  };
 
   const getDownloadAttributes = debounce(
     contents => {
@@ -125,10 +152,8 @@ const CycleBind = () => {
     [bindName]
   );
 
-  const FONT_MIN = 9;
-  const FONT_MAX = 13;
-  const longestLineLength = textAreaValue
-    ? textAreaValue.split('\n').reduce((result, line) => {
+  const longestLineLength = cycleText
+    ? cycleText.split('\n').reduce((result, line) => {
         return Math.max(result, line.length);
       }, 0)
     : 0;
@@ -141,15 +166,16 @@ const CycleBind = () => {
     )
   );
 
-  const downloadAttrs = getDownloadAttributes(cycleBind);
+  const downloadAttrs = getDownloadAttributes(cycleScript);
 
   useEffect(() => {
-    handleGenerateScript(textAreaValue);
+    handleGenerateScript(cycleText);
+    updateRulesHeight();
 
     return () => {
       downloadAttrs.revoke();
     };
-  }, [downloadAttrs, handleGenerateScript, textAreaValue]);
+  }, [downloadAttrs, handleGenerateScript, cycleText]);
 
   return (
     <Container>
@@ -165,6 +191,7 @@ const CycleBind = () => {
         css={`
           margin-left: 5px;
         `}
+        disabled={!cycleScript}
       >
         Copy <i className="fas fa-copy" />
       </Button>
@@ -184,22 +211,20 @@ const CycleBind = () => {
           `}
         >
           <SectionHeader>Input</SectionHeader>
-          <GuideList>
-            <GuideItem>Each output on a new line.</GuideItem>
-            <GuideItem>
-              {' '}
-              Max {MAX_CHARS_PER_LINE} characters per line.
-            </GuideItem>
-            <GuideItem>
+          <RulesList height={rulesHeight} ref={inputRulesRef}>
+            <RulesItem>Each output on a new line.</RulesItem>
+            <RulesItem>Max {MAX_CHARS_PER_LINE} characters per line.</RulesItem>
+            <RulesItem>
               For ASCII art, use {IDEAL_CHARS_PER_LINE} characters per line.
-            </GuideItem>
-          </GuideList>
+            </RulesItem>
+          </RulesList>
           <TextArea
             cols={120}
             fontSize={fontSize}
             onChange={handleTextAreaChange}
-            rows={Math.max(MIN_ROWS, countLines(textAreaValue))}
-            value={textAreaValue}
+            placeholder="Enter text to print here"
+            rows={Math.max(MIN_ROWS, countLines(cycleText))}
+            value={cycleText}
             wrap="off"
           />
         </Section>
@@ -209,16 +234,16 @@ const CycleBind = () => {
           `}
         >
           <SectionHeader>Output</SectionHeader>
-          <GuideList>
-            <GuideItem>Replace `KEY` with the key you'll use.</GuideItem>
-          </GuideList>
+          <RulesList height={rulesHeight} ref={outputRulesRef}>
+            <RulesItem>Replace `KEY` with the key you'll use.</RulesItem>
+          </RulesList>
           <TextArea
             fontSize={fontSize}
             id="cycle-script"
-            placeholder="TF2 Script Output Will Appear Here"
+            placeholder="TF2 script output will appear here"
             readOnly
-            rows={Math.max(MIN_ROWS, countLines(cycleBind))}
-            value={cycleBind}
+            rows={Math.max(MIN_ROWS, countLines(cycleScript))}
+            value={cycleScript}
             wrap="off"
           />
         </Section>
