@@ -1,6 +1,7 @@
 /* eslint-disable sort-keys */
 const breakpoints = {
   mobile: 0,
+  largeMobile: 540,
   tablet: 768,
   desktop: 992,
 };

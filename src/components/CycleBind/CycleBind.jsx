@@ -3,22 +3,14 @@ import React, { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 import { Button, ButtonLink } from '../common';
-
-const countLines = text => (text ? text.split('\n').length : 0);
-
-const MAX_CHARS_PER_LINE = 127;
-const BEST_CHARS_PER_LINE = 82;
-const MIN_ROWS = 10;
-
-const alertLength = debounce(
-  line => {
-    alert(`Line greater than ${MAX_CHARS_PER_LINE} characters: ${line}`);
-  },
-  5000,
-  {
-    leading: true,
-  }
-);
+import {
+  countLines,
+  createCycleBind,
+  IDEAL_CHARS_PER_LINE,
+  MAX_CHARS_PER_LINE,
+  MIN_ROWS,
+  validateLines,
+} from './util';
 
 const EXAMPLE_BIND = `⢀⢀⢀⢀⢀⢀⢀⢀⢀⣠⠞⠋⢀⢀⢀⢀⢀⢀⢀⢀⢀⢀⢀⢀⢀⢀⢀⢀⠉⠳⢄
 ⢀⢀⢀⢀⢀⢀⢀⢀⣶⠉⢀⢀⢀⣀⣀⣀⣀⢀⢀⢀⢀⢀⢀⣀⣀⣀⣀⡀⢀⢀⠈⣶
@@ -65,59 +57,25 @@ const TextArea = styled.textarea`
   font-family: Consolas, Monaco, Lucida Console, Liberation Mono,
     DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New;
   font-size: ${props => props.fontSize || 9}px;
-  width: 40%;
+  overflow: auto;
+  width: 100%;
 `;
 
-const validateLines = lines => {
-  lines.forEach(line => {
-    if (line.length > MAX_CHARS_PER_LINE) {
-      alertLength(line);
-      return false;
-    }
-  });
+const Section = styled.section`
+  &:not(:first-of-type) {
+    margin-left: 20px;
+  }
+`;
 
-  return true;
-};
+const SectionsContainer = styled.div`
+  display: flex;
+`;
 
-const createAliasName = (bindName, index) => {
-  return index !== undefined ? `say${bindName}${index}` : `say${bindName}`;
-};
+const GuideList = styled.ul``;
 
-const createSayCommand = (name, text) => {
-  return `alias ${name} "say ${text}"`;
-};
-
-const createCycleBind = (lines, _bindName) => {
-  const bindName = !_bindName || !_bindName.length ? 'CycleBind' : _bindName;
-  const bindCommandName = `bind${bindName}`;
-
-  const sayCommands = lines.map((text, index) => {
-    const name = createAliasName(bindName, index);
-    return createSayCommand(name, text);
-  });
-
-  const bindCommands = lines.map((_, index) => {
-    const nextIndex = index === sayCommands.length - 1 ? 0 : index + 1;
-
-    return `alias ${bindCommandName}${index} "${createAliasName(
-      bindName,
-      index
-    )}; alias ${bindCommandName} ${bindCommandName}${nextIndex};"`;
-  });
-
-  return lines && lines.length
-    ? `${sayCommands.join('\n')}
-    
-${bindCommands.join('\n')}
-
-alias ${bindCommandName} ${bindCommandName}0
-
-bind KEY ${bindCommandName}
-
-echo ">>> ${bindName} loaded."
-`
-    : '';
-};
+const GuideItem = styled.li`
+  margin: 0;
+`;
 
 const CycleBind = () => {
   const [textAreaValue, setTextAreaValue] = useState(EXAMPLE_BIND);
@@ -193,12 +151,10 @@ const CycleBind = () => {
     };
   }, [downloadAttrs, handleGenerateScript, textAreaValue]);
 
-  const Section = styled.section``;
-
   return (
     <Container>
       <Header>CycleBind</Header>
-      <Label for="bind-name">Name for bind (optional):&nbsp;</Label>
+      <Label htmlFor="bind-name">Name for bind (optional):&nbsp;</Label>
       <Input
         id="bind-name"
         onChange={handleChangeBindName}
@@ -220,39 +176,53 @@ const CycleBind = () => {
       >
         Download <i className="fas fa-download" />
       </ButtonLink>
-      <Section>
-        <SectionHeader>Input</SectionHeader>
-        <Label for="cycle-text">
-          Each output on a new line. Max {MAX_CHARS_PER_LINE} characters per
-          line. For art use {BEST_CHARS_PER_LINE}.
-        </Label>
-        <TextArea
-          cols={120}
-          fontSize={fontSize}
-          id="cycle-text"
-          onChange={handleTextAreaChange}
-          rows={Math.max(MIN_ROWS, countLines(textAreaValue))}
-          value={textAreaValue}
-        />
-      </Section>
-      <Section>
-        <SectionHeader>Output</SectionHeader>
-        <Label
+      <SectionsContainer>
+        <Section
           css={`
-            margin-top: 10px;
+            flex: 2 0 auto;
+            max-width: 40%;
           `}
-          for="cycle-script"
         >
-          Replace `KEY` with the key you'll use:
-        </Label>
-        <TextArea
-          fontSize={fontSize}
-          id="cycle-script"
-          readOnly
-          rows={Math.max(MIN_ROWS, countLines(cycleBind))}
-          value={cycleBind}
-        />
-      </Section>
+          <SectionHeader>Input</SectionHeader>
+          <GuideList>
+            <GuideItem>Each output on a new line.</GuideItem>
+            <GuideItem>
+              {' '}
+              Max {MAX_CHARS_PER_LINE} characters per line.
+            </GuideItem>
+            <GuideItem>
+              For ASCII art, use {IDEAL_CHARS_PER_LINE} characters per line.
+            </GuideItem>
+          </GuideList>
+          <TextArea
+            cols={120}
+            fontSize={fontSize}
+            onChange={handleTextAreaChange}
+            rows={Math.max(MIN_ROWS, countLines(textAreaValue))}
+            value={textAreaValue}
+            wrap="off"
+          />
+        </Section>
+        <Section
+          css={`
+            flex: 1 3 auto;
+          `}
+        >
+          <SectionHeader>Output</SectionHeader>
+          <GuideList>
+            <GuideItem>Replace `KEY` with the key you'll use.</GuideItem>
+          </GuideList>
+          <TextArea
+            fontSize={fontSize}
+            id="cycle-script"
+            placeholder="TF2 Script Output Will Appear Here"
+            readOnly
+            rows={Math.max(MIN_ROWS, countLines(cycleBind))}
+            value={cycleBind}
+            wrap="off"
+          />
+        </Section>
+      </SectionsContainer>
     </Container>
   );
 };
