@@ -1,3 +1,4 @@
+import extraPages from 'extraPages';
 import { graphql, Link, StaticQuery } from 'gatsby';
 import React from 'react';
 import styled from 'styled-components';
@@ -53,34 +54,51 @@ const CategoryLink = styled(Link)`
   }
 `;
 
-const SideContent = ({ activeMenu }) => (
-  <StaticQuery
-    query={query}
-    render={data => {
-      const categories = data.allMarkdownRemark.nodes.map(
-        node => node.fields.category
-      );
+const HorizontalLine = styled.hr`
+  background-color: ${props => props.theme.side.defaultText};
+  margin: 10px 0 10px 0;
+`;
 
-      return (
-        <StyledSideContent>
-          {categories.sort(byCategoryPriority).map(category => {
-            const isActive = activeMenu === category;
-            return (
+const SideContent = ({ activeMenu }) => {
+  const isActive = value => value === activeMenu;
+
+  return (
+    <StaticQuery
+      query={query}
+      render={data => {
+        const categories = data.allMarkdownRemark.nodes.map(
+          node => node.fields.category
+        );
+
+        return (
+          <StyledSideContent>
+            {categories.sort(byCategoryPriority).map(category => (
               <CategoryLink
-                active={isActive ? 1 : 0}
+                active={isActive(category) ? 1 : 0}
                 key={category}
                 to={`/${pathCase(category)}`}
               >
                 <i className="fas fa-hashtag fa-fw" />
                 <span>{category}</span>
               </CategoryLink>
-            );
-          })}
-        </StyledSideContent>
-      );
-    }}
-  />
-);
+            ))}
+            <HorizontalLine />
+            {extraPages.map(page => (
+              <CategoryLink
+                active={isActive(page.name) ? 1 : 0}
+                key={page.name}
+                to={`/${pathCase(page.path)}`}
+              >
+                <i className="fas fa-hashtag fa-fw" />
+                <span>{page.name}</span>
+              </CategoryLink>
+            ))}
+          </StyledSideContent>
+        );
+      }}
+    />
+  );
+};
 
 const query = graphql`
   query {
