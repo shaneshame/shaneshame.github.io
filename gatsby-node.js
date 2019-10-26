@@ -1,3 +1,4 @@
+const extraPages = require('./extra-pages.js');
 const { pathCase, replaceTrailingSlash } = require('./src/utils/nodeUtil');
 const path = require(`path`);
 const { createFilePath } = require(`gatsby-source-filesystem`);
@@ -161,6 +162,16 @@ exports.createPages = async ({ graphql, actions }) => {
       items: tagEdges,
       itemsPerPage: siteConfig.postsPerPage,
       pathPrefix: `/tags/${tag}`,
+    });
+  });
+
+  extraPages.forEach(page => {
+    createPage({
+      component: path.resolve(`./src/components/templates/${page.template}`),
+      context: {
+        slug: page.path,
+      },
+      path: page.path,
     });
   });
 };
