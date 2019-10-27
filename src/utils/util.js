@@ -7,6 +7,14 @@ export const upperFirst = (str = '') => {
   return `${str[0].toUpperCase()}${str.slice(1)}`;
 };
 
+export const stringBoolean = value => {
+  if (value && typeof value === 'string') {
+    if (value.toLowerCase() === 'true') return true;
+    if (value.toLowerCase() === 'false') return false;
+  }
+  return value;
+};
+
 export const pascalCase = str => upperFirst(camelCase(str));
 
 export const sentenceCase = (str = '') => upperFirst(str.toLowerCase());

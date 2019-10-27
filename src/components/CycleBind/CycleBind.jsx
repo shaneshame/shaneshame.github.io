@@ -5,7 +5,14 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { media } from 'utils';
 
-import { Button, ButtonLink, Input, TextArea } from '../common';
+import {
+  Button,
+  ButtonLink,
+  Input,
+  RadioGroup,
+  RadioItem,
+  TextArea,
+} from '../common';
 import {
   countLines,
   createCycleBind,
@@ -42,7 +49,14 @@ const FONT_MAX = 13;
 // ⢀⢀⢀⢀⢀⡤⠚⠉⠉⠙⠒⠯⣉⠉⣶⢀⢀⢀⢀⢀⢀⢀⢀⣼⠃⠉⠉⠉⣩⠽⠖⠚⠉⠉⠒⠢⣄
 // ⢀⢀⢀⢀⢀⢀⢀⢀⢀⢀⢀⣀⠤⠔⠒⠊⠉⠉⠉⠉⠉⠉⠉⠉⠑⠒⠢⠤⣀`;
 
-const EXAMPLE_BIND = '';
+const EXAMPLE_BIND = `A cycle bind sends one message at a time
+Each time you press it, it says the next line here.
+You can say lots of important things to everyone.
+Make sure you pause after each press.
+The game gives you a hidden cooldown between chat messages.
+Every time you press it, it moves on to the next message.
+If you press it too fast, you'll rotate past the next
+message you want to send.`;
 
 const Container = styled.div`
   position: relative;
@@ -123,6 +137,9 @@ const CycleBind = () => {
     bindName: null,
     cycleScript: null,
     cycleText: null,
+  });
+  const [settings, setSettings] = useState({
+    ignoreEmptyLines: true,
   });
   const inputRulesRef = useRef(null);
   const outputRulesRef = useRef(null);
@@ -238,6 +255,14 @@ const CycleBind = () => {
     )
   );
 
+  const setSetting = setting => value => {
+    console.log('value', value);
+    setSettings({
+      ...settings,
+      [setting]: value,
+    });
+  };
+
   const downloadAttrs = getDownloadAttributes(cycleScript);
 
   useEffect(() => {
@@ -288,6 +313,22 @@ const CycleBind = () => {
           Download&nbsp;
           <i className="fas fa-download" />
         </ButtonLink>
+        <RadioGroup onChange={setSetting('ignoreEmptyLines')}>
+          <RadioItem
+            checked={settings.ignoreEmptyLines}
+            id="ignore"
+            value={true}
+          >
+            Ignore
+          </RadioItem>
+          <RadioItem
+            checked={!settings.ignoreEmptyLines}
+            id="dont-ignore"
+            value={false}
+          >
+            Don't Ignore
+          </RadioItem>
+        </RadioGroup>
       </div>
       <SectionsContainer>
         <Section
@@ -327,7 +368,16 @@ const CycleBind = () => {
         >
           <SectionHeader>Output</SectionHeader>
           <RulesList height={rulesHeight} ref={outputRulesRef}>
-            <RulesItem>Replace `KEY` with the key you'll use.</RulesItem>
+            <RulesItem>
+              Replace `KEY` with the name of the key you'll use.
+            </RulesItem>
+            <RulesItem>
+              The names of the keys&nbsp;
+              <a href="https://wiki.teamfortress.com/wiki/Scripting#List_of_key_names">
+                can be found here
+              </a>
+              .
+            </RulesItem>
           </RulesList>
           <CodeArea
             fontSize={fontSize}
