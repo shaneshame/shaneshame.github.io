@@ -1,18 +1,15 @@
-/* eslint-disable sort-keys */
-const breakpoints = {
-  mobile: 0,
-  largeMobile: 540,
-  tablet: 768,
-  desktop: 992,
-};
+import theme from './theme';
 
 const breakpoint = minWidth => `@media (min-width: ${minWidth / 16}em)`;
 
-const media = Object.entries(breakpoints).reduce((acc, [label, value]) => {
-  acc[label] = breakpoint(value);
+const media = Object.entries(theme.breakpoints).reduce(
+  (acc, [label, value]) => {
+    acc[label] = breakpoint(value);
 
-  return acc;
-}, {});
+    return acc;
+  },
+  {}
+);
 
 export { breakpoint };
 export default media;

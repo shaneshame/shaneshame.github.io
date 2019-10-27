@@ -1,16 +1,22 @@
-import { debounce } from 'lodash';
+import clsx from 'clsx';
+import { useClipboard } from 'hooks';
+import { debounce, get } from 'lodash';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { media } from 'utils';
 
-import { Button, ButtonLink } from '../common';
+import { Button, ButtonLink, Input, TextArea } from '../common';
 import {
   countLines,
   createCycleBind,
+  DEFAULT_BINDNAME,
+  DEFAULT_FILENAME,
+  getLines,
   IDEAL_CHARS_PER_LINE,
   MAX_CHARS_PER_LINE,
   MIN_ROWS,
-  validateLines,
+  validateBindName,
+  validateTextArea,
 } from './util';
 
 const FONT_MIN = 9;
@@ -50,22 +56,22 @@ const SectionHeader = styled.h3`
   margin: 10px 0;
 `;
 
-const Input = styled.input`
-  margin: 0 0 0 0;
-`;
-
 const Label = styled.label`
   display: block;
 `;
 
-const TextArea = styled.textarea`
-  display: block;
+const CodeArea = styled(TextArea)`
   font-family: Consolas, Monaco, Lucida Console, Liberation Mono,
     DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New;
   font-size: ${props => props.fontSize || 9}px;
-  overflow: auto;
-  padding: 5px;
   width: 100%;
+`;
+
+const SectionsContainer = styled.div`
+  ${media.tablet} {
+    display: flex;
+    margin-top: 20px;
+  }
 `;
 
 const Section = styled.section`
@@ -76,27 +82,56 @@ const Section = styled.section`
   }
 `;
 
-const SectionsContainer = styled.div`
-  display: flex;
-  margin-top: 20px;
-`;
-
 const RulesList = styled.ul`
-  ${props => props.height && `height: ${props.height}px;`};
+  ${media.tablet} {
+    ${props => props.height && `height: ${props.height}px;`}
+  }
 `;
 
 const RulesItem = styled.li`
   margin: 0;
 `;
 
+const CopyButton = ({ className, clipboardStatus, disabled, onClick }) => {
+  return (
+    <Button
+      className={clsx(className, {
+        error: clipboardStatus === false,
+        success: clipboardStatus === true,
+      })}
+      disabled={disabled}
+      onClick={onClick}
+    >
+      Copy&nbsp;
+      <i
+        className={clsx('fas', {
+          'fa-check': clipboardStatus === true,
+          'fa-copy': clipboardStatus === undefined,
+          'fa-times': clipboardStatus === false,
+        })}
+      />
+    </Button>
+  );
+};
+
 const CycleBind = () => {
   const [bindName, setBindName] = useState('');
   const [cycleText, setTextAreaValue] = useState(EXAMPLE_BIND);
   const [cycleScript, setCycleBind] = useState('');
   const [rulesHeight, setRulesHeight] = useState();
-
+  const [formErrors, setFormErrors] = useState({
+    bindName: null,
+    cycleScript: null,
+    cycleText: null,
+  });
   const inputRulesRef = useRef(null);
   const outputRulesRef = useRef(null);
+
+  const {
+    clipboardStatus,
+    copyToClipboard,
+    setClipboardStatus,
+  } = useClipboard();
 
   const updateRulesHeight = () => {
     if (inputRulesRef.current && outputRulesRef.current) {
@@ -112,13 +147,18 @@ const CycleBind = () => {
   const getDownloadAttributes = debounce(
     contents => {
       const file =
-        typeof Blob !== 'undefined'
+        typeof Blob !== 'undefined' && contents && contents.length
           ? new Blob([contents], { type: 'text/plain' })
           : null;
       const url = file ? URL.createObjectURL(file) : '';
+      const fileName = url
+        ? bindName
+          ? `${bindName.toLowerCase()}.cfg`
+          : DEFAULT_FILENAME
+        : 'empty';
 
       return {
-        download: bindName ? `${bindName.toLowerCase()}.cfg` : 'cyclebind.cfg',
+        download: fileName,
         href: url,
         revoke: () => {
           url && URL.revokeObjectURL(url);
@@ -131,29 +171,61 @@ const CycleBind = () => {
 
   const handleTextAreaChange = e => {
     const text = e.target.value;
+    const isValid = validateTextArea(text);
+
+    if (isValid) {
+      setFormErrors({
+        ...formErrors,
+        cycleText: null,
+      });
+      handleGenerateScript(text);
+    } else {
+      setFormErrors({
+        ...formErrors,
+        cycleText: `Max line length is ${MAX_CHARS_PER_LINE}.`,
+      });
+    }
+
     setTextAreaValue(text);
-    handleGenerateScript(text);
+
+    setClipboardStatus();
   };
 
   const handleChangeBindName = e => {
-    setBindName(e.target.value);
+    const newBindName = e.target.value;
+    const validation = validateBindName(newBindName);
+
+    validation
+      .then(() => {
+        setFormErrors({
+          ...formErrors,
+          bindName: null,
+        });
+      })
+      .catch(error => {
+        setFormErrors({
+          ...formErrors,
+          bindName: error,
+        });
+      })
+      .finally(() => {
+        setBindName(newBindName);
+        setClipboardStatus();
+      });
   };
 
   const handleGenerateScript = useCallback(
-    textAreaContents => {
-      const lines = textAreaContents ? textAreaContents.split('\n') : [];
-      const isValid = validateLines(lines);
-
-      if (isValid) {
-        const fileContents = createCycleBind(lines, bindName);
+    text => {
+      if (!formErrors.cycleText) {
+        const fileContents = createCycleBind(text, bindName);
         setCycleBind(fileContents);
       }
     },
-    [bindName]
+    [bindName, formErrors.cycleText]
   );
 
   const longestLineLength = cycleText
-    ? cycleText.split('\n').reduce((result, line) => {
+    ? getLines(cycleText).reduce((result, line) => {
         return Math.max(result, line.length);
       }, 0)
     : 0;
@@ -180,35 +252,52 @@ const CycleBind = () => {
   return (
     <Container>
       <Header>CycleBind</Header>
-      <Label htmlFor="bind-name">Name for bind (optional):&nbsp;</Label>
+      <Label
+        css={`
+          display: inline-block;
+        `}
+        htmlFor="bind-name"
+      >
+        Name for bind (optional):&nbsp;
+      </Label>
       <Input
+        error={get(formErrors, 'bindName.message')}
         id="bind-name"
         onChange={handleChangeBindName}
+        placeholder={DEFAULT_BINDNAME}
         type="text"
         value={bindName}
       />
-      <Button
+      <div
         css={`
-          margin-left: 5px;
+          margin-top: 20px;
         `}
-        disabled={!cycleScript}
       >
-        Copy <i className="fas fa-copy" />
-      </Button>
-      <ButtonLink
-        disabled={!cycleScript}
-        download={downloadAttrs.download}
-        href={cycleScript && downloadAttrs.href}
-        rel="noopener noreferrer"
-        target="_blank"
-      >
-        Download <i className="fas fa-download" />
-      </ButtonLink>
+        <CopyButton
+          clipboardStatus={clipboardStatus}
+          disabled={!cycleScript}
+          onClick={() => copyToClipboard(cycleScript)}
+        />
+        <ButtonLink
+          disabled={!cycleScript}
+          download={downloadAttrs.download}
+          href={downloadAttrs.href}
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          Download&nbsp;
+          <i className="fas fa-download" />
+        </ButtonLink>
+      </div>
       <SectionsContainer>
         <Section
           css={`
-            flex: 2 0 auto;
-            max-width: 40%;
+            max-width: 100%;
+
+            ${media.tablet} {
+              flex: 2 0 auto;
+              max-width: 40%;
+            }
           `}
         >
           <SectionHeader>Input</SectionHeader>
@@ -219,7 +308,7 @@ const CycleBind = () => {
               For ASCII art, use {IDEAL_CHARS_PER_LINE} characters per line.
             </RulesItem>
           </RulesList>
-          <TextArea
+          <CodeArea
             cols={120}
             fontSize={fontSize}
             onChange={handleTextAreaChange}
@@ -231,14 +320,16 @@ const CycleBind = () => {
         </Section>
         <Section
           css={`
-            flex: 1 3 auto;
+            ${media.tablet} {
+              flex: 1 3 auto;
+            }
           `}
         >
           <SectionHeader>Output</SectionHeader>
           <RulesList height={rulesHeight} ref={outputRulesRef}>
             <RulesItem>Replace `KEY` with the key you'll use.</RulesItem>
           </RulesList>
-          <TextArea
+          <CodeArea
             fontSize={fontSize}
             id="cycle-script"
             placeholder="TF2 script output will appear here"

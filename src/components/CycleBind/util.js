@@ -1,25 +1,29 @@
-import { debounce } from 'lodash';
+import { pascalCase } from 'utils';
+import * as yup from 'yup';
 
-const MAX_CHARS_PER_LINE = 127;
+const DEFAULT_BINDNAME = 'MyAwesomeBind';
+const DEFAULT_FILENAME = 'cyclebind.cfg';
 const IDEAL_CHARS_PER_LINE = 82;
+const MAX_CHARS_PER_LINE = 127;
 const MIN_ROWS = 10;
 
-const countLines = text => (text ? text.split('\n').length : 0);
+const getLines = text => (text ? text.split('\n') : []);
+const countLines = text => getLines(text).length;
 
-const alertLength = debounce(
-  line => {
-    alert(`Line greater than ${MAX_CHARS_PER_LINE} characters: ${line}`);
-  },
-  5000,
-  {
-    leading: true,
-  }
-);
+const bindNameSchema = yup.string().matches(/^\S+$/, {
+  excludeEmptyString: true,
+  message: 'Bind name cannot contain spaces.',
+});
 
-const validateLines = lines => {
+const validateBindName = bindName => {
+  return bindNameSchema.validate(bindName);
+};
+
+const validateTextArea = text => {
+  const lines = getLines(text);
+
   lines.forEach(line => {
     if (line.length > MAX_CHARS_PER_LINE) {
-      alertLength(line);
       return false;
     }
   });
@@ -28,16 +32,21 @@ const validateLines = lines => {
 };
 
 const createAliasName = (bindName, index) => {
-  return index !== undefined ? `say${bindName}${index}` : `say${bindName}`;
+  const casedBindName = pascalCase(bindName);
+  return index !== undefined
+    ? `say${casedBindName}${index}`
+    : `say${casedBindName}`;
 };
 
 const createSayCommand = (name, text) => {
   return `alias ${name} "say ${text}"`;
 };
 
-const createCycleBind = (lines, _bindName) => {
-  const bindName = !_bindName || !_bindName.length ? 'CycleBind' : _bindName;
-  const bindCommandName = `bind${bindName}`;
+const createCycleBind = (text, _bindName) => {
+  const lines = getLines(text);
+  const bindName =
+    !_bindName || !_bindName.length ? DEFAULT_BINDNAME : _bindName;
+  const bindCommandName = `bind${pascalCase(bindName)}`;
 
   const sayCommands = lines.map((text, index) => {
     const name = createAliasName(bindName, index);
@@ -70,8 +79,12 @@ echo ">>> ${bindName} loaded."
 export {
   countLines,
   createCycleBind,
+  DEFAULT_BINDNAME,
+  DEFAULT_FILENAME,
+  getLines,
   IDEAL_CHARS_PER_LINE,
   MAX_CHARS_PER_LINE,
   MIN_ROWS,
-  validateLines,
+  validateBindName,
+  validateTextArea,
 };

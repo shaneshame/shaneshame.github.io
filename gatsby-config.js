@@ -116,6 +116,7 @@ module.exports = {
         // src: `${__dirname}/src`,
         // themes: `${__dirname}/src/themes`,
         extraPages: `${__dirname}/extra-pages.js`,
+        hooks: `${__dirname}/src/hooks`,
         utils: `${__dirname}/src/utils`,
         nodeUtil: `${__dirname}/src/utils/nodeUtil`,
       },

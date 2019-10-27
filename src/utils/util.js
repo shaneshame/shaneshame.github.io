@@ -1,4 +1,4 @@
-import { get, identity } from 'lodash';
+import { camelCase, get, identity } from 'lodash';
 import { PATH_NORMALIZER } from 'nodeUtil';
 
 import { CATEGORY_PRIORITIES } from './config';
@@ -6,6 +6,8 @@ import { CATEGORY_PRIORITIES } from './config';
 export const upperFirst = (str = '') => {
   return `${str[0].toUpperCase()}${str.slice(1)}`;
 };
+
+export const pascalCase = str => upperFirst(camelCase(str));
 
 export const sentenceCase = (str = '') => upperFirst(str.toLowerCase());
 
