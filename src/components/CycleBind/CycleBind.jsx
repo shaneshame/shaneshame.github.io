@@ -5,14 +5,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { media } from 'utils';
 
-import {
-  Button,
-  ButtonLink,
-  Input,
-  RadioGroup,
-  RadioItem,
-  TextArea,
-} from '../common';
+import { Button, ButtonLink, Checkbox, Input, TextArea } from '../common';
 import {
   countLines,
   createCycleBind,
@@ -23,40 +16,39 @@ import {
   MAX_CHARS_PER_LINE,
   MIN_ROWS,
   validateBindName,
-  validateTextArea,
+  validateCycleText,
 } from './util';
 
 const FONT_MIN = 9;
 const FONT_MAX = 13;
 
-// const EXAMPLE_BIND = `⢀⢀⢀⢀⢀⢀⢀⢀⢀⣠⠞⠋⢀⢀⢀⢀⢀⢀⢀⢀⢀⢀⢀⢀⢀⢀⢀⢀⠉⠳⢄
-// ⢀⢀⢀⢀⢀⢀⢀⢀⣶⠉⢀⢀⢀⣀⣀⣀⣀⢀⢀⢀⢀⢀⢀⣀⣀⣀⣀⡀⢀⢀⠈⣶
-// ⢀⢀⢀⢀⢀⢀⢀⢀⣿⢀⢰⣿⣿⣿⠿⢿⣿⣿⢀⢀⢀⢀⣿⣿⡿⠿⣿⣿⣿⡆⢀⣿
-// ⢀⢀⢀⢀⢀⢀⢀⢀⠉⢶⡈⠛⠻⠿⠶⢾⡿⠉⢀⣶⣶⡀⠉⢿⡷⠶⠿⠟⠛⢁⡰⠉
-// ⢀⢀⢀⢀⢀⢀⢀⢀⢀⣾⠁⣀⣰⣦⣉⡁⢀⢀⠘⠛⠛⠃⢀⢀⠈⢉⣰⣦⣀⠈⢳
-// ⢀⢀⢀⢀⢀⢀⣠⠤⠴⣿⡄⠉⠙⠣⣿⡙⠒⣶⠒⣶⠒⠒⣶⠒⢲⣏⠟⠋⠉⢠⡾⠓⠒⠢⣀
-// ⢀⢀⢀⢀⠠⣟⣤⣤⣄⣈⡙⠓⢤⣄⣀⡈⠉⠛⠒⠛⠒⠒⠛⠚⢉⣁⣠⣤⠾⠁⢀⣤⣾⣯⠲⢄⡀
-// ⢀⢀⢀⣠⢼⣿⣿⣿⡿⣿⣿⣦⣬⡙⠻⠿⣿⣟⠛⠛⠛⢛⣿⣿⠿⠿⢋⣉⣠⣼⣿⠿⣻⣿⣷⣬⡿⣀
-// ⢀⡰⣏⣾⣿⣿⣿⣿⡇⣿⣿⣿⣿⡇⠿⠇⣶⣿⠓⠒⠲⢾⡷⠰⠆⣿⣿⣿⣿⡿⠟⢀⣿⣿⣿⣿⣷⣬⠱⣆
-// ⣾⠃⣿⣿⣿⣿⣿⣿⣇⣬⣷⣶⣶⣶⢻⣷⠟⣿⢀⢀⢀⢸⡇⣾⡇⣿⢿⣿⣤⣶⣾⡀⢿⣿⣿⣿⣿⣿⡆⣿
-// ⠙⠢⣍⠻⢿⣿⣿⡇⣿⣿⣿⣿⣿⣿⣰⢞⡃⣿⢀⢀⢀⢸⡇⣛⢣⡟⣼⣿⣿⣿⣿⣿⢸⣿⣿⣿⣿⠿⢃⡿
-// ⢀⢀⢀⠙⢦⣄⣿⡇⠻⢿⣿⣿⣿⣿⣿⠸⠃⠿⢶⣶⣶⣾⣃⠟⢰⣿⣿⣿⣿⣿⡿⠋⣸⡿⠿⣯⣥⠞⠁
-// ⢀⢀⢀⢀⢀⠉⠙⠛⠦⣤⣬⣭⣭⣭⣽⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⢿⣿⣿⣿⡦⣴⠋⠙⠛⠁
-// ⢀⢀⢀⢀⢀⢀⢀⢰⡏⣾⡟⠃⣼⣿⣿⣿⣿⣿⣿⣟⢿⣿⣿⣿⣿⡇⢸⣿⣿⣿⣷⠉⡆
-// ⢀⢀⢀⢀⢀⢀⢀⡼⣧⣿⠇⣠⣿⣿⣿⣿⣿⣿⡇⣿⣼⢿⣿⣿⣿⡇⠈⣿⣿⣿⣿⣶⢳⡄
-// ⢀⢀⢀⢀⢀⢀⢸⡇⣿⣿⢀⣿⣿⣿⣿⣿⣿⣿⢰⡏⣿⢸⣿⣿⣿⣷⢀⣿⣿⣿⣿⣿⢸⡇
-// ⢀⢀⢀⢀⢀⢀⠈⠳⠶⠶⠶⣿⣿⣿⣿⣿⣿⣿⠞⠁⠻⢾⣿⣿⣿⣿⣤⣤⣿⡿⠶⠶⠞⠃
-// ⢀⢀⢀⢀⢀⡤⠚⠉⠉⠙⠒⠯⣉⠉⣶⢀⢀⢀⢀⢀⢀⢀⢀⣼⠃⠉⠉⠉⣩⠽⠖⠚⠉⠉⠒⠢⣄
-// ⢀⢀⢀⢀⢀⢀⢀⢀⢀⢀⢀⣀⠤⠔⠒⠊⠉⠉⠉⠉⠉⠉⠉⠉⠑⠒⠢⠤⣀`;
+const EXAMPLE_BIND = `⢀⢀⢀⢀⢀⢀⢀⢀⢀⣠⠞⠋⢀⢀⢀⢀⢀⢀⢀⢀⢀⢀⢀⢀⢀⢀⢀⢀⠉⠳⢄
+⢀⢀⢀⢀⢀⢀⢀⢀⣶⠉⢀⢀⢀⣀⣀⣀⣀⢀⢀⢀⢀⢀⢀⣀⣀⣀⣀⡀⢀⢀⠈⣶
+⢀⢀⢀⢀⢀⢀⢀⢀⣿⢀⢰⣿⣿⣿⠿⢿⣿⣿⢀⢀⢀⢀⣿⣿⡿⠿⣿⣿⣿⡆⢀⣿
+⢀⢀⢀⢀⢀⢀⢀⢀⠉⢶⡈⠛⠻⠿⠶⢾⡿⠉⢀⣶⣶⡀⠉⢿⡷⠶⠿⠟⠛⢁⡰⠉
+⢀⢀⢀⢀⢀⢀⢀⢀⢀⣾⠁⣀⣰⣦⣉⡁⢀⢀⠘⠛⠛⠃⢀⢀⠈⢉⣰⣦⣀⠈⢳
+⢀⢀⢀⢀⢀⢀⣠⠤⠴⣿⡄⠉⠙⠣⣿⡙⠒⣶⠒⣶⠒⠒⣶⠒⢲⣏⠟⠋⠉⢠⡾⠓⠒⠢⣀
+⢀⢀⢀⢀⠠⣟⣤⣤⣄⣈⡙⠓⢤⣄⣀⡈⠉⠛⠒⠛⠒⠒⠛⠚⢉⣁⣠⣤⠾⠁⢀⣤⣾⣯⠲⢄⡀
+⢀⢀⢀⣠⢼⣿⣿⣿⡿⣿⣿⣦⣬⡙⠻⠿⣿⣟⠛⠛⠛⢛⣿⣿⠿⠿⢋⣉⣠⣼⣿⠿⣻⣿⣷⣬⡿⣀
+⢀⡰⣏⣾⣿⣿⣿⣿⡇⣿⣿⣿⣿⡇⠿⠇⣶⣿⠓⠒⠲⢾⡷⠰⠆⣿⣿⣿⣿⡿⠟⢀⣿⣿⣿⣿⣷⣬⠱⣆
+⣾⠃⣿⣿⣿⣿⣿⣿⣇⣬⣷⣶⣶⣶⢻⣷⠟⣿⢀⢀⢀⢸⡇⣾⡇⣿⢿⣿⣤⣶⣾⡀⢿⣿⣿⣿⣿⣿⡆⣿
+⠙⠢⣍⠻⢿⣿⣿⡇⣿⣿⣿⣿⣿⣿⣰⢞⡃⣿⢀⢀⢀⢸⡇⣛⢣⡟⣼⣿⣿⣿⣿⣿⢸⣿⣿⣿⣿⠿⢃⡿
+⢀⢀⢀⠙⢦⣄⣿⡇⠻⢿⣿⣿⣿⣿⣿⠸⠃⠿⢶⣶⣶⣾⣃⠟⢰⣿⣿⣿⣿⣿⡿⠋⣸⡿⠿⣯⣥⠞⠁
+⢀⢀⢀⢀⢀⠉⠙⠛⠦⣤⣬⣭⣭⣭⣽⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⢿⣿⣿⣿⡦⣴⠋⠙⠛⠁
+⢀⢀⢀⢀⢀⢀⢀⢰⡏⣾⡟⠃⣼⣿⣿⣿⣿⣿⣿⣟⢿⣿⣿⣿⣿⡇⢸⣿⣿⣿⣷⠉⡆
+⢀⢀⢀⢀⢀⢀⢀⡼⣧⣿⠇⣠⣿⣿⣿⣿⣿⣿⡇⣿⣼⢿⣿⣿⣿⡇⠈⣿⣿⣿⣿⣶⢳⡄
+⢀⢀⢀⢀⢀⢀⢸⡇⣿⣿⢀⣿⣿⣿⣿⣿⣿⣿⢰⡏⣿⢸⣿⣿⣿⣷⢀⣿⣿⣿⣿⣿⢸⡇
+⢀⢀⢀⢀⢀⢀⠈⠳⠶⠶⠶⣿⣿⣿⣿⣿⣿⣿⠞⠁⠻⢾⣿⣿⣿⣿⣤⣤⣿⡿⠶⠶⠞⠃
+⢀⢀⢀⢀⢀⡤⠚⠉⠉⠙⠒⠯⣉⠉⣶⢀⢀⢀⢀⢀⢀⢀⢀⣼⠃⠉⠉⠉⣩⠽⠖⠚⠉⠉⠒⠢⣄
+⢀⢀⢀⢀⢀⢀⢀⢀⢀⢀⢀⣀⠤⠔⠒⠊⠉⠉⠉⠉⠉⠉⠉⠉⠑⠒⠢⠤⣀`;
 
-const EXAMPLE_BIND = `A cycle bind sends one message at a time
-Each time you press it, it says the next line here.
-You can say lots of important things to everyone.
-Make sure you pause after each press.
-The game gives you a hidden cooldown between chat messages.
-Every time you press it, it moves on to the next message.
-If you press it too fast, you'll rotate past the next
-message you want to send.`;
+// const EXAMPLE_BIND = `This is a test
+// to see
+
+// empty lines
+// and stuff`;
+
+const P = styled.p``;
 
 const Container = styled.div`
   position: relative;
@@ -67,7 +59,8 @@ const Header = styled.h1`
 `;
 
 const SectionHeader = styled.h3`
-  margin: 10px 0;
+  /* border-bottom: 1px solid hsla(0, 0%, 0%, 0.07); */
+  margin: 0 0 10px 0;
 `;
 
 const Label = styled.label`
@@ -104,6 +97,10 @@ const RulesList = styled.ul`
 
 const RulesItem = styled.li`
   margin: 0;
+`;
+
+const Row = styled.div`
+  margin-top: 20px;
 `;
 
 const CopyButton = ({ className, clipboardStatus, disabled, onClick }) => {
@@ -188,7 +185,7 @@ const CycleBind = () => {
 
   const handleTextAreaChange = e => {
     const text = e.target.value;
-    const isValid = validateTextArea(text);
+    const isValid = validateCycleText(text);
 
     if (isValid) {
       setFormErrors({
@@ -234,11 +231,11 @@ const CycleBind = () => {
   const handleGenerateScript = useCallback(
     text => {
       if (!formErrors.cycleText) {
-        const fileContents = createCycleBind(text, bindName);
+        const fileContents = createCycleBind(text, bindName, settings);
         setCycleBind(fileContents);
       }
     },
-    [bindName, formErrors.cycleText]
+    [bindName, formErrors.cycleText, settings]
   );
 
   const longestLineLength = cycleText
@@ -255,11 +252,10 @@ const CycleBind = () => {
     )
   );
 
-  const setSetting = setting => value => {
-    console.log('value', value);
+  const setSetting = ({ name, value }) => {
     setSettings({
       ...settings,
-      [setting]: value,
+      [name]: value,
     });
   };
 
@@ -277,27 +273,67 @@ const CycleBind = () => {
   return (
     <Container>
       <Header>CycleBind</Header>
-      <Label
+      <Row
         css={`
-          display: inline-block;
-        `}
-        htmlFor="bind-name"
-      >
-        Name for bind (optional):&nbsp;
-      </Label>
-      <Input
-        error={get(formErrors, 'bindName.message')}
-        id="bind-name"
-        onChange={handleChangeBindName}
-        placeholder={DEFAULT_BINDNAME}
-        type="text"
-        value={bindName}
-      />
-      <div
-        css={`
-          margin-top: 20px;
+          border-bottom: 1px solid black;
         `}
       >
+        <P>
+          A cycle bind takes text that's too long for one message and breaks it
+          into multiple messages. Each time the bind is pressed, the next part
+          of the message is said.
+        </P>
+        <P>
+          <span
+            css={`
+              font-weight: 700;
+            `}
+          >
+            Make sure you pause after each press.
+          </span>
+          &nbsp;The game gives you a hidden cooldown between chat messages.
+          Every time you press it, it moves on to the next message. If you press
+          it too fast, you'll rotate past the next message you want to send.
+        </P>
+      </Row>
+      <Row>
+        <SectionHeader>Controls</SectionHeader>
+        <div
+          css={`
+            display: inline-block;
+            margin-right: 20px;
+          `}
+        >
+          <Label
+            css={`
+              display: inline-block;
+              margin-right: 10px;
+            `}
+            htmlFor="bind-name"
+          >
+            Name for bind (optional):
+          </Label>
+          <Input
+            error={get(formErrors, 'bindName.message')}
+            id="bind-name"
+            onChange={handleChangeBindName}
+            placeholder={DEFAULT_BINDNAME}
+            type="text"
+            value={bindName}
+          />
+        </div>
+        <Checkbox
+          checked={settings.ignoreEmptyLines}
+          css={`
+            display: inline-block;
+          `}
+          id="ignore-empty-lines"
+          label="Ignore Empty Lines"
+          name="ignoreEmptyLines"
+          onChange={setSetting}
+        />
+      </Row>
+      <Row>
         <CopyButton
           clipboardStatus={clipboardStatus}
           disabled={!cycleScript}
@@ -313,23 +349,7 @@ const CycleBind = () => {
           Download&nbsp;
           <i className="fas fa-download" />
         </ButtonLink>
-        <RadioGroup onChange={setSetting('ignoreEmptyLines')}>
-          <RadioItem
-            checked={settings.ignoreEmptyLines}
-            id="ignore"
-            value={true}
-          >
-            Ignore
-          </RadioItem>
-          <RadioItem
-            checked={!settings.ignoreEmptyLines}
-            id="dont-ignore"
-            value={false}
-          >
-            Don't Ignore
-          </RadioItem>
-        </RadioGroup>
-      </div>
+      </Row>
       <SectionsContainer>
         <Section
           css={`

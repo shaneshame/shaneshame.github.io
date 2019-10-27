@@ -1,3 +1,4 @@
+import { isEmpty } from 'lodash';
 import { pascalCase } from 'utils';
 import * as yup from 'yup';
 
@@ -19,7 +20,7 @@ const validateBindName = bindName => {
   return bindNameSchema.validate(bindName);
 };
 
-const validateTextArea = text => {
+const validateCycleText = text => {
   const lines = getLines(text);
 
   lines.forEach(line => {
@@ -42,8 +43,21 @@ const createSayCommand = (name, text) => {
   return `alias ${name} "say ${text}"`;
 };
 
-const createCycleBind = (text, _bindName) => {
+const processText = (text, settings = {}) => {
+  const { ignoreEmptyLines } = settings;
   const lines = getLines(text);
+
+  return lines.filter(line => {
+    if (ignoreEmptyLines && !line.trim().length) {
+      return false;
+    }
+
+    return true;
+  });
+};
+
+const createCycleBind = (text, _bindName, settings) => {
+  const lines = processText(text, settings);
   const bindName =
     !_bindName || !_bindName.length ? DEFAULT_BINDNAME : _bindName;
   const bindCommandName = `bind${pascalCase(bindName)}`;
@@ -86,5 +100,5 @@ export {
   MAX_CHARS_PER_LINE,
   MIN_ROWS,
   validateBindName,
-  validateTextArea,
+  validateCycleText,
 };
