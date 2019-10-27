@@ -2,12 +2,26 @@ import React from 'react';
 import styled from 'styled-components';
 import { stringBoolean } from 'utils';
 
-const RadioGroupBase = styled.div`
+const RadioGroupContainer = styled.div`
+  display: inline-block;
+
   .radio-item {
     &:not(:first-of-type) {
-      margin-left: 15px;
+      margin-left: 20px;
     }
   }
+`;
+
+const RadioTitle = styled.span`
+  background-color: white;
+  display: inline-block;
+  font-weight: 500;
+  text-align: center;
+  width: 100%;
+`;
+
+const RadioItemContainer = styled.div`
+  border-top: 1px solid black;
 `;
 
 // eslint-disable-next-line no-unused-vars
@@ -23,12 +37,17 @@ const RadioContainer = styled.div`
   display: inline;
 `;
 
-const RadioGroup = ({ children, onChange }) => {
+const RadioGroup = ({ children, onChange, title }) => {
   const childrenWithProps = React.Children.map(children, child =>
     React.cloneElement(child, { onChange })
   );
 
-  return <RadioGroupBase>{childrenWithProps}</RadioGroupBase>;
+  return (
+    <RadioGroupContainer>
+      <RadioTitle>{title}</RadioTitle>
+      <RadioItemContainer>{childrenWithProps}</RadioItemContainer>
+    </RadioGroupContainer>
+  );
 };
 
 const RadioItem = ({ children, id, onChange, ...rest }) => {
