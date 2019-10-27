@@ -43,17 +43,25 @@ const createSayCommand = (name, text) => {
   return `alias ${name} "say ${text}"`;
 };
 
+const isEmptyLine = line => line.trim().length;
+
+// const breakLinesAt = ()
+
 const processText = (text, settings = {}) => {
-  const { ignoreEmptyLines } = settings;
-  const lines = getLines(text);
+  const { ignoreEmptyLines, stripWhitespace = true } = settings;
+  let lines = getLines(text);
 
-  return lines.filter(line => {
-    if (ignoreEmptyLines && !line.trim().length) {
-      return false;
-    }
+  if (ignoreEmptyLines) {
+    lines = lines.filter(isEmptyLine);
+  }
 
-    return true;
-  });
+  // if (stripWhitespace) {
+  //   lines
+  // }
+
+  // lines = breakLinesAt(lines, MAX_CHARS_PER_LINE);
+
+  return lines;
 };
 
 const createCycleBind = (text, _bindName, settings) => {
