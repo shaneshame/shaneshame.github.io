@@ -5,7 +5,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { media } from 'utils';
 
-import { Button, ButtonLink, Checkbox, Input, TextArea } from '../common';
+import { Button, ButtonLink, Checkbox, Code, Input, TextArea } from '../common';
 import {
   countLines,
   createCycleBind,
@@ -16,7 +16,6 @@ import {
   MAX_CHARS_PER_LINE,
   MIN_ROWS,
   validateBindName,
-  validateCycleText,
 } from './util';
 
 const FONT_MIN = 9;
@@ -42,12 +41,6 @@ const EXAMPLE_BIND = `⢀⢀⢀⢀⢀⢀⢀⢀⢀⣠⠞⠋⢀⢀⢀⢀⢀⢀⢀�
 ⢀⢀⢀⢀⢀⡤⠚⠉⠉⠙⠒⠯⣉⠉⣶⢀⢀⢀⢀⢀⢀⢀⢀⣼⠃⠉⠉⠉⣩⠽⠖⠚⠉⠉⠒⠢⣄
 ⢀⢀⢀⢀⢀⢀⢀⢀⢀⢀⢀⣀⠤⠔⠒⠊⠉⠉⠉⠉⠉⠉⠉⠉⠑⠒⠢⠤⣀`;
 
-// const EXAMPLE_BIND = `This is a test
-// to see
-
-// empty lines
-// and stuff`;
-
 const P = styled.p``;
 
 const Container = styled.div`
@@ -61,6 +54,7 @@ const Header = styled.h1`
 const SectionHeader = styled.h3`
   /* border-bottom: 1px solid hsla(0, 0%, 0%, 0.07); */
   margin: 0 0 10px 0;
+  padding-bottom: 4.5px;
 `;
 
 const Label = styled.label`
@@ -131,12 +125,12 @@ const CycleBind = () => {
   const [cycleScript, setCycleBind] = useState('');
   const [rulesHeight, setRulesHeight] = useState();
   const [formErrors, setFormErrors] = useState({
-    bindName: null,
-    cycleScript: null,
-    cycleText: null,
+    bindName: false,
+    cycleText: false,
   });
   const [settings, setSettings] = useState({
     ignoreEmptyLines: true,
+    stripWhitespace: true,
   });
   const inputRulesRef = useRef(null);
   const outputRulesRef = useRef(null);
@@ -185,23 +179,8 @@ const CycleBind = () => {
 
   const handleTextAreaChange = e => {
     const text = e.target.value;
-    const isValid = validateCycleText(text);
-
-    if (isValid) {
-      setFormErrors({
-        ...formErrors,
-        cycleText: null,
-      });
-      handleGenerateScript(text);
-    } else {
-      setFormErrors({
-        ...formErrors,
-        cycleText: `Max line length is ${MAX_CHARS_PER_LINE}.`,
-      });
-    }
-
     setTextAreaValue(text);
-
+    handleGenerateScript(text);
     setClipboardStatus();
   };
 
@@ -230,12 +209,10 @@ const CycleBind = () => {
 
   const handleGenerateScript = useCallback(
     text => {
-      if (!formErrors.cycleText) {
-        const fileContents = createCycleBind(text, bindName, settings);
-        setCycleBind(fileContents);
-      }
+      const fileContents = createCycleBind(text, bindName, settings);
+      setCycleBind(fileContents);
     },
-    [bindName, formErrors.cycleText, settings]
+    [bindName, settings]
   );
 
   const longestLineLength = cycleText
@@ -326,10 +303,21 @@ const CycleBind = () => {
           checked={settings.ignoreEmptyLines}
           css={`
             display: inline-block;
+            margin-right: 20px;
           `}
           id="ignore-empty-lines"
           label="Ignore Empty Lines"
           name="ignoreEmptyLines"
+          onChange={setSetting}
+        />
+        <Checkbox
+          checked={settings.stripWhitespace}
+          css={`
+            display: inline-block;
+          `}
+          id="strip-whitespace"
+          label="Strip Whitespace"
+          name="stripWhitespace"
           onChange={setSetting}
         />
       </Row>
@@ -363,8 +351,11 @@ const CycleBind = () => {
         >
           <SectionHeader>Input</SectionHeader>
           <RulesList height={rulesHeight} ref={inputRulesRef}>
-            <RulesItem>Each output on a new line.</RulesItem>
-            <RulesItem>Max {MAX_CHARS_PER_LINE} characters per line.</RulesItem>
+            <RulesItem>Each line will be a new message.</RulesItem>
+            <RulesItem>
+              Lines longer than {MAX_CHARS_PER_LINE} characters will be split
+              into additional messages.
+            </RulesItem>
             <RulesItem>
               For ASCII art, use {IDEAL_CHARS_PER_LINE} characters per line.
             </RulesItem>
@@ -389,11 +380,15 @@ const CycleBind = () => {
           <SectionHeader>Output</SectionHeader>
           <RulesList height={rulesHeight} ref={outputRulesRef}>
             <RulesItem>
-              Replace `KEY` with the name of the key you'll use.
+              Replace <Code>KEY</Code> with the name of the key you'll use.
             </RulesItem>
             <RulesItem>
               The names of the keys&nbsp;
-              <a href="https://wiki.teamfortress.com/wiki/Scripting#List_of_key_names">
+              <a
+                href="https://wiki.teamfortress.com/wiki/Scripting#List_of_key_names"
+                rel="noopener noreferrer"
+                target="_blank"
+              >
                 can be found here
               </a>
               .

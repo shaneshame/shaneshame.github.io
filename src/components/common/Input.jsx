@@ -10,6 +10,7 @@ const InputContainer = styled.div`
 
 const InputBase = styled.input`
   margin: 0;
+  padding: 0 3px;
 
   &.error {
     border-color: ${theme.color.error};
