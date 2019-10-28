@@ -1,4 +1,4 @@
 export const CATEGORY_PRIORITIES = {
-  high: [],
+  high: ['tf2'],
   low: ['misc'],
 };
