@@ -53,7 +53,6 @@ const Header = styled.h1`
 
 const SectionHeader = styled.h3`
   /* border-bottom: 1px solid hsla(0, 0%, 0%, 0.07); */
-  margin: 0 0 10px 0;
   padding-bottom: 4.5px;
 `;
 
@@ -71,7 +70,6 @@ const CodeArea = styled(TextArea)`
 const SectionsContainer = styled.div`
   ${media.tablet} {
     display: flex;
-    margin-top: 20px;
   }
 `;
 
@@ -252,7 +250,7 @@ const CycleBind = () => {
       <Header>CycleBind</Header>
       <Row
         css={`
-          border-bottom: 1px solid black;
+          max-width: 50%;
         `}
       >
         <P>
@@ -273,7 +271,11 @@ const CycleBind = () => {
           it too fast, you'll rotate past the next message you want to send.
         </P>
       </Row>
-      <Row>
+      <Row
+        css={`
+          border-top: 1px solid black;
+        `}
+      >
         <SectionHeader>Controls</SectionHeader>
         <div
           css={`
