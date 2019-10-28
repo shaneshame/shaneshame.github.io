@@ -51,6 +51,7 @@ const processText = (text, settings = {}) => {
 };
 
 const createCycleBind = (text, _bindName, settings) => {
+  const selectedKey = settings.selectedKey || 'KEY';
   const lines = processText(text, settings);
   const bindName =
     !_bindName || !_bindName.length ? DEFAULT_BINDNAME : _bindName;
@@ -77,7 +78,7 @@ ${bindCommands.join('\n')}
 
 alias ${bindCommandName} ${bindCommandName}0
 
-bind KEY ${bindCommandName}
+bind ${selectedKey} ${bindCommandName}
 
 echo ">>> ${bindName} loaded."
 `

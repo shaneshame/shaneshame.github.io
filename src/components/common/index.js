@@ -1,4 +1,5 @@
 export * from './Radio';
+export * from './Select';
 
 export { default as Button } from './Button';
 export { default as ButtonLink } from './ButtonLink';

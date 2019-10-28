@@ -5,7 +5,16 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { media } from 'utils';
 
-import { Button, ButtonLink, Checkbox, Code, Input, TextArea } from '../common';
+import {
+  Button,
+  ButtonLink,
+  Checkbox,
+  Input,
+  Select,
+  SelectOption,
+  TextArea,
+} from '../common';
+import { KEYS } from './constants';
 import {
   countLines,
   createCycleBind,
@@ -128,6 +137,7 @@ const CycleBind = () => {
   });
   const [settings, setSettings] = useState({
     ignoreEmptyLines: true,
+    selectedKey: undefined,
     stripWhitespace: true,
   });
   const inputRulesRef = useRef(null);
@@ -234,6 +244,16 @@ const CycleBind = () => {
     });
   };
 
+  const handleCheckboxSetting = event => {
+    const { name, checked } = event.target;
+    setSetting({ name, value: checked });
+  };
+
+  const handleSelectSetting = event => {
+    const { name, value } = event.target;
+    setSetting({ name, value });
+  };
+
   const downloadAttrs = getDownloadAttributes(cycleScript);
 
   useEffect(() => {
@@ -250,7 +270,7 @@ const CycleBind = () => {
       <Header>CycleBind</Header>
       <Row
         css={`
-          max-width: 50%;
+          max-width: 625px;
         `}
       >
         <P>
@@ -259,13 +279,13 @@ const CycleBind = () => {
           of the message is said.
         </P>
         <P>
-          <span
+          <strong
             css={`
               font-weight: 700;
             `}
           >
             Make sure you pause after each press.
-          </span>
+          </strong>
           &nbsp;The game gives you a hidden cooldown between chat messages.
           Every time you press it, it moves on to the next message. If you press
           it too fast, you'll rotate past the next message you want to send.
@@ -310,7 +330,7 @@ const CycleBind = () => {
           id="ignore-empty-lines"
           label="Ignore Empty Lines"
           name="ignoreEmptyLines"
-          onChange={setSetting}
+          onChange={handleCheckboxSetting}
         />
         <Checkbox
           checked={settings.stripWhitespace}
@@ -320,8 +340,29 @@ const CycleBind = () => {
           id="strip-whitespace"
           label="Strip Whitespace"
           name="stripWhitespace"
-          onChange={setSetting}
+          onChange={handleCheckboxSetting}
         />
+        <Row
+          css={`
+            margin-top: 10px;
+          `}
+        >
+          <Select
+            error={!settings.selectedKey}
+            id="select-key"
+            label="Select key to use (required):"
+            name="selectedKey"
+            onChange={handleSelectSetting}
+            value={settings.selectedKey}
+          >
+            <SelectOption value={undefined} />
+            {KEYS.map(key => (
+              <SelectOption key={key} value={key}>
+                {key}
+              </SelectOption>
+            ))}
+          </Select>
+        </Row>
       </Row>
       <Row>
         <CopyButton
@@ -381,9 +422,7 @@ const CycleBind = () => {
         >
           <SectionHeader>Output</SectionHeader>
           <RulesList height={rulesHeight} ref={outputRulesRef}>
-            <RulesItem>
-              Replace <Code>KEY</Code> with the name of the key you'll use.
-            </RulesItem>
+            <RulesItem>Select the key you'll use above.</RulesItem>
             <RulesItem>
               The names of the keys&nbsp;
               <a
