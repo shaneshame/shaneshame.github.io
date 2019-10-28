@@ -13,7 +13,6 @@ const RadioGroupContainer = styled.div`
 `;
 
 const RadioTitle = styled.span`
-  background-color: white;
   display: inline-block;
   font-weight: 500;
   text-align: center;
@@ -37,14 +36,14 @@ const RadioContainer = styled.div`
   display: inline;
 `;
 
-const RadioGroup = ({ children, onChange, title }) => {
+const RadioGroup = ({ children, className, onChange, title }) => {
   const childrenWithProps = React.Children.map(children, child =>
     React.cloneElement(child, { onChange })
   );
 
   return (
-    <RadioGroupContainer>
-      <RadioTitle>{title}</RadioTitle>
+    <RadioGroupContainer className={className}>
+      {title && <RadioTitle>{title}</RadioTitle>}
       <RadioItemContainer>{childrenWithProps}</RadioItemContainer>
     </RadioGroupContainer>
   );

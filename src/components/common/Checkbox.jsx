@@ -23,12 +23,8 @@ const Checkbox = ({ className, id, label, name, onChange, ...rest }) => {
       <CheckboxInput
         {...rest}
         id={id}
-        onChange={event =>
-          onChange({
-            name,
-            value: event.target.checked,
-          })
-        }
+        name={name}
+        onChange={onChange}
         ref={inputRef}
       />
       <CheckboxLabel htmlFor={id} onClick={() => inputRef.current.click()}>
