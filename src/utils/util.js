@@ -1,4 +1,4 @@
-import { camelCase, get, identity } from 'lodash';
+import { camelCase, chunk, get, identity } from 'lodash';
 import { PATH_NORMALIZER } from 'nodeUtil';
 
 import { CATEGORY_PRIORITIES } from './config';
@@ -46,4 +46,11 @@ const getRank = item => {
 
 export const byCategoryPriority = (a, b) => {
   return getRank(b) - getRank(a);
+};
+
+export const when = (cond, f) => x => (cond(x) ? f(x) : x);
+
+export const chunkString = (str, length = 1) => {
+  if (str === '' && length > 0) return [''];
+  return chunk(str, length).map(chunk => chunk.join(''));
 };

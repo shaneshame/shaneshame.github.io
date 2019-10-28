@@ -1,5 +1,5 @@
-import { isEmpty } from 'lodash';
-import { pascalCase } from 'utils';
+import { constant, filter, flow, map, reduce, trim } from 'lodash/fp';
+import { chunkString, pascalCase, when } from 'utils';
 import * as yup from 'yup';
 
 const DEFAULT_BINDNAME = 'MyAwesomeBind';
@@ -11,25 +11,13 @@ const MIN_ROWS = 10;
 const getLines = text => (text ? text.split('\n') : []);
 const countLines = text => getLines(text).length;
 
-const bindNameSchema = yup.string().matches(/^\S+$/, {
+const noSpacesSchema = yup.string().matches(/^\S+$/, {
   excludeEmptyString: true,
-  message: 'Bind name cannot contain spaces.',
+  message: 'Cannot contain spaces.',
 });
 
 const validateBindName = bindName => {
-  return bindNameSchema.validate(bindName);
-};
-
-const validateCycleText = text => {
-  const lines = getLines(text);
-
-  lines.forEach(line => {
-    if (line.length > MAX_CHARS_PER_LINE) {
-      return false;
-    }
-  });
-
-  return true;
+  return noSpacesSchema.validate(bindName);
 };
 
 const createAliasName = (bindName, index) => {
@@ -43,25 +31,23 @@ const createSayCommand = (name, text) => {
   return `alias ${name} "say ${text}"`;
 };
 
-const isEmptyLine = line => line.trim().length;
-
-// const breakLinesAt = ()
+const isEmptyLine = line => line.length;
 
 const processText = (text, settings = {}) => {
-  const { ignoreEmptyLines, stripWhitespace = true } = settings;
+  const { ignoreEmptyLines, stripWhitespace = false } = settings;
   let lines = getLines(text);
 
-  if (ignoreEmptyLines) {
-    lines = lines.filter(isEmptyLine);
-  }
-
-  // if (stripWhitespace) {
-  //   lines
-  // }
-
-  // lines = breakLinesAt(lines, MAX_CHARS_PER_LINE);
-
-  return lines;
+  return flow(
+    reduce(
+      (accumulator, currentLine) => [
+        ...accumulator,
+        ...chunkString(currentLine, MAX_CHARS_PER_LINE),
+      ],
+      []
+    ),
+    when(constant(stripWhitespace), map(trim)),
+    when(constant(ignoreEmptyLines), filter(isEmptyLine))
+  )(lines);
 };
 
 const createCycleBind = (text, _bindName, settings) => {
@@ -108,5 +94,4 @@ export {
   MAX_CHARS_PER_LINE,
   MIN_ROWS,
   validateBindName,
-  validateCycleText,
 };
