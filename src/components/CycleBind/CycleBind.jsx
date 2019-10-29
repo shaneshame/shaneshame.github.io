@@ -1,20 +1,20 @@
 import clsx from 'clsx';
 import { useClipboard } from 'hooks';
 import { debounce, get } from 'lodash';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { media } from 'utils';
+import { JS_KEY_TO_TF2, media, TF2_KEYS } from 'utils';
 
 import {
   Button,
   ButtonLink,
   Checkbox,
+  DetectButtonWindow,
   Input,
   Select,
   SelectOption,
   TextArea,
 } from '../common';
-import { KEYS } from './constants';
 import {
   countLines,
   createCycleBind,
@@ -91,9 +91,7 @@ const Section = styled.section`
 `;
 
 const RulesList = styled.ul`
-  ${media.tablet} {
-    ${props => props.height && `height: ${props.height}px;`}
-  }
+  margin-bottom: 0;
 `;
 
 const RulesItem = styled.li`
@@ -126,11 +124,29 @@ const CopyButton = ({ className, clipboardStatus, disabled, onClick }) => {
   );
 };
 
+const mouseButtonMap = {
+  /* eslint-disable sort-keys */
+  LEFTCLICK: 'MOUSE1',
+  RIGHTCLICK: 'MOUSE2',
+  MIDDLECLICK: 'MOUSE3',
+  BROWSERBACK: 'MOUSE4',
+  BROWSERFORWARD: 'MOUSE5',
+  /* eslint-enable sort-keys */
+};
+
+const getButtonName = (buttonCode = '') => {
+  return (
+    mouseButtonMap[buttonCode] ||
+    JS_KEY_TO_TF2[buttonCode] ||
+    buttonCode.toUpperCase() ||
+    undefined
+  );
+};
+
 const CycleBind = () => {
   const [bindName, setBindName] = useState('');
   const [cycleText, setTextAreaValue] = useState(EXAMPLE_BIND);
   const [cycleScript, setCycleBind] = useState('');
-  const [rulesHeight, setRulesHeight] = useState();
   const [formErrors, setFormErrors] = useState({
     bindName: false,
     cycleText: false,
@@ -140,24 +156,18 @@ const CycleBind = () => {
     selectedKey: undefined,
     stripWhitespace: true,
   });
-  const inputRulesRef = useRef(null);
-  const outputRulesRef = useRef(null);
-
+  const [isCapturing, setCapturing] = useState(false);
   const {
     clipboardStatus,
     copyToClipboard,
     setClipboardStatus,
   } = useClipboard();
 
-  const updateRulesHeight = () => {
-    if (inputRulesRef.current && outputRulesRef.current) {
-      setRulesHeight(
-        Math.max(
-          inputRulesRef.current.clientHeight,
-          outputRulesRef.current.clientHeight
-        )
-      );
-    }
+  const setSetting = ({ name, value }) => {
+    setSettings({
+      ...settings,
+      [name]: value,
+    });
   };
 
   const getDownloadAttributes = debounce(
@@ -183,6 +193,22 @@ const CycleBind = () => {
     },
     500,
     { leading: true }
+  );
+
+  const handleDetectButton = useCallback(
+    button => {
+      const selectedKey = getButtonName(button);
+      setSettings({
+        ...settings,
+        selectedKey,
+      });
+
+      const timeoutId = setTimeout(() => {
+        setCapturing(false);
+        clearTimeout(timeoutId);
+      }, 150);
+    },
+    [settings]
   );
 
   const handleTextAreaChange = e => {
@@ -223,6 +249,34 @@ const CycleBind = () => {
     [bindName, settings]
   );
 
+  const handleCheckboxSetting = event => {
+    const { name, checked } = event.target;
+    setSetting({ name, value: checked });
+  };
+
+  const handleSelectSetting = event => {
+    const { name, value } = event.target;
+    setSetting({ name, value });
+  };
+
+  const handleCapture = () => {
+    if (!isCapturing) {
+      setCapturing(true);
+    } else {
+      setCapturing(false);
+    }
+  };
+
+  const downloadAttrs = getDownloadAttributes(cycleScript);
+
+  useEffect(() => {
+    handleGenerateScript(cycleText);
+
+    return () => {
+      downloadAttrs.revoke();
+    };
+  }, [downloadAttrs, handleGenerateScript, cycleText]);
+
   const longestLineLength = cycleText
     ? getLines(cycleText).reduce((result, line) => {
         return Math.max(result, line.length);
@@ -236,34 +290,6 @@ const CycleBind = () => {
       FONT_MIN + FONT_MAX - (FONT_MAX * longestLineLength) / MAX_CHARS_PER_LINE
     )
   );
-
-  const setSetting = ({ name, value }) => {
-    setSettings({
-      ...settings,
-      [name]: value,
-    });
-  };
-
-  const handleCheckboxSetting = event => {
-    const { name, checked } = event.target;
-    setSetting({ name, value: checked });
-  };
-
-  const handleSelectSetting = event => {
-    const { name, value } = event.target;
-    setSetting({ name, value });
-  };
-
-  const downloadAttrs = getDownloadAttributes(cycleScript);
-
-  useEffect(() => {
-    handleGenerateScript(cycleText);
-    updateRulesHeight();
-
-    return () => {
-      downloadAttrs.revoke();
-    };
-  }, [downloadAttrs, handleGenerateScript, cycleText]);
 
   return (
     <Container>
@@ -342,27 +368,53 @@ const CycleBind = () => {
           name="stripWhitespace"
           onChange={handleCheckboxSetting}
         />
-        <Row
-          css={`
-            margin-top: 10px;
-          `}
+      </Row>
+      <Row
+        css={`
+          margin-top: 10px;
+        `}
+      >
+        <Select
+          error={!settings.selectedKey}
+          id="select-key"
+          label="Select key to use*:"
+          name="selectedKey"
+          onChange={handleSelectSetting}
+          value={settings.selectedKey}
         >
-          <Select
-            error={!settings.selectedKey}
-            id="select-key"
-            label="Select key to use (required):"
-            name="selectedKey"
-            onChange={handleSelectSetting}
-            value={settings.selectedKey}
-          >
-            <SelectOption value={undefined} />
-            {KEYS.map(key => (
-              <SelectOption key={key} value={key}>
-                {key}
-              </SelectOption>
-            ))}
-          </Select>
-        </Row>
+          <SelectOption value={undefined} />
+          {TF2_KEYS.map(key => (
+            <SelectOption key={key} value={key}>
+              {key}
+            </SelectOption>
+          ))}
+        </Select>
+        <a
+          css={`
+            margin-left: 3px;
+          `}
+          href="https://wiki.teamfortress.com/wiki/Scripting#List_of_key_names"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          (?)
+        </a>
+        <Button
+          css={`
+            height: 50px;
+            margin: 0 20px;
+            width: 150px;
+          `}
+          onClick={handleCapture}
+        >
+          {isCapturing ? 'Stop capturing' : 'Auto-detect Key'}
+        </Button>
+        <DetectButtonWindow
+          isCapturing={isCapturing}
+          onBlock={() => alert('Must enable popups to use auto-detect.')}
+          onCancel={() => setCapturing(false)}
+          onCapture={handleDetectButton}
+        />
       </Row>
       <Row>
         <CopyButton
@@ -381,6 +433,18 @@ const CycleBind = () => {
           <i className="fas fa-download" />
         </ButtonLink>
       </Row>
+      <Row>
+        <RulesList>
+          <RulesItem>Each line will be a new message.</RulesItem>
+          <RulesItem>
+            Lines longer than {MAX_CHARS_PER_LINE} characters will be split into
+            additional messages.
+          </RulesItem>
+          <RulesItem>
+            For ASCII art, use {IDEAL_CHARS_PER_LINE} characters per line.
+          </RulesItem>
+        </RulesList>
+      </Row>
       <SectionsContainer>
         <Section
           css={`
@@ -393,16 +457,6 @@ const CycleBind = () => {
           `}
         >
           <SectionHeader>Input</SectionHeader>
-          <RulesList height={rulesHeight} ref={inputRulesRef}>
-            <RulesItem>Each line will be a new message.</RulesItem>
-            <RulesItem>
-              Lines longer than {MAX_CHARS_PER_LINE} characters will be split
-              into additional messages.
-            </RulesItem>
-            <RulesItem>
-              For ASCII art, use {IDEAL_CHARS_PER_LINE} characters per line.
-            </RulesItem>
-          </RulesList>
           <CodeArea
             cols={120}
             fontSize={fontSize}
@@ -421,20 +475,6 @@ const CycleBind = () => {
           `}
         >
           <SectionHeader>Output</SectionHeader>
-          <RulesList height={rulesHeight} ref={outputRulesRef}>
-            <RulesItem>Select the key you'll use above.</RulesItem>
-            <RulesItem>
-              The names of the keys&nbsp;
-              <a
-                href="https://wiki.teamfortress.com/wiki/Scripting#List_of_key_names"
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                can be found here
-              </a>
-              .
-            </RulesItem>
-          </RulesList>
           <CodeArea
             fontSize={fontSize}
             id="cycle-script"
