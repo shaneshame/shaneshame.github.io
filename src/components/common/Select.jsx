@@ -3,7 +3,9 @@ import React from 'react';
 import styled from 'styled-components';
 import { theme } from 'utils';
 
-const SelectContainer = styled.div``;
+const SelectContainer = styled.div`
+  display: inline-block;
+`;
 
 const SelectLabel = styled.label`
   margin-right: 8px;
