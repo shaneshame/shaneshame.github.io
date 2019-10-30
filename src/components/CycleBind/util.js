@@ -2,8 +2,8 @@ import { constant, filter, flow, map, reduce, trim } from 'lodash/fp';
 import { chunkString, pascalCase, when } from 'utils';
 import * as yup from 'yup';
 
-const DEFAULT_BINDNAME = 'MyAwesomeBind';
-const DEFAULT_FILENAME = 'cyclebind.cfg';
+const DEFAULT_BINDNAME = 'HelloWorld';
+const DEFAULT_FILENAME = 'helloworld-cyclebind.cfg';
 const IDEAL_CHARS_PER_LINE = 82;
 const MAX_CHARS_PER_LINE = 127;
 const MIN_ROWS = 10;
