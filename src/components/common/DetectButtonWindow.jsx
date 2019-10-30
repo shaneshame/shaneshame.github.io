@@ -57,8 +57,8 @@ const DetectButtonWindow = ({
   const handleMouseDown = useCallback(
     event => {
       const { button } = event;
-      const result = MOUSE_BUTTON_MAP[button] || `mouse${button}`;
-      onCapture(result);
+      const mouseButton = MOUSE_BUTTON_MAP[button] || `mouse${button}`;
+      onCapture(mouseButton);
     },
     [onCapture]
   );
@@ -71,6 +71,15 @@ const DetectButtonWindow = ({
       } else {
         onCapture(key);
       }
+    },
+    [onCapture]
+  );
+
+  const handleMouseWheel = useCallback(
+    event => {
+      const delta = Math.sign(event.deltaY);
+      const mouseWheel = delta === -1 ? 'MWHEELUP' : 'MWHEELDOWN';
+      onCapture(mouseWheel);
     },
     [onCapture]
   );
@@ -89,6 +98,7 @@ const DetectButtonWindow = ({
         <CaptureArea
           onKeyDown={handleKeyDown}
           onMouseDown={handleMouseDown}
+          onWheel={handleMouseWheel}
           style={{
             border: '1px solid black',
             height: '99%',
