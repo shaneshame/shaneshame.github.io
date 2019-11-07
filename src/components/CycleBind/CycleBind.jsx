@@ -178,7 +178,7 @@ const CycleBind = () => {
       const url = file ? URL.createObjectURL(file) : '';
       const fileName = url
         ? bindName
-          ? `${bindName.toLowerCase()}.cfg`
+          ? `${bindName.trim().toLowerCase()}.cfg`
           : DEFAULT_FILENAME
         : 'empty';
 
