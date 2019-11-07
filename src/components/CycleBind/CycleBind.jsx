@@ -149,12 +149,11 @@ const CycleBind = () => {
   const [cycleScript, setCycleBind] = useState('');
   const [formErrors, setFormErrors] = useState({
     bindName: false,
-    cycleText: false,
   });
   const [settings, setSettings] = useState({
     ignoreEmptyLines: true,
     selectedKey: undefined,
-    stripWhitespace: true,
+    stripWhitespace: false,
   });
   const [isCapturing, setCapturing] = useState(false);
   const {
