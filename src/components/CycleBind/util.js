@@ -54,7 +54,7 @@ const createCycleBind = (text, _bindName, settings) => {
   const selectedKey = settings.selectedKey || 'KEY';
   const lines = processText(text, settings);
   const bindName =
-    !_bindName || !_bindName.length ? DEFAULT_BINDNAME : _bindName;
+    (_bindName && _bindName.trim().length) ? _bindName : DEFAULT_BINDNAME;
   const bindCommandName = `bind${pascalCase(bindName)}`;
 
   const sayCommands = lines.map((text, index) => {
