@@ -1,5 +1,5 @@
-import { constant, filter, flow, map, reduce, trim } from 'lodash/fp';
-import { chunkString, pascalCase, when } from 'utils';
+import { filter, flow, map, reduce, trim } from 'lodash/fp';
+import { chunkString, invokeWhen, pascalCase } from 'utils';
 import * as yup from 'yup';
 
 const DEFAULT_BINDNAME = 'HelloWorld';
@@ -34,8 +34,8 @@ const createSayCommand = (name, text) => {
 const isEmptyLine = line => line.length;
 
 const processText = (text, settings = {}) => {
-  const { ignoreEmptyLines, stripWhitespace = false } = settings;
-  let lines = getLines(text);
+  const { ignoreEmptyLines, stripWhitespace } = settings;
+  const lines = getLines(text);
 
   return flow(
     reduce(
@@ -45,8 +45,8 @@ const processText = (text, settings = {}) => {
       ],
       []
     ),
-    when(constant(stripWhitespace), map(trim)),
-    when(constant(ignoreEmptyLines), filter(isEmptyLine))
+    invokeWhen(stripWhitespace, map(trim)),
+    invokeWhen(ignoreEmptyLines, filter(isEmptyLine))
   )(lines);
 };
 
@@ -54,7 +54,7 @@ const createCycleBind = (text, _bindName, settings) => {
   const selectedKey = settings.selectedKey || 'KEY';
   const lines = processText(text, settings);
   const bindName =
-    (_bindName && _bindName.trim().length) ? _bindName.trim() : DEFAULT_BINDNAME;
+    _bindName && _bindName.trim().length ? _bindName.trim() : DEFAULT_BINDNAME;
   const bindCommandName = `bind${pascalCase(bindName)}`;
 
   const sayCommands = lines.map((text, index) => {
