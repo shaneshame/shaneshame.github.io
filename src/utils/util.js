@@ -19,7 +19,7 @@ export const pascalCase = str => upperFirst(camelCase(str));
 
 export const sentenceCase = (str = '') => upperFirst(str.toLowerCase());
 
-export const stripSpaces = (str) => str.replace(/ /g, '');
+export const stripSpaces = str => str.replace(/ /g, '');
 
 export const mapPath = (path = '', iteratee = identity) => {
   return path
@@ -50,7 +50,10 @@ export const byCategoryPriority = (a, b) => {
   return getRank(b) - getRank(a);
 };
 
-export const when = (cond, f) => x => (cond(x) ? f(x) : x);
+export const invokeWhen = (cond, f) => value => {
+  const predicate = typeof cond === 'function' ? cond(value) : cond;
+  return predicate ? f(value) : value;
+};
 
 export const chunkString = (str, length = 1) => {
   if (str === '' && length > 0) return [''];
