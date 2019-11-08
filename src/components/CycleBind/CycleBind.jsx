@@ -3,7 +3,7 @@ import { useClipboard } from 'hooks';
 import { debounce, get } from 'lodash';
 import React, { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { JS_KEY_TO_TF2, media, TF2_KEYS } from 'utils';
+import { JS_KEY_TO_TF2, media, stripSpaces, TF2_KEYS } from 'utils';
 
 import {
   Button,
@@ -177,8 +177,8 @@ const CycleBind = () => {
           : null;
       const url = file ? URL.createObjectURL(file) : '';
       const fileName = url
-        ? bindName
-          ? `${bindName.trim().toLowerCase()}.cfg`
+        ? stripSpaces(bindName)
+          ? `${stripSpaces(bindName)}.cfg`
           : DEFAULT_FILENAME
         : 'empty';
 
@@ -220,6 +220,8 @@ const CycleBind = () => {
   const handleChangeBindName = e => {
     const newBindName = e.target.value;
     const validation = validateBindName(newBindName);
+    setBindName(newBindName);
+    setClipboardStatus();
 
     validation
       .then(() => {
@@ -228,15 +230,11 @@ const CycleBind = () => {
           bindName: null,
         });
       })
-      .catch(error => {
+      .catch(() => {
         setFormErrors({
           ...formErrors,
-          bindName: error,
+          bindName: 'Spaces will be ignored',
         });
-      })
-      .finally(() => {
-        setBindName(newBindName);
-        setClipboardStatus();
       });
   };
 
@@ -338,7 +336,7 @@ const CycleBind = () => {
             Name for bind (optional):
           </Label>
           <Input
-            error={get(formErrors, 'bindName.message')}
+            error={get(formErrors, 'bindName')}
             id="bind-name"
             onChange={handleChangeBindName}
             placeholder={DEFAULT_BINDNAME}
