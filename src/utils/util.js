@@ -19,6 +19,8 @@ export const pascalCase = str => upperFirst(camelCase(str));
 
 export const sentenceCase = (str = '') => upperFirst(str.toLowerCase());
 
+export const stripSpaces = (str) => str.replace(/ /g, '');
+
 export const mapPath = (path = '', iteratee = identity) => {
   return path
     .split('/')
