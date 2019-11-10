@@ -1,49 +1,160 @@
-import { chunk, chunkIndices, times } from './util';
+import { chunk, chunkIndices, chunkString, range, times } from './util';
+
+describe('range', () => {
+  it('should create Array with only `stop`', () => {
+    const actual = range(3);
+    const expected = [0, 1, 2];
+
+    expect(actual).toEqual(expected);
+  });
+
+  it('should create Array with `start` and `stop`', () => {
+    const actual = range(3, 6);
+    const expected = [3, 4, 5];
+
+    expect(actual).toEqual(expected);
+  });
+
+  it('should create empty Array', () => {
+    const actual = range(6, 3);
+    const expected = [];
+
+    expect(actual).toEqual(expected);
+  });
+
+  it('should create Array with one element', () => {
+    const actual = range(3, 4);
+    const expected = [3];
+
+    expect(actual).toEqual(expected);
+  });
+
+  it('should create Array with `start` and `stop` and `step` even', () => {
+    const actual = range(0, 11, 2);
+    const expected = [0, 2, 4, 6, 8, 10];
+
+    expect(actual).toEqual(expected);
+  });
+
+  it('should create Array with `start` and `stop` and `step` uneven', () => {
+    const actual = range(0, 4, 2);
+    const expected = [0, 2];
+
+    expect(actual).toEqual(expected);
+  });
+});
 
 describe('times', () => {
-  test('should match lodash 1', () => {
+  it('should match lodash 1', () => {
     const actual = times(3, String);
     const expected = ['0', '1', '2'];
 
-    expect(actual).toEqual(expect.arrayContaining(expected));
+    expect(actual).toEqual(expected);
   });
 });
 
 describe('chunkIndices', () => {
-  test('should split evenly', () => {
+  it('should split evenly', () => {
     const actual = chunkIndices(['a', 'b', 'c', 'd'], 2);
-    const expected = [[0, 2], [2, 4]];
-
-    expect(actual).toEqual(expect.arrayContaining(expected));
+    const expected = [[0, 1], [2, 3]];
+    expect(actual).toEqual(expected);
   });
 
-  test('should split unevenly', () => {
+  it('should split unevenly', () => {
     const actual = chunkIndices(['a', 'b', 'c', 'd'], 3);
-    const expected = [[0, 3], [3, 4]];
-
-    expect(actual).toEqual(expect.arrayContaining(expected));
+    const expected = [[0, 1, 2], [3]];
+    expect(actual).toEqual(expected);
   });
 });
 
 describe('chunk', () => {
-  test('should split evenly', () => {
+  it('should split evenly', () => {
     const actual = chunk(['a', 'b', 'c', 'd'], 2);
     const expected = [['a', 'b'], ['c', 'd']];
 
-    expect(actual).toEqual(expect.arrayContaining(expected));
+    expect(actual).toEqual(expected);
   });
 
-  test('should split unevenly', () => {
+  it('should split unevenly', () => {
     const actual = chunk(['a', 'b', 'c', 'd'], 3);
     const expected = [['a', 'b', 'c'], ['d']];
 
-    expect(actual).toEqual(expect.arrayContaining(expected));
+    expect(actual).toEqual(expected);
   });
 
-  test('should handle size 0', () => {
+  it('should handle size 0', () => {
     const actual = chunk(['a', 'b'], 0);
     const expected = [];
 
-    expect(actual).toEqual(expect.arrayContaining(expected));
+    expect(actual).toEqual(expected);
+  });
+
+  it('should handle empty array', () => {
+    const actual = chunk([]);
+    const expected = [];
+
+    expect(actual).toEqual(expected);
+  });
+
+  it('should handle size greater than max', () => {
+    const actual = chunk([], 5);
+    const expected = [];
+
+    expect(actual).toEqual(expected);
+  });
+
+  it('should handle null size', () => {
+    const actual = chunk([], null);
+    const expected = [];
+
+    expect(actual).toEqual(expected);
+  });
+
+  it('should handle non-iterable input', () => {
+    const actual = chunk(3, 3);
+    const expected = [];
+
+    expect(actual).toEqual(expected);
+  });
+
+  it('should handle strings', () => {
+    const actual = chunk('123456789', 3);
+    const expected = [['1', '2', '3'], ['4', '5', '6'], ['7', '8', '9']];
+
+    expect(actual).toEqual(expected);
+  });
+});
+
+describe('chunkString', () => {
+  it('should split evenly', () => {
+    const actual = chunkString('abcd', 2);
+    const expected = ['ab', 'cd'];
+
+    expect(actual).toEqual(expected);
+  });
+
+  it('should split unevenly', () => {
+    const actual = chunkString('abcd', 3);
+    const expected = ['abc', 'd'];
+
+    expect(actual).toEqual(expected);
+  });
+
+  it('should handle invalid size', () => {
+    let actual = chunkString('abcd', 0);
+    const expected = [''];
+    expect(actual).toEqual(expected);
+
+    actual = chunkString('abcd', -1);
+    expect(actual).toEqual(expected);
+
+    actual = chunkString('abcd', null);
+    expect(actual).toEqual(expected);
+  });
+
+  it('should handle no size', () => {
+    let actual = chunkString('abcd');
+    const expected = ['a', 'b', 'c', 'd'];
+    expect(actual).toEqual(expected);
   });
 });
