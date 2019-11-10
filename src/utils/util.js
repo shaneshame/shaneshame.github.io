@@ -55,15 +55,24 @@ export const invokeWhen = (cond, f) => value => {
   return predicate ? f(value) : value;
 };
 
-export const range = (start, stop, step = 1) => {
-  if (stop < start) {
-    return [];
-  }
+const getSign = n => {
+  const sign = Math.sign(n);
+  return sign === 0 ? 1 : sign === -0 ? -1 : sign;
+};
 
-  const length = stop ? Math.ceil((stop - start) / step) : start;
-  const startPad = stop ? start : 0;
+export const range = (_start, _stop, _step) => {
+  const start = _stop ? _start : 0;
+  const stop = _stop ? _stop : _start;
+  const step = _step !== undefined ? _step : start > stop ? -1 : 1;
 
-  return [...Array(length).keys()].map(n => (n + startPad) * step);
+  const length =
+    step === 0
+      ? Math.abs(stop - start)
+      : Math.abs(Math.ceil((stop - start) / step));
+
+  return [...Array(length).keys()].map(n =>
+    step === 0 ? start : (start + n * getSign(step)) * Math.abs(step)
+  );
 };
 
 export const times = (n, iteratee) => {
@@ -80,78 +89,33 @@ export const isIterable = iterable => {
   return typeof iterable[Symbol.iterator] === 'function';
 };
 
-const baseChunk = (iterable, size) => {
-  if (!iterable.length || size < 1) return [];
+const chunkBase = (iterable, size = 1, customizer = identity) => {
+  if (!iterable.length || Math.floor(size) < 1) return [];
 
-  const _baseChunk = (
-    iterable,
-    size,
-    start = 0,
-    end = Math.min(size, iterable.length),
-    result = []
-  ) => {
-    const isLastChunk = start >= iterable.length - size;
-    return isLastChunk
-      ? [...result, iterable.slice(start, iterable.length)]
-      : _baseChunk(iterable, size, end, Math.min(end + size, iterable.length), [
-          ...result,
-          iterable.slice(start, end),
-        ]);
-  };
-
-  return _baseChunk(iterable, size);
+  return range(0, iterable.length, size).map(
+    (startIndex, i, startingIndices) => {
+      const nextStartIndex = startingIndices[i + 1];
+      const endIndex = nextStartIndex || iterable.length;
+      return customizer(
+        iterable.slice(startIndex, endIndex),
+        startIndex,
+        endIndex
+      );
+    }
+  );
 };
 
-export const chunk = (_iterable, size = 1) => {
-  if (size < 1) return [];
-  const iterable = Array.from(_iterable);
-  return baseChunk(iterable, size);
+export const chunk = (iterable, size = 1, customizer) => {
+  return chunkBase(Array.from(iterable), size, customizer);
 };
 
 export const chunkIndices = (iterable, size = 1) => {
-  if (size < 1) return [];
-
-  const indices = Array.from(iterable).map((_, index) => index);
-  return baseChunk(indices, size);
+  return chunkBase(iterable, size, (_, start, end) => range(start, end));
 };
 
 export const chunkString = (str, size = 1) => {
   if (!str.length || Math.floor(size) < 1) return [''];
-  return baseChunk(str, size);
+  return chunkBase(str, size);
 };
 
 export const splitAt = (arr, index) => [arr.slice(0, index), arr.slice(index)];
-
-// export const chunk = (iterable, size = 1) => {
-//   if (size < 1) return [];
-
-//   const _chunk = (iterable, size, result = []) => {
-//     if (iterable.length < size) return [...result, iterable];
-//     const [nextChunk, remainder] = splitAt(iterable, size);
-//     return _chunk(remainder, size, [...result, nextChunk]);
-//   };
-
-//   return _chunk(iterable, size);
-// };
-
-// export const chunkIndices = (iterable, size = 1) => {
-//   let curResult = [];
-//   if (size < 1) return curResult;
-
-//   times(Math.ceil(iterable.length / size), index => {
-//     const start = index > 0 ? curResult[index - 1][1] : 0;
-//     const end = Math.min(start + size, iterable.length);
-//     curResult = [...curResult, [start, end]];
-//   });
-
-//   return curResult;
-// };
-
-// export const chunk = (iterable, size = 1) => {
-//   const indices = chunkIndices(iterable, size);
-//   return size < 1
-//     ? []
-//     : indices.map(curRange =>
-//         iterable.slice(first(curRange), last(curRange) + 1)
-//       );
-// };
