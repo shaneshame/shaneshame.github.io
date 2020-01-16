@@ -51,9 +51,32 @@ describe('range', () => {
   });
 
   it('should handle negative start with negative step', () => {
-    const actual = range(0, -4, -1);
-    const expected = [0, -1, -2, -3];
+    const actual = range(-1, -5, -1);
+    const expected = [-1, -2, -3, -4];
 
+    expect(actual).toEqual(expected);
+  });
+
+  it('should handle a postive `start` and negative `stop`', () => {
+    const actual = range(1, -10, -2);
+    const expected = [1, -1, -3, -5, -7, -9];
+
+    expect(actual).toEqual(expected);
+  });
+
+  it('should handle a negative `start` and positive `stop`', () => {
+    const actual = range(-1, 10, 2);
+    const expected = [-1, 1, 3, 5, 7, 9];
+
+    expect(actual).toEqual(expected);
+  });
+
+  it('should return an empty array if the step moves in the wrong direction', () => {
+    let actual = range(5, 1, 1); // Descending but provides positive step
+    const expected = [];
+    expect(actual).toEqual(expected);
+
+    actual = range(1, 5, -1); // Ascending but provides negative step
     expect(actual).toEqual(expected);
   });
 

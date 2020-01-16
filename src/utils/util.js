@@ -56,23 +56,27 @@ export const invokeWhen = (cond, f) => value => {
 };
 
 const getSign = n => {
-  const sign = Math.sign(n);
-  return sign === 0 ? 1 : sign === -0 ? -1 : sign;
+  return n >= 0 ? 1 : -1;
 };
 
 export const range = (_start, _stop, _step) => {
   const start = _stop ? _start : 0;
   const stop = _stop ? _stop : _start;
-  const step = _step !== undefined ? _step : start > stop ? -1 : 1;
 
-  const length =
-    step === 0
-      ? Math.abs(stop - start)
-      : Math.abs(Math.ceil((stop - start) / step));
+  const isDescending = start > stop;
 
-  return [...Array(length).keys()].map(n =>
-    step === 0 ? start : (start + n * getSign(step)) * Math.abs(step)
-  );
+  const step = _step !== undefined ? _step : isDescending ? -1 : 1;
+
+  const hasLegalParameters =
+    step === 0 || (isDescending && step < 0) || (!isDescending && step > 0);
+
+  const length = !hasLegalParameters
+    ? 0
+    : step === 0
+    ? Math.abs(stop - start)
+    : Math.abs(Math.ceil((stop - start) / step));
+
+  return [...Array(length).keys()].map(n => start + step * n);
 };
 
 export const times = (n, iteratee) => {
