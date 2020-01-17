@@ -55,26 +55,14 @@ export const invokeWhen = (cond, f) => value => {
   return predicate ? f(value) : value;
 };
 
-const getSign = n => {
-  return n >= 0 ? 1 : -1;
-};
+export const isUndefined = v => v === undefined;
+export const isDefined = v => !isUndefined(v);
 
-export const range = (_start, _stop, _step) => {
-  const start = _stop ? _start : 0;
-  const stop = _stop ? _stop : _start;
-
-  const isDescending = start > stop;
-
-  const step = _step !== undefined ? _step : isDescending ? -1 : 1;
-
-  const hasLegalParameters =
-    step === 0 || (isDescending && step < 0) || (!isDescending && step > 0);
-
-  const length = !hasLegalParameters
-    ? 0
-    : step === 0
-    ? Math.abs(stop - start)
-    : Math.abs(Math.ceil((stop - start) / step));
+export const range = (_start, _end, _step) => {
+  const start = isDefined(_end) ? _start : 0;
+  const end = isDefined(_end) ? _end : _start;
+  const step = isDefined(_step) ? _step : start < end ? 1 : -1;
+  const length = Math.max(Math.ceil((end - start) / (step || 1)), 0);
 
   return [...Array(length).keys()].map(n => start + step * n);
 };
