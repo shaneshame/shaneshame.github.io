@@ -58,13 +58,23 @@ export const invokeWhen = (cond, f) => value => {
 export const isUndefined = v => v === undefined;
 export const isDefined = v => !isUndefined(v);
 
+const newArray = length => {
+  const result = new Array(length);
+
+  while (length--) {
+    result[length] = undefined;
+  }
+
+  return result;
+};
+
 export const range = (_start, _end, _step) => {
   const start = isDefined(_end) ? _start : 0;
   const end = isDefined(_end) ? _end : _start;
   const step = isDefined(_step) ? _step : start < end ? 1 : -1;
   const length = Math.max(Math.ceil((end - start) / (step || 1)), 0);
 
-  return [...Array(length).keys()].map(n => start + step * n);
+  return newArray(length).map((_, i) => start + step * i);
 };
 
 export const times = (n, iteratee) => {

@@ -1,35 +1,35 @@
 import { chunk, chunkIndices, chunkString, range, times } from './util';
 
 describe('range', () => {
-  it('should create Array with only `stop`', () => {
+  it('should create Array with only `end`', () => {
     const actual = range(4);
     const expected = [0, 1, 2, 3];
 
     expect(actual).toEqual(expected);
   });
 
-  it('should create Array with `start` and `stop`', () => {
+  it('should create Array with `start` and `end`', () => {
     const actual = range(1, 5);
     const expected = [1, 2, 3, 4];
 
     expect(actual).toEqual(expected);
   });
 
-  it('should create Array with `start` and `stop` and `step` even', () => {
+  it('should create Array with `start` and `end` and `step` even', () => {
     const actual = range(0, 20, 5);
     const expected = [0, 5, 10, 15];
 
     expect(actual).toEqual(expected);
   });
 
-  it('should create Array with `start` and `stop` and `step` uneven', () => {
+  it('should create Array with `start` and `end` and `step` uneven', () => {
     const actual = range(0, 4, 2);
     const expected = [0, 2];
 
     expect(actual).toEqual(expected);
   });
 
-  it('should infer negative step when start > stop', () => {
+  it('should infer negative step when `start` > `end`', () => {
     const actual = range(6, 3);
     const expected = [6, 5, 4];
 
@@ -43,35 +43,35 @@ describe('range', () => {
     expect(actual).toEqual(expected);
   });
 
-  it('should handle negative start', () => {
+  it('should handle negative `start`', () => {
     const actual = range(-4);
     const expected = [0, -1, -2, -3];
 
     expect(actual).toEqual(expected);
   });
 
-  it('should handle negative start with negative step', () => {
+  it('should handle negative `start` with negative `step`', () => {
     const actual = range(-1, -5, -1);
     const expected = [-1, -2, -3, -4];
 
     expect(actual).toEqual(expected);
   });
 
-  it('should handle a postive `start` and negative `stop`', () => {
+  it('should handle a postive `start` and negative `end`', () => {
     const actual = range(1, -10, -2);
     const expected = [1, -1, -3, -5, -7, -9];
 
     expect(actual).toEqual(expected);
   });
 
-  it('should handle a negative `start` and positive `stop`', () => {
+  it('should handle a negative `start` and positive `end`', () => {
     const actual = range(-1, 10, 2);
     const expected = [-1, 1, 3, 5, 7, 9];
 
     expect(actual).toEqual(expected);
   });
 
-  it('should return an empty array if the step moves in the wrong direction', () => {
+  it('should return an empty array if the `step` moves in the wrong direction', () => {
     let actual = range(5, 1, 1); // Descending but provides positive step
     const expected = [];
     expect(actual).toEqual(expected);
@@ -80,7 +80,7 @@ describe('range', () => {
     expect(actual).toEqual(expected);
   });
 
-  it('should handle a step of 0', () => {
+  it('should handle a `step` of 0', () => {
     const actual = range(1, 4, 0);
     const expected = [1, 1, 1];
 
