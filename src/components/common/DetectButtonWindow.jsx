@@ -54,6 +54,8 @@ const DetectButtonWindow = ({
   onBlock,
   onCapture,
 }) => {
+  let isFocused = true;
+
   const handleMouseDown = useCallback(
     event => {
       const { button } = event;
@@ -120,7 +122,13 @@ const DetectButtonWindow = ({
               width: '100%',
             }}
           >
-            Click Inside Here
+            <span>
+              {isFocused ? 'Capturing...' : 'Focus this window to capture'}
+            </span>
+            <br />
+            {isFocused && (
+              <span>Press any key, or click mouse inside this box</span>
+            )}
           </span>
         </CaptureArea>
       </NewWindow>

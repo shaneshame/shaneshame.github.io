@@ -414,23 +414,6 @@ const CycleBind = () => {
         />
       </Row>
       <Row>
-        <CopyButton
-          clipboardStatus={clipboardStatus}
-          disabled={!cycleScript}
-          onClick={() => copyToClipboard(cycleScript)}
-        />
-        <ButtonLink
-          disabled={!cycleScript}
-          download={downloadAttrs.download}
-          href={downloadAttrs.href}
-          rel="noopener noreferrer"
-          target="_blank"
-        >
-          Download&nbsp;
-          <i className="fas fa-download" />
-        </ButtonLink>
-      </Row>
-      <Row>
         <RulesList>
           <RulesItem>Each line will be a new message.</RulesItem>
           <RulesItem>
@@ -471,7 +454,29 @@ const CycleBind = () => {
             }
           `}
         >
-          <SectionHeader>Output</SectionHeader>
+          <SectionHeader
+            css={`
+              display: inline-block;
+              margin-right: 20px;
+            `}
+          >
+            Output
+          </SectionHeader>
+          <CopyButton
+            clipboardStatus={clipboardStatus}
+            disabled={!cycleScript}
+            onClick={() => copyToClipboard(cycleScript)}
+          />
+          <ButtonLink
+            disabled={!cycleScript}
+            download={downloadAttrs.download}
+            href={downloadAttrs.href}
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            Download&nbsp;
+            <i className="fas fa-download" />
+          </ButtonLink>
           <CodeArea
             fontSize={fontSize}
             id="cycle-script"
