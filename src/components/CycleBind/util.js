@@ -2,11 +2,13 @@ import { filter, flow, map, reduce, trim } from 'lodash/fp';
 import { chunkString, invokeWhen, pascalCase } from 'utils';
 import * as yup from 'yup';
 
-const DEFAULT_BINDNAME = 'HelloWorld';
-const DEFAULT_FILENAME = 'helloworld-cyclebind.cfg';
-const IDEAL_CHARS_PER_LINE = 82;
-const MAX_CHARS_PER_LINE = 127;
-const MIN_ROWS = 10;
+import {
+  DEFAULT_BINDNAME,
+  DEFAULT_FILENAME,
+  IDEAL_CHARS_PER_LINE,
+  MAX_CHARS_PER_LINE,
+  MIN_ROWS,
+} from './constants';
 
 const getLines = text => (text ? text.split('\n') : []);
 const countLines = text => getLines(text).length;
