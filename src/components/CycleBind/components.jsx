@@ -18,10 +18,6 @@ const SectionHeader = styled.h3`
   padding-bottom: 4.5px;
 `;
 
-const Label = styled.label`
-  display: block;
-`;
-
 const CodeArea = styled(TextArea)`
   font-family: Consolas, Monaco, Lucida Console, Liberation Mono,
     DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New;
@@ -59,7 +55,6 @@ export {
   CodeArea,
   Container,
   Header,
-  Label,
   P,
   Row,
   RulesItem,
