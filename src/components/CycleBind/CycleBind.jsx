@@ -184,6 +184,7 @@ const CycleBind = () => {
 
       return {
         download: fileName,
+        fileName,
         href: url,
         revoke: () => {
           url && URL.revokeObjectURL(url);
@@ -474,7 +475,14 @@ const CycleBind = () => {
             rel="noopener noreferrer"
             target="_blank"
           >
-            Download&nbsp;
+            Download as{' '}
+            <code
+              css={`
+                margin-right: 6px;
+              `}
+            >
+              cfg
+            </code>
             <i className="fas fa-download" />
           </ButtonLink>
           <CodeArea
@@ -486,6 +494,34 @@ const CycleBind = () => {
             value={cycleScript}
             wrap="off"
           />
+          <div
+            css={`
+              margin-top: 10px;
+            `}
+          >
+            <CopyButton
+              clipboardStatus={clipboardStatus}
+              disabled={!cycleScript}
+              onClick={() => copyToClipboard(cycleScript)}
+            />
+            <ButtonLink
+              disabled={!cycleScript}
+              download={downloadAttrs.download}
+              href={downloadAttrs.href}
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              Download as{' '}
+              <code
+                css={`
+                  margin-right: 6px;
+                `}
+              >
+                cfg
+              </code>
+              <i className="fas fa-download" />
+            </ButtonLink>
+          </div>
         </Section>
       </SectionsContainer>
     </Container>
