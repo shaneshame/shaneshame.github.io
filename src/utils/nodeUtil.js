@@ -28,6 +28,7 @@ const PATH_NORMALIZER = toLowerCase;
 
 const EXCEPTIONS_MAP = {
   tf2: toLowerCase,
+  'tf2-server-info': toLowerCase,
 };
 
 const EXCEPTIONS = mapKeys(EXCEPTIONS_MAP, (_, key) => PATH_NORMALIZER(key));
