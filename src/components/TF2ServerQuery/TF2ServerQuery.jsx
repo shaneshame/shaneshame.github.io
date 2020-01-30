@@ -1,9 +1,19 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import { media } from 'utils';
 
-import { Button, Header, Input, Label, Row } from '../common';
+import { Label as BaseLabel, Button, Header, Input, Row } from '../common';
 
 const IP_EXAMPLE = '74.91.123.146:27015';
+
+const Label = styled(BaseLabel)`
+  display: block;
+  margin-right: 10px;
+
+  ${media.tablet} {
+    display: inline-block;
+  }
+`;
 
 const Form = styled.form``;
 
@@ -15,8 +25,9 @@ const TF2ServerQuery = () => {
     setServerIP(newServerIP);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = event => {
     console.log('Form submitted', 'IP:', serverIP);
+    event.preventDefault();
   };
 
   return (
@@ -24,15 +35,7 @@ const TF2ServerQuery = () => {
       <Header>TF2 Server Query</Header>
       <Row>
         <Form onSubmit={handleSubmit}>
-          <Label
-            css={`
-              display: inline-block;
-              margin-right: 10px;
-            `}
-            htmlFor="server-ip"
-          >
-            Server IP:
-          </Label>
+          <Label htmlFor="server-ip">TF2 Server IP:</Label>
           <Input
             id="server-ip"
             onChange={handleChangeServerIP}
@@ -40,7 +43,15 @@ const TF2ServerQuery = () => {
             type="text"
             value={serverIP}
           />
-          <Button role="submit">Search</Button>
+          <Button
+            css={`
+              margin-left: 5px;
+              padding: 1px 10px;
+            `}
+            role="submit"
+          >
+            Search
+          </Button>
         </Form>
       </Row>
     </div>
