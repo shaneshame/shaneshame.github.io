@@ -329,16 +329,36 @@ const CycleBind = () => {
         >
           (?)
         </a>
-        <Button
+        <div
           css={`
-            height: 50px;
-            margin: 0 20px;
-            width: 150px;
+            ${media.tablet} {
+              align-items: center;
+              display: inline-flex;
+            }
           `}
-          onClick={handleCapture}
         >
-          {isCapturing ? 'Stop capturing' : 'Auto-detect Key'}
-        </Button>
+          <Button
+            css={`
+              height: 50px;
+              margin: 5px 5px 0 0;
+              width: 150px;
+
+              ${media.tablet} {
+                margin: 0 10px 0 20px;
+              }
+            `}
+            onClick={handleCapture}
+          >
+            {isCapturing ? 'Stop capturing' : 'Auto-detect Key'}
+          </Button>
+          <span
+            css={`
+              font-size: 10px;
+            `}
+          >
+            Note: Opens a new window
+          </span>
+        </div>
         <DetectButtonWindow
           isCapturing={isCapturing}
           onBlock={() => alert('Must enable popups to use auto-detect.')}
@@ -389,8 +409,10 @@ const CycleBind = () => {
         >
           <SectionHeader
             css={`
-              display: inline-block;
-              margin-right: 20px;
+              ${media.tablet} {
+                display: inline-block;
+                margin-right: 20px;
+              }
             `}
           >
             Output
@@ -418,6 +440,13 @@ const CycleBind = () => {
             <i className="fas fa-download" />
           </ButtonLink>
           <CodeArea
+            css={`
+              margin-top: 5px;
+
+              ${media.tablet} {
+                margin-top: 0;
+              }
+            `}
             fontSize={fontSize}
             id="cycle-script"
             placeholder="TF2 script output will appear here"
