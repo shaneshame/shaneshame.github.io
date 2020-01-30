@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const TF2ServerInfo = () => {
+const TF2ServerQuery = () => {
   return (
     <div>
       <h1>TF2 Server Query</h1>
@@ -9,4 +9,4 @@ const TF2ServerInfo = () => {
   );
 };
 
-export default TF2ServerInfo;
+export default TF2ServerQuery;

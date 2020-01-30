@@ -14,6 +14,6 @@ module.exports = [
   {
     name: 'TF2 Server Info',
     path: 'tf2-server-info/',
-    template: 'TF2ServerInfo.jsx',
+    template: 'TF2ServerQuery.jsx',
   },
 ];
