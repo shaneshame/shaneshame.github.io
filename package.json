@@ -16,15 +16,6 @@
     "type": "git",
     "url": "git+https://github.com/shaneshame/shaneshame.github.io.git"
   },
-  "scripts": {
-    "band": "yarn clean && yarn build && yarn deploy",
-    "build": "gatsby build",
-    "clean": "rm -rf ./.cache && rm -rf ./public",
-    "deep-clean": "yarn clean && node ./node_modules/gh-pages/bin/gh-pages-clean",
-    "deploy": "gh-pages -b master -d public",
-    "dev": "rm -rf ./.cache && gatsby develop",
-    "test": "jest ./src --watch"
-  },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.25",
     "@fortawesome/free-regular-svg-icons": "^5.11.2",
@@ -118,5 +109,14 @@
     "testMatch": [
       "**/?(*.)+(spec|test).[jt]s?(x)"
     ]
+  },
+  "scripts": {
+    "band": "yarn clean && yarn build && yarn deploy",
+    "build": "gatsby build",
+    "clean": "rm -rf ./.cache && rm -rf ./public",
+    "deep-clean": "yarn clean && node ./node_modules/gh-pages/bin/gh-pages-clean",
+    "deploy": "gh-pages -b master -d public",
+    "dev": "rm -rf ./.cache && gatsby develop",
+    "test": "jest ./src --watch"
   }
 }
