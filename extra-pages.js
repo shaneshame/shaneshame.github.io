@@ -11,9 +11,4 @@ module.exports = [
     path: 'cycle-bind/',
     template: 'CycleBind.jsx',
   },
-  {
-    name: 'TF2 Server Info',
-    path: 'tf2-server-info/',
-    template: 'TF2ServerQuery.jsx',
-  },
 ];
