@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import Gamedig from 'gamedig';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { media } from 'utils';
 
 import { Label as BaseLabel, Button, Header, Input, Row } from '../common';
 
-const IP_EXAMPLE = '74.91.123.146:27015';
+const IP_EXAMPLE = '74.91.123.146';
+const PORT_DEFAULT = 27015;
 
 const Label = styled(BaseLabel)`
   display: block;
@@ -19,16 +21,35 @@ const Form = styled.form``;
 
 const TF2ServerQuery = () => {
   const [serverIP, setServerIP] = useState('');
+  const [port, setPort] = useState(PORT_DEFAULT);
 
   const handleChangeServerIP = e => {
     const newServerIP = e.target.value;
     setServerIP(newServerIP);
   };
 
+  const handleChangePort = e => {
+    const port = e.target.value;
+    setPort(port);
+  };
+
   const handleSubmit = event => {
     console.log('Form submitted', 'IP:', serverIP);
     event.preventDefault();
   };
+
+  useEffect(() => {
+    Gamedig.query({
+      host: '74.91.123.146',
+      type: 'tf2',
+    })
+      .then(state => {
+        console.log(state);
+      })
+      .catch(error => {
+        console.log('Server is offline');
+      });
+  });
 
   return (
     <div>
@@ -42,6 +63,13 @@ const TF2ServerQuery = () => {
             placeholder={IP_EXAMPLE}
             type="text"
             value={serverIP}
+          />
+          <Label htmlFor="port">Port:</Label>
+          <Input
+            id="port"
+            onChange={handleChangePort}
+            type="text"
+            value={port}
           />
           <Button
             css={`
