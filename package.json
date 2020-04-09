@@ -111,12 +111,13 @@
     ]
   },
   "scripts": {
-    "band": "yarn clean && yarn build && yarn deploy",
-    "build": "gatsby build",
-    "clean": "rm -rf ./.cache && rm -rf ./public",
-    "deep-clean": "yarn clean && node ./node_modules/gh-pages/bin/gh-pages-clean",
-    "deploy": "gh-pages -b master -d public",
+    "band": "npm run _clean && npm run _build && npm run _deploy",
     "dev": "rm -rf ./.cache && gatsby develop",
-    "test": "jest ./src --watch"
+    "start": "npm run dev",
+    "test": "jest ./src --watch",
+    "_build": "gatsby build",
+    "_clean": "rm -rf ./.cache && rm -rf ./public",
+    "_deep-clean": "npm run _clean && node ./node_modules/gh-pages/bin/gh-pages-clean",
+    "_deploy": "gh-pages -b master -d public"
   }
 }
