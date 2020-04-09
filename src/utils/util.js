@@ -58,7 +58,7 @@ export const invokeWhen = (cond, f) => value => {
 export const isUndefined = v => v === undefined;
 export const isDefined = v => !isUndefined(v);
 
-const newArray = length => {
+export const newArray = length => {
   const result = new Array(length);
 
   while (length--) {
