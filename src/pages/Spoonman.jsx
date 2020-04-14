@@ -7,6 +7,16 @@ import screenshot from './spoonman.png';
 const serverIP = '74.91.115.39';
 const discordInviteLink = 'https://discord.gg/KH866DB';
 
+/* eslint-disable sort-keys */
+const unfurlData = {
+  name: 'Spoonman',
+  title: '[Chicago] Payload+',
+  description: 'Server IP: 74.91.115.39',
+  screenshot,
+  url: 'https://discord.gg/KH866DB',
+};
+/* eslint-enable sort-keys */
+
 export const windowSize = {
   height: 400,
   width: 400,
@@ -151,11 +161,11 @@ const Label = styled.label`
 const MOTDUnfurlHeader = () => {
   return (
     <Helmet>
-      <meta content="https://discord.gg/KH866DB" property="og:url" />
-      <meta content="Spoonman | [Chicago] Payload+" property="og:title" />
-      <meta content="Server IP: 74.91.115.39" property="og:description" />
-      <meta content="Spoonman" property="og:site_name" />
-      <meta content={screenshot} property="og:image" />
+      <meta content={unfurlData.url} property="og:url" />
+      <meta content={unfurlData.title} property="og:title" />
+      <meta content={unfurlData.description} property="og:description" />
+      <meta content={unfurlData.name} property="og:site_name" />
+      <meta content={unfurlData.screenshot} property="og:image" />
     </Helmet>
   );
 };
