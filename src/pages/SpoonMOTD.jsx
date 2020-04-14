@@ -1,11 +1,14 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const windowHeight = '640px';
-const windowWidth = '800px';
+const windowHeight = '100vh';
+const windowWidth = '100vw';
+// const windowHeight = '640px';
+// const windowWidth = '800px';
 
 const colors = {
-  darkBlue: '#6074ca',
+  darkBlue: '#7289da',
+  darkBlueHover: '#677bc4',
   darkGray: '#2f3136',
   discordBlueLink: '#00b0f4',
   lightGray: '#36393f',
@@ -33,12 +36,12 @@ const InnerBox = styled.div`
   box-shadow: 20px 20px 47px #17181a, -20px -20px 47px #474a52;
   box-sizing: border-box;
   color: ${colors.white};
-  height: 50%;
+  height: 400px;
   left: 50%;
   margin: 0 auto;
   padding: 1em;
   position: absolute;
-  width: 50%;
+  width: 400px;
   top: 45%;
   transform: translate(-50%, -50%);
 
@@ -53,7 +56,7 @@ const ContentContainer = styled.div`
   position: absolute;
   text-align: center;
   left: 50%;
-  top: 45%;
+  top: 50%;
   transform: translate(-50%, -50%);
 `;
 
@@ -78,14 +81,23 @@ const Link = styled.a`
 const LinkButton = styled.a`
   background-color: ${colors.darkBlue};
   border-radius: 3px;
+
   color: ${colors.white};
   display: inline-block;
   font-family: Impact, Charcoal, sans-serif;
   font-size: 23px;
-  letter-spacing: 1px;
+  letter-spacing: 1.5px;
   margin-top: 1em;
   padding: 0.75em 1em;
+  text-decoration: none;
   text-transform: uppercase;
+  transition: background-color 0.1s ease, box-shadow 0.1s ease;
+
+  &:hover {
+    background-color: ${colors.darkBlueHover};
+    box-shadow: 0 12px 12px -6px black, 0 0 12px 2px #474a52;
+    text-decoration: none;
+  }
 `;
 
 const MOTD = () => {
