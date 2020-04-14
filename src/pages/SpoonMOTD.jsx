@@ -86,13 +86,14 @@ const codeStyles = `
   background-color: ${colors.darkerGray};
   border: none;
   color: inherit;
+  cursor: pointer;
   font-family: monospace, monospace;
-  font-size: 0.85rem;
+  font-size: 1rem;
   line-height: 1.625rem;
   margin-top: .75rem;
-  padding: 0.25rem 0.5rem;
+  padding: 0.25rem;
   text-align: center;
-  width: 14rem;
+  width: 16rem;
 `;
 
 const CodeInput = styled.input`
@@ -110,86 +111,8 @@ const Link = styled.a`
   text-transform: uppercase;
 `;
 
-const LinkButton = styled.button`
-  background-color: ${colors.darkBlue};
-  border: none;
-  border-radius: 3px;
-
-  color: ${colors.white};
-  cursor: pointer;
-  display: inline-block;
-  font-family: Impact, Charcoal, sans-serif;
-  font-size: 23px;
-  letter-spacing: 1.5px;
-  margin-top: 1em;
-  padding: 0.75em 1em;
-  text-decoration: none;
-  text-transform: uppercase;
-  transition: background-color 0.1s ease, box-shadow 0.2s ease;
-  width: 8.5em;
-
-  &:hover {
-    background-color: ${colors.darkBlueHover};
-    box-shadow: 0 12px 12px -6px ${colors.darkerGray}, 0 0 6px #474a52;
-    text-decoration: none;
-  }
-
-  &.success {
-    background-color: ${colors.darkGreen};
-
-    &:hover {
-      background-color: ${colors.darkerGreen};
-      box-shadow: 0 12px 12px -6px ${colors.darkerGray}, 0 0 6px #474a52;
-      text-decoration: none;
-    }
-  }
-
-  &.error {
-    background-color: ${colors.brown};
-
-    &:hover {
-      background-color: ${colors.darkBrown};
-      box-shadow: 0 12px 12px -6px ${colors.darkerGray}, 0 0 6px #474a52;
-      text-decoration: none;
-    }
-  }
-`;
-
-const writeToClipboard = text => {
-  return navigator.clipboard.writeText(text).then(
-    () => {
-      console.log('Text copied to clipboard');
-    },
-    err => {
-      // This can happen if the user denies clipboard permissions:
-      console.error('Could not copy text: ', err);
-    }
-  );
-};
-
-const handleCopyToClipboard = text => {
-  return navigator.permissions
-    .query({ name: 'clipboard-write' })
-    .then(result => {
-      if (result.state === 'granted' || result.state === 'prompt') {
-        return writeToClipboard(text);
-      }
-    });
-};
-
 const MOTD = () => {
   const [isSSR, setSSR] = useState(true);
-  const [copyLinkState, setCopyLinkState] = useState();
-
-  const handleCopyLink = () => {
-    handleCopyToClipboard(discordInviteLink)
-      .then(() => {
-        setCopyLinkState('success');
-      })
-      .catch(() => {
-        setCopyLinkState('error');
-      });
-  };
 
   useEffect(() => {
     setSSR(false);
@@ -208,25 +131,20 @@ const MOTD = () => {
           <Link href="https://paste.ubuntu.com/p/PN94TXyhbw/">
             Don't be an asshole
           </Link>
-          <LinkButton
-            className={clsx({ [copyLinkState]: !!copyLinkState })}
-            onClick={handleCopyLink}
-          >
-            {!copyLinkState
-              ? 'Join Discord'
-              : copyLinkState === 'success'
-              ? 'Link Copied'
-              : 'Copy Failed'}
-          </LinkButton>
           {isSSR ? (
-            <Code>{discordInviteLink}</Code>
+            <b>
+              <Code>{discordInviteLink}</Code>
+            </b>
           ) : (
-            <CodeInput
-              onClick={event => {
-                event.target.select();
-              }}
-              value={discordInviteLink}
-            />
+            <b>
+              <CodeInput
+                onClick={event => {
+                  event.target.select();
+                }}
+                readOnly
+                value={discordInviteLink}
+              />
+            </b>
           )}
         </ContentContainer>
       </InnerBox>
