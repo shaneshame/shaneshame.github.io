@@ -1,7 +1,7 @@
-import clsx from 'clsx';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
+const serverIP = '74.91.115.39';
 const discordInviteLink = 'https://discord.gg/KH866DB';
 
 const colors = {
@@ -23,7 +23,9 @@ const Container = styled.div`
   background-color: ${colors.lightGray};
   font-family: Tahoma, Geneva, sans-serif;
   font-size: 16px;
+  display: flex;
   height: 100vh;
+  justify-content: center;
   overflow-y: hidden;
   position: relative;
 
@@ -41,18 +43,22 @@ const InnerBox = styled.div`
   box-sizing: border-box;
   color: ${colors.green};
   height: 400px;
-  left: 50%;
-  margin: 0 auto;
+  opacity: 0;
   padding: 1em;
-  position: absolute;
+  position: relative;
   width: 400px;
   top: 45%;
-  transform: translate(-50%, -50%);
+  transition: opacity 0.2s ease;
+  transform: translateY(-50%);
 
   *,
   *:before,
   *:after {
     box-sizing: border-box;
+  }
+
+  &.isOpen {
+    opacity: 1;
   }
 `;
 
@@ -90,7 +96,6 @@ const codeStyles = `
   font-family: monospace, monospace;
   font-size: 1rem;
   line-height: 1.625rem;
-  margin-top: .75rem;
   padding: 0.25rem;
   text-align: center;
   width: 16rem;
@@ -104,10 +109,21 @@ const Code = styled.pre`
   ${codeStyles}
 `;
 
+const InfoLabel = styled.b`
+  color: ${colors.darkBlue};
+`;
+
 const Link = styled.a`
   color: ${colors.discordBlueLink};
   display: inline-block;
   margin: 1em 0;
+  text-transform: uppercase;
+`;
+
+const Label = styled.label`
+  display: block;
+  letter-spacing: 1px;
+  margin: 0.75rem 0;
   text-transform: uppercase;
 `;
 
@@ -120,7 +136,7 @@ const MOTD = () => {
 
   return (
     <Container>
-      <InnerBox>
+      <InnerBox className="isOpen">
         <ContentContainer>
           <Title>
             {'Spoon'.split('').map((letter, index) => (
@@ -128,24 +144,37 @@ const MOTD = () => {
             ))}
             man
           </Title>
-          <Link href="https://paste.ubuntu.com/p/PN94TXyhbw/">
-            Don't be an asshole
-          </Link>
-          {isSSR ? (
-            <b>
-              <Code>{discordInviteLink}</Code>
-            </b>
-          ) : (
-            <b>
+          <Link>Don't be an asshole</Link>
+          <Label htmlFor="discordInviteLink">
+            <InfoLabel>Discord</InfoLabel>
+            {isSSR ? (
+              <Code id="discordInviteLink">{discordInviteLink}</Code>
+            ) : (
               <CodeInput
+                id="discordInviteLink"
                 onClick={event => {
                   event.target.select();
                 }}
                 readOnly
                 value={discordInviteLink}
               />
-            </b>
-          )}
+            )}
+          </Label>
+          <Label htmlFor="serverIP">
+            <InfoLabel>Server IP</InfoLabel>
+            {isSSR ? (
+              <Code id="serverIP">{serverIP}</Code>
+            ) : (
+              <CodeInput
+                id="serverIP"
+                onClick={event => {
+                  event.target.select();
+                }}
+                readOnly
+                value={serverIP}
+              />
+            )}
+          </Label>
         </ContentContainer>
       </InnerBox>
     </Container>
