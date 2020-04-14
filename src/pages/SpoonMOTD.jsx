@@ -91,11 +91,11 @@ const LinkButton = styled.a`
   padding: 0.75em 1em;
   text-decoration: none;
   text-transform: uppercase;
-  transition: background-color 0.1s ease, box-shadow 0.1s ease;
+  transition: background-color 0.1s ease, box-shadow 0.2s ease;
 
   &:hover {
     background-color: ${colors.darkBlueHover};
-    box-shadow: 0 12px 12px -6px black, 0 0 12px 2px #474a52;
+    box-shadow: 0 12px 12px -6px #17181a, 0 0 6px #474a52;
     text-decoration: none;
   }
 `;
