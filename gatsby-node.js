@@ -1,12 +1,8 @@
-const fs = require('fs-extra');
-
 const extraPages = require('./extra-pages.js');
 const { pathCase, replaceTrailingSlash } = require('./src/utils/nodeUtil');
 const path = require(`path`);
 const { createFilePath } = require(`gatsby-source-filesystem`);
 const { paginate } = require(`gatsby-awesome-pagination`);
-
-const captureSpoonman = require('./src/gatsby/captureSpoonman');
 
 const CATEGORY_COVER = 'icon.png';
 
@@ -192,16 +188,4 @@ exports.onCreatePage = ({ actions, page }) => {
     deletePage(oldPage);
     createPage(page);
   }
-};
-
-const saveFile = (filePath, fileData) => {
-  fs.ensureDirSync(filePath);
-  fs.writeFileSync(filePath, fileData);
-};
-
-exports.onPreBuild = async () => {
-  const imagesPath = 'static/spoonman';
-  const capture = await captureSpoonman();
-
-  saveFile(`${imagesPath}/spoonman.png`, capture);
 };
