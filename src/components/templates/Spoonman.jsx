@@ -96,7 +96,7 @@ const Title = styled.h1`
   border: 1px solid ${colors.pink};
   color: ${colors.pink};
   margin: 0;
-  padding: 0.5em 0 0.5em 0;
+  padding: 0.5em 0 calc(0.5em + 2px) 0;
   position: relative;
   text-transform: uppercase;
 
