@@ -52,17 +52,18 @@ const ContentContainer = styled.div`
   position: absolute;
   text-align: center;
   left: 50%;
-  top: 50%;
+  top: calc(50% - 0.5em);
   transform: translate(-50%, -50%);
 `;
 
 const Title = styled.h1`
-  margin: 0 0 0.5em 0;
+  margin: 0;
+  padding: 0.5em 0 0.5em 0;
   text-transform: uppercase;
 
   span {
     display: inline-block;
-    transition: transform 0.2s ease;
+    transition: transform 0.4s ease;
   }
 
   &:hover {
@@ -71,12 +72,6 @@ const Title = styled.h1`
       transform: scaleX(-1);
     }
   }
-`;
-
-const CeneteredRow = styled.div`
-  display: block;
-  height: auto;
-  margin: 0 auto;
 `;
 
 const Link = styled.a`
@@ -119,16 +114,12 @@ const MOTD = () => {
             ))}
             man
           </Title>
-          <CeneteredRow>
-            <Link href="https://paste.ubuntu.com/p/PN94TXyhbw/">
-              Don't be an asshole
-            </Link>
-          </CeneteredRow>
-          <CeneteredRow>
-            <LinkButton href="https://discord.gg/KH866DB">
-              Join Discord
-            </LinkButton>
-          </CeneteredRow>
+          <Link href="https://paste.ubuntu.com/p/PN94TXyhbw/">
+            Don't be an asshole
+          </Link>
+          <LinkButton href="https://discord.gg/KH866DB">
+            Join Discord
+          </LinkButton>
         </ContentContainer>
       </InnerBox>
     </Container>
