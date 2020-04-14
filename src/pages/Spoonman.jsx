@@ -1,14 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet';
-import RoutineDesign from 'routine-design';
 import styled from 'styled-components';
-
-const routineDesign = new RoutineDesign();
 
 const serverIP = '74.91.115.39';
 const discordInviteLink = 'https://discord.gg/KH866DB';
 
-const windowSize = {
+export const windowSize = {
   height: 400,
   width: 400,
 };
@@ -83,16 +80,20 @@ const ContentContainer = styled.div`
 `;
 
 const Title = styled.h1`
+  border: none;
   margin: 0;
   padding: 0.5em 0 0.5em 0;
   position: relative;
   text-transform: uppercase;
 
   &::before {
+    background-color: ${colors.gray};
     bottom: 0;
     content: '';
     height: 1px;
+    left: 50%;
     position: absolute;
+    transform: translateX(-50%);
     width: 50%;
   }
 
@@ -153,28 +154,13 @@ const Label = styled.label`
 `;
 
 const MOTDUnfurlHeader = () => {
-  const [screenshot, setScreenshot] = useState();
-
-  useEffect(() => {
-    const puppeteer = require('puppeteer');
-    const browser = puppeteer.launch().then(() => {
-      const WebPage = routineDesign.createWebPage(
-        browser,
-        8080,
-        'path',
-        windowSize.width
-      );
-      setScreenshot(WebPage.screenshot());
-    });
-  }, []);
-
   return (
     <Helmet>
       <meta content="https://shaneshame.github.io/Spoonman" property="og:url" />
       <meta content="Spoonman TF2 Server" property="og:title" />
       <meta content="Payload+ // Chicago" property="og:description" />
       <meta content="Shane Shame" property="og:site_name" />
-      <meta content={screenshot} property="og:image" />
+      <meta content="static/screenshots/spoonman.png" property="og:image" />
     </Helmet>
   );
 };
