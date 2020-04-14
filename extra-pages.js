@@ -11,4 +11,9 @@ module.exports = [
     path: 'cycle-bind/',
     template: 'CycleBind.jsx',
   },
+  {
+    name: 'Spoonman',
+    path: 'spoonman/',
+    template: 'Spoonman.jsx',
+  },
 ];

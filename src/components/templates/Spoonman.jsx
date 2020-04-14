@@ -2,7 +2,7 @@ import React from 'react';
 import { Helmet } from 'react-helmet';
 import styled from 'styled-components';
 
-import screenshot from './spoonman.png';
+import screenshot from '../Spoonman/spoonman.png';
 
 const serverIP = '74.91.115.39';
 const discordInviteLink = 'https://discord.gg/KH866DB';
@@ -165,7 +165,7 @@ const MOTDUnfurlHeader = () => {
   );
 };
 
-const MOTD = () => {
+const Spoonman = () => {
   return (
     <Container>
       <MOTDUnfurlHeader />
@@ -206,4 +206,4 @@ const MOTD = () => {
   );
 };
 
-export default MOTD;
+export default Spoonman;
