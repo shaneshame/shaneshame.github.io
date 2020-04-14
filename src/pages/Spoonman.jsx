@@ -151,10 +151,10 @@ const Label = styled.label`
 const MOTDUnfurlHeader = () => {
   return (
     <Helmet>
-      <meta content="https://shaneshame.github.io/Spoonman" property="og:url" />
-      <meta content="Spoonman TF2 Server" property="og:title" />
-      <meta content="Payload+ // Chicago" property="og:description" />
-      <meta content="Shane Shame" property="og:site_name" />
+      <meta content="https://discord.gg/KH866DB" property="og:url" />
+      <meta content="Spoonman | [Chicago] Payload+" property="og:title" />
+      <meta content="Server IP: 74.91.115.39" property="og:description" />
+      <meta content="Spoonman" property="og:site_name" />
       <meta content={screenshot} property="og:image" />
     </Helmet>
   );
