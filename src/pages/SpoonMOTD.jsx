@@ -1,27 +1,23 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const windowHeight = '100vh';
-const windowWidth = '100vw';
-// const windowHeight = '640px';
-// const windowWidth = '800px';
-
 const colors = {
-  darkBlue: '#7289da',
-  darkBlueHover: '#677bc4',
-  darkGray: '#2f3136',
-  discordBlueLink: '#00b0f4',
-  lightGray: '#36393f',
-  white: '#ffffff',
+  darkBlue: '#7289DA',
+  darkBlueHover: '#677BC4',
+  darkGray: '#2F3136',
+  discordBlueLink: '#00B0F4',
+  green: '#008000',
+  lightGray: '#36393F',
+  white: '#FFFFFF',
 };
 
 const Container = styled.div`
   background-color: ${colors.lightGray};
   font-family: Tahoma, Geneva, sans-serif;
   font-size: 16px;
-  height: ${windowHeight};
+  height: 100vh;
+  overflow-y: hidden;
   position: relative;
-  width: ${windowWidth};
 
   *,
   *:before,
@@ -35,7 +31,7 @@ const InnerBox = styled.div`
   border-radius: 10px;
   box-shadow: 20px 20px 47px #17181a, -20px -20px 47px #474a52;
   box-sizing: border-box;
-  color: ${colors.white};
+  color: ${colors.green};
   height: 400px;
   left: 50%;
   margin: 0 auto;
@@ -63,6 +59,18 @@ const ContentContainer = styled.div`
 const Title = styled.h1`
   margin: 0 0 0.5em 0;
   text-transform: uppercase;
+
+  span {
+    display: inline-block;
+    transition: transform 0.2s ease;
+  }
+
+  &:hover {
+    span {
+      filter: FlipH;
+      transform: scaleX(-1);
+    }
+  }
 `;
 
 const CeneteredRow = styled.div`
@@ -105,7 +113,12 @@ const MOTD = () => {
     <Container>
       <InnerBox>
         <ContentContainer>
-          <Title>Spoonman</Title>
+          <Title>
+            {'Spoon'.split('').map((letter, index) => (
+              <span key={index}>{letter}</span>
+            ))}
+            man
+          </Title>
           <CeneteredRow>
             <Link href="https://paste.ubuntu.com/p/PN94TXyhbw/">
               Don't be an asshole
