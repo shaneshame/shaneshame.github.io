@@ -1,6 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Helmet } from 'react-helmet';
 import styled from 'styled-components';
+
+import screenshot from './spoonman.png';
 
 const serverIP = '74.91.115.39';
 const discordInviteLink = 'https://discord.gg/KH866DB';
@@ -110,26 +112,19 @@ const Title = styled.h1`
   }
 `;
 
-const codeStyles = `
+const CodeInput = styled.input`
   background-color: ${colors.darkerGray};
   border: none;
   border-radius: 3px;
   color: inherit;
-  cursor: input;
   font-family: monospace, monospace;
   font-size: 1rem;
   line-height: 1.625rem;
+  margin: 0;
   padding: 0.35rem;
   text-align: center;
+  text-transform: none;
   width: 16rem;
-`;
-
-const CodeInput = styled.input`
-  ${codeStyles}
-`;
-
-const Code = styled.pre`
-  ${codeStyles}
 `;
 
 const InfoLabel = styled.b`
@@ -160,18 +155,12 @@ const MOTDUnfurlHeader = () => {
       <meta content="Spoonman TF2 Server" property="og:title" />
       <meta content="Payload+ // Chicago" property="og:description" />
       <meta content="Shane Shame" property="og:site_name" />
-      <meta content="static/screenshots/spoonman.png" property="og:image" />
+      <meta content={screenshot} property="og:image" />
     </Helmet>
   );
 };
 
 const MOTD = () => {
-  const [isSSR, setSSR] = useState(true);
-
-  useEffect(() => {
-    setSSR(false);
-  }, []);
-
   return (
     <Container>
       <MOTDUnfurlHeader />
@@ -186,33 +175,25 @@ const MOTD = () => {
           <Link>Don't be an asshole</Link>
           <Label htmlFor="discordInviteLink">
             <InfoLabel>Discord</InfoLabel>
-            {isSSR ? (
-              <Code id="discordInviteLink">{discordInviteLink}</Code>
-            ) : (
-              <CodeInput
-                id="discordInviteLink"
-                onClick={event => {
-                  event.target.select();
-                }}
-                readOnly
-                value={discordInviteLink}
-              />
-            )}
+            <CodeInput
+              id="discordInviteLink"
+              onClick={event => {
+                event.target.select();
+              }}
+              readOnly
+              value={discordInviteLink}
+            />
           </Label>
           <Label htmlFor="serverIP">
             <InfoLabel>Server IP</InfoLabel>
-            {isSSR ? (
-              <Code id="serverIP">{serverIP}</Code>
-            ) : (
-              <CodeInput
-                id="serverIP"
-                onClick={event => {
-                  event.target.select();
-                }}
-                readOnly
-                value={serverIP}
-              />
-            )}
+            <CodeInput
+              id="serverIP"
+              onClick={event => {
+                event.target.select();
+              }}
+              readOnly
+              value={serverIP}
+            />
           </Label>
         </ContentContainer>
       </InnerBox>
