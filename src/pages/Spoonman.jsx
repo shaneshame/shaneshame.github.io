@@ -9,11 +9,11 @@ const discordInviteLink = 'https://discord.gg/KH866DB';
 
 /* eslint-disable sort-keys */
 const unfurlData = {
-  name: 'Spoonman',
+  name: 'SPOONMAN | TF2',
   title: '[Chicago] Payload+',
-  description: 'Server IP: 74.91.115.39',
+  description: `Server IP: ${serverIP}\nDiscord: ${discordInviteLink}\n`,
   screenshot,
-  url: 'https://discord.gg/KH866DB',
+  url: 'https://shaneshame.github.io/Spoonman',
 };
 /* eslint-enable sort-keys */
 
@@ -36,6 +36,7 @@ const colors = {
   darkGreen: '#005900',
   darkerGreen: '#013301',
   lightGray: '#36393F',
+  pink: '#ffc0cb',
   white: '#FFFFFF',
 };
 /* eslint-enable sort-keys */
@@ -62,7 +63,7 @@ const InnerBox = styled.div`
   border-radius: 10px;
   box-shadow: 20px 20px 47px ${colors.darkerGray}, -20px -20px 47px #474a52;
   box-sizing: border-box;
-  color: ${colors.green};
+  color: ${colors.pink};
   height: ${windowSize.height}px;
   opacity: 0;
   padding: 1em;
@@ -92,22 +93,12 @@ const ContentContainer = styled.div`
 `;
 
 const Title = styled.h1`
-  border: none;
+  border: 1px solid ${colors.pink};
+  color: ${colors.pink};
   margin: 0;
   padding: 0.5em 0 0.5em 0;
   position: relative;
   text-transform: uppercase;
-
-  &::before {
-    background-color: ${colors.gray};
-    bottom: 0;
-    content: '';
-    height: 1px;
-    left: 50%;
-    position: absolute;
-    transform: translateX(-50%);
-    width: 50%;
-  }
 
   span {
     display: inline-block;
@@ -156,6 +147,10 @@ const Label = styled.label`
   font-size: 0.9rem;
   margin: 0.75rem 0;
   text-transform: uppercase;
+
+  &:first-of-type {
+    margin: 0;
+  }
 `;
 
 const MOTDUnfurlHeader = () => {
