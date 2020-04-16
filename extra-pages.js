@@ -16,4 +16,9 @@ module.exports = [
     path: 'spoonman/',
     template: 'Spoonman.jsx',
   },
+  {
+    name: 'Spoonman Commands',
+    path: 'spoonman-commands/',
+    template: 'SpoonmanCommands.jsx',
+  },
 ];
