@@ -7,6 +7,7 @@ const TableContainer = styled.div`
   color: ${theme.colors.gold};
   font-size: 16px;
   margin: 0 auto;
+  padding: 0.5rem;
   width: 95%;
 `;
 
