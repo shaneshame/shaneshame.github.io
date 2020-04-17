@@ -35,7 +35,7 @@ const transitionDuration = '0.4s';
 const Header = styled.header`
   margin: 0 auto;
   transition: width ${transitionDuration} ease;
-  width: 95%;
+  width: 90;
 `;
 
 const Title = styled.h1`
@@ -44,9 +44,10 @@ const Title = styled.h1`
   display: flex;
   flex-direction: column;
   font-size: 64px;
+  font-weight: 700;
   line-height: 1;
   margin: 0;
-  padding: 0.5rem 0 calc(0.5rem + 2px) 0;
+  padding: 0.5rem 0.5rem calc(0.5rem + 2px) 0.5rem;
   position: relative;
   text-transform: uppercase;
   transition: font-size ${transitionDuration} ease,
