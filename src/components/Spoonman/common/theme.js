@@ -22,9 +22,15 @@ const colors = {
   darkGreen: '#005900',
   darkerGreen: '#013301',
 
+  goldPale: '#d8c999',
+  gold: '#FFD700',
+
   pink: '#ffc0cb',
 
-  white: '#FFFFFF',
+  red: '#ff0000',
+  // red: '#ff0000',
+
+  white: '#e61717',
   offWhite: '#EEEEEE',
 };
 /* eslint-enable sort-keys */
