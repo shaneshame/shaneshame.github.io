@@ -9,14 +9,11 @@ const InnerBox = styled.div`
     -20px -20px 47px #474a52;
   box-sizing: border-box;
   color: ${theme.colors.pink};
-  height: ${theme.windowSize.height}px;
-  opacity: 0;
-  padding: 1em;
+  height: ${theme.floatingBoxDimensions.height}px;
+  padding: 1rem;
   position: relative;
-  width: ${theme.windowSize.width}px;
+  width: ${theme.floatingBoxDimensions.width}px;
   top: 45%;
-  transition: opacity 0.2s ease;
-  transform: translateY(-50%);
 
   *,
   *:before,
@@ -24,8 +21,24 @@ const InnerBox = styled.div`
     box-sizing: border-box;
   }
 
-  &.isOpen {
-    opacity: 1;
+  &.main {
+    transition: transform 0.4s ease;
+    transform: translate(50%, -50%);
+
+    &.isSideOpen {
+      transform: translate(0, -50%);
+    }
+  }
+
+  &.secondary {
+    opacity: 0;
+    transition: opacity 0.4s ease, transform 0.6s ease;
+    transform: translate(50%, -50%);
+
+    &.isSideOpen {
+      transform: translate(0, -50%);
+      opacity: 1;
+    }
   }
 `;
 

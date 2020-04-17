@@ -8,7 +8,7 @@ const Code = styled.code`
   color: ${theme.colors.red};
   font-family: monospace, monospace;
   font-weight: 600;
-  padding: 0.35em;
+  padding: 0.35rem;
 `;
 
 export default Code;
