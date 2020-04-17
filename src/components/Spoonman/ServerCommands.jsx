@@ -1,8 +1,7 @@
-import clsx from 'clsx';
 import React from 'react';
 import styled from 'styled-components';
 
-import { Code, InnerBox, SERVER_COMMANDS, theme } from './common';
+import { Code, SERVER_COMMANDS, theme } from './common';
 
 const TableContainer = styled.div`
   color: ${theme.colors.gold};
@@ -47,36 +46,34 @@ const Description = styled.span`
   color: ${theme.colors.offWhite};
 `;
 
-const CommandsPreview = ({ className }) => {
+const CommandsPreview = () => {
   return (
-    <InnerBox className={clsx('secondary', className)}>
-      <aside>
-        <TableContainer>
-          <Table>
-            <THead>
-              <HeaderRow>
-                <TH>Chat Command</TH>
-                <TH>Description</TH>
-              </HeaderRow>
-            </THead>
-            <TBody>
-              {SERVER_COMMANDS.map(({ command, description }) => {
-                return (
-                  <TR key={command}>
-                    <TD>
-                      <Code>{command}</Code>
-                    </TD>
-                    <TD>
-                      <Description>{description}</Description>
-                    </TD>
-                  </TR>
-                );
-              })}
-            </TBody>
-          </Table>
-        </TableContainer>
-      </aside>
-    </InnerBox>
+    <aside>
+      <TableContainer>
+        <Table>
+          <THead>
+            <HeaderRow>
+              <TH>Chat Command</TH>
+              <TH>Description</TH>
+            </HeaderRow>
+          </THead>
+          <TBody>
+            {SERVER_COMMANDS.map(({ command, description }) => {
+              return (
+                <TR key={command}>
+                  <TD>
+                    <Code>{command}</Code>
+                  </TD>
+                  <TD>
+                    <Description>{description}</Description>
+                  </TD>
+                </TR>
+              );
+            })}
+          </TBody>
+        </Table>
+      </TableContainer>
+    </aside>
   );
 };
 
