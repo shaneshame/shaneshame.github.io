@@ -8,8 +8,6 @@ const colors = {
   brown: '#A52A2A',
   darkBrown: '#661515',
 
-  boxShadowWhite: '#474a52',
-
   darkBlue: '#7289DA',
   darkBlueHover: '#677BC4',
   discordBlueLink: '#00B0F4',

@@ -148,21 +148,6 @@ const Footer = styled.footer`
   width: 256px;
 `;
 
-const ClickBait = styled.span`
-  color: ${theme.colors.aquaGreen};
-  cursor: inherit;
-  margin-left: 0.5rem;
-`;
-
-const TipContainer = styled.p`
-  border-radius: 2px;
-  box-shadow: 0 0 10px ${theme.colors.goldPale};
-  color: inherit;
-  cursor: pointer;
-  margin: 0;
-  padding: 0.5rem 1.5rem;
-`;
-
 // const Info = styled.div`
 //   background: ${props => props.background || 'inherit'};
 //   border: 1px solid white;
@@ -175,6 +160,17 @@ const TipContainer = styled.p`
 //   width: 1.5em;
 // `;
 
+const Chevron = styled.i`
+  border-radius: 100%;
+  box-shadow: 0 0 4px ${theme.colors.goldPale};
+  color: ${theme.colors.gold};
+  cursor: inherit;
+  right: 0;
+  position: absolute;
+  top: 50%;
+  transform: translate(65%, -50%);
+`;
+
 const ButtonLink = styled.button`
   background: ${theme.colors.darkGray};
   border: none;
@@ -184,25 +180,53 @@ const ButtonLink = styled.button`
   font-weight: 600;
   padding: 0;
   position: relative;
-  text-align: left;
+  text-align: center;
   width: 100%;
 
   &:hover {
     background: ${theme.colors.lightGray};
     color: ${theme.colors.gold};
 
-    ${ClickBait} {
-      /* color: ${theme.colors.discordBlueLink}; */
+    ${Chevron} {
+      box-shadow: 0 0 8px ${theme.colors.pink};
+      color: ${theme.colors.pink};
     }
   }
+`;
+
+const TipContainer = styled.p`
+  border-radius: 2px;
+  box-shadow: 0 0 10px ${theme.colors.goldPale};
+  color: inherit;
+  cursor: pointer;
+  margin: 0;
+  padding: 0.5rem 1.5rem;
+  position: relative;
+  width: 100%;
+`;
+
+const TipCommand = styled.span`
+  display: inline-block;
+  width: 100%;
+`;
+
+const ClickBait = styled.span`
+  align-items: center;
+  color: ${theme.colors.gold};
+  display: flex;
+  font-size: 16px;
 `;
 
 const Tip = ({ command, description, onClick }) => {
   return (
     <ButtonLink onClick={onClick}>
       <TipContainer>
-        <Code>{command}</Code> will {description.toLowerCase()} -
-        <ClickBait>See More</ClickBait>
+        <TipCommand>
+          Chat <Code>{command}</Code> to {description.toLowerCase()}.
+        </TipCommand>
+        <ClickBait>
+          <Chevron className="fas fa-chevron-circle-right fa-3x" />
+        </ClickBait>
       </TipContainer>
     </ButtonLink>
   );
