@@ -1,4 +1,4 @@
-export const windowSize = {
+export const floatingBoxDimensions = {
   height: 400,
   width: 400,
 };
@@ -6,7 +6,9 @@ export const windowSize = {
 /* eslint-disable sort-keys */
 const colors = {
   brown: '#A52A2A',
-  darkBrown: '##661515',
+  darkBrown: '#661515',
+
+  boxShadowWhite: '#474a52',
 
   darkBlue: '#7289DA',
   darkBlueHover: '#677BC4',
@@ -28,16 +30,15 @@ const colors = {
   pink: '#ffc0cb',
 
   red: '#ff0000',
-  // red: '#ff0000',
 
-  white: '#e61717',
+  white: '#ffffff',
   offWhite: '#EEEEEE',
 };
 /* eslint-enable sort-keys */
 
 const theme = {
   colors,
-  windowSize,
+  floatingBoxDimensions,
 };
 
 export default theme;

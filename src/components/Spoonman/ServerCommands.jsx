@@ -5,7 +5,8 @@ import styled from 'styled-components';
 import { Code, InnerBox, SERVER_COMMANDS, theme } from './common';
 
 const TableContainer = styled.div`
-  font-size: 1em;
+  color: ${theme.colors.gold};
+  font-size: 16px;
   margin: 0 auto;
   width: 95%;
 `;
@@ -18,10 +19,10 @@ const TBody = styled.tbody``;
 
 const stylesThTd = `
   border-bottom-color: ${theme.colors.goldPale};
-  padding-left: 0.5em;
-  padding-right: 0.5em;
-  padding-top: 0.4em;
-  padding-bottom: calc(0.4em - 1px);
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  padding-top: 0.4rem;
+  padding-bottom: calc(0.4rem - 1px);
 `;
 
 const TH = styled.th`
@@ -46,9 +47,9 @@ const Description = styled.span`
   color: ${theme.colors.offWhite};
 `;
 
-const CommandsPreview = ({ isOpen }) => {
+const CommandsPreview = ({ className }) => {
   return (
-    <InnerBox className={clsx({ isOpen })}>
+    <InnerBox className={clsx('secondary', className)}>
       <aside>
         <TableContainer>
           <Table>
