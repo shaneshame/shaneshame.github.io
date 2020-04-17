@@ -114,6 +114,7 @@
     "band": "npm run _clean && npm run build && npm run _deploy",
     "build": "gatsby build",
     "dev": "rm -rf ./.cache && gatsby develop",
+    "serve": "gatsby serve",
     "start": "npm run dev",
     "test": "jest ./src --watch",
     "_clean": "rm -rf ./.cache && rm -rf ./public",
