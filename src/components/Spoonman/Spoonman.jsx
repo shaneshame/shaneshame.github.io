@@ -4,7 +4,6 @@ import styled from 'styled-components';
 
 import {
   Code,
-  ContentContainer,
   DISCORD_INVITE_LINK,
   SERVER_COMMANDS,
   SERVER_IP,
@@ -39,7 +38,7 @@ const MainBox = styled.div`
   height: ${theme.floatingBoxDimensions.height}px;
   padding: 1rem;
   position: relative;
-  width: ${theme.floatingBoxDimensions.width}px;
+  min-width: ${theme.floatingBoxDimensions.width}px;
   transition: transform 0.4s ease;
   transform: translate(50%, -50%);
   top: 45%;
@@ -65,23 +64,34 @@ const transitionDuration = '0.4s';
 const Header = styled.header`
   margin: 0 auto;
   transition: width ${transitionDuration} ease;
-  width: 90;
+`;
+
+const ContentContainer = styled.div`
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: space-evenly;
+  position: absolute;
+  text-align: center;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
 `;
 
 const Title = styled.h1`
   border: 1px solid ${theme.colors.pink};
   color: ${theme.colors.pink};
   display: flex;
-  flex-direction: column;
-  font-size: 64px;
+  flex-direction: row;
+  font-size: 48px;
   font-weight: 700;
   line-height: 1;
   margin: 0;
-  padding: 0.5rem 0.5rem calc(0.5rem + 2px) 0.5rem;
+  padding: 0.17em 0.25em 0.28em 0.25em;
   position: relative;
   text-transform: uppercase;
-  transition: font-size ${transitionDuration} ease,
-    line-height ${transitionDuration} ease;
+  transition: font-size ${transitionDuration} ease;
 
   & .spin-letter {
     display: inline-block;
@@ -90,13 +100,7 @@ const Title = styled.h1`
 
   &.large,
   &:hover {
-    font-size: 128px;
-    line-height: 1;
-    width: 100%;
-
-    .letter {
-      text-shadow: 1px 1px 1px #000;
-    }
+    font-size: 84px;
 
     .spin-letter {
       transform: scaleX(-1);
@@ -115,24 +119,21 @@ const CodeInput = styled.input`
   border-radius: 3px;
   color: ${theme.colors.aquaGreen};
   font-family: monospace, monospace;
-  font-size: 1rem;
+  font-size: 19px;
   letter-spacing: -0.02rem;
   line-height: 1.625rem;
   margin: 0.1rem 0;
   padding: 0.35rem;
   text-align: center;
   text-transform: none;
-  width: 16rem;
+  width: 100%;
 `;
 
-const InfoLabel = styled.b`
+const InfoLabel = styled.h2`
   color: ${theme.colors.offWhite};
   display: block;
-  font-size: 1rem;
-`;
-
-const ContentBlock = styled.section`
-  /* margin: 0.75rem 0; */
+  margin: 0 0 0.5rem 0;
+  padding: 0;
 `;
 
 const Label = styled.label`
@@ -140,12 +141,20 @@ const Label = styled.label`
   text-transform: uppercase;
 `;
 
+const ContentBlock = styled.section`
+  width: 310px;
+
+  & > *:not(:nth-child(1)) {
+    margin-top: 1rem;
+  }
+`;
+
 const Footer = styled.footer`
-  align-self: center;
   display: flex;
-  font-size: 14px;
+  font-size: 12px;
   justify-content: center;
   width: 256px;
+  width: 310px;
 `;
 
 // const Info = styled.div`
@@ -162,30 +171,29 @@ const Footer = styled.footer`
 
 const Chevron = styled.i`
   border-radius: 100%;
-  box-shadow: 0 0 4px ${theme.colors.goldPale};
   color: ${theme.colors.gold};
   cursor: inherit;
   right: 0;
   position: absolute;
   top: 50%;
-  transform: translate(65%, -50%);
+  transform: translate(67%, -50%);
 `;
 
 const ButtonLink = styled.button`
   background: ${theme.colors.darkGray};
   border: none;
-  color: ${theme.colors.white};
+  border: 1px solid ${theme.colors.goldPale};
+  border-radius: 15px;
+  color: ${theme.colors.gold};
   cursor: inherit;
   font-size: inherit;
-  font-weight: 600;
   padding: 0;
   position: relative;
-  text-align: center;
   width: 100%;
 
   &:hover {
     background: ${theme.colors.lightGray};
-    color: ${theme.colors.gold};
+    box-shadow: 0 0 10px ${theme.colors.goldPale};
 
     ${Chevron} {
       box-shadow: 0 0 8px ${theme.colors.pink};
@@ -196,25 +204,21 @@ const ButtonLink = styled.button`
 
 const TipContainer = styled.p`
   border-radius: 2px;
-  box-shadow: 0 0 10px ${theme.colors.goldPale};
   color: inherit;
   cursor: pointer;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  line-height: 1;
   margin: 0;
-  padding: 0.5rem 1.5rem;
+  padding: 0.5rem 1.5rem 0.6rem;
   position: relative;
+  text-align: center;
   width: 100%;
 `;
 
 const TipCommand = styled.span`
   display: inline-block;
   width: 100%;
-`;
-
-const ClickBait = styled.span`
-  align-items: center;
-  color: ${theme.colors.gold};
-  display: flex;
-  font-size: 16px;
 `;
 
 const Tip = ({ command, description, onClick }) => {
@@ -224,9 +228,7 @@ const Tip = ({ command, description, onClick }) => {
         <TipCommand>
           Chat <Code>{command}</Code> to {description.toLowerCase()}.
         </TipCommand>
-        <ClickBait>
-          <Chevron className="fas fa-chevron-circle-right fa-3x" />
-        </ClickBait>
+        <Chevron className="fas fa-chevron-circle-right fa-2x" />
       </TipContainer>
     </ButtonLink>
   );
@@ -241,7 +243,7 @@ const Spoonman = () => {
       <Helmet />
       <MainBox className={clsx('main', { isSideOpen })}>
         <ContentContainer>
-          <Header className={clsx({ large: false })}>
+          <Header>
             <Title className={clsx({ large: false })}>
               <FlexControl>
                 {'Spoon'.split('').map((letter, index) => (
