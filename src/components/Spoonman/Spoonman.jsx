@@ -113,7 +113,7 @@ const CodeInput = styled.input`
   background-color: ${theme.colors.darkerGray};
   border: none;
   border-radius: 3px;
-  color: inherit;
+  color: ${theme.colors.aquaGreen};
   font-family: monospace, monospace;
   font-size: 1rem;
   letter-spacing: -0.02rem;
