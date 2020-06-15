@@ -1,4 +1,3 @@
-import React from 'react';
 import styled from 'styled-components';
 import { media } from 'utils';
 
@@ -19,12 +18,16 @@ const StyledMainContent = styled.section`
 
     padding: 50px 75px;
   }
+
+  &.isApp {
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+
+    & > * {
+      box-sizing: border-box;
+    }
+  }
 `;
 
-const MainContent = ({ isArticle, children }) => {
-  return (
-    <StyledMainContent isArticle={isArticle}>{children}</StyledMainContent>
-  );
-};
-
-export default MainContent;
+export default StyledMainContent;

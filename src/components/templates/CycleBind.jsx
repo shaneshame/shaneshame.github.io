@@ -1,7 +1,6 @@
 import { graphql } from 'gatsby';
 import React from 'react';
 
-// import styled from 'styled-components';
 import CycleBind from '../CycleBind';
 import SEO from '../SEO';
 import Layout from './Layout';

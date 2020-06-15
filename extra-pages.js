@@ -7,6 +7,11 @@ Notes:
 
 module.exports = [
   {
+    name: 'Divinity 2 Cures',
+    path: 'divinity-2-cures/',
+    template: 'Divinity2Cures.jsx',
+  },
+  {
     name: 'Cycle Bind',
     path: 'cycle-bind/',
     template: 'CycleBind.jsx',
