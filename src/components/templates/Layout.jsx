@@ -1,3 +1,4 @@
+import clsx from 'clsx';
 import React, { useState } from 'react';
 import styled, {
   createGlobalStyle,
@@ -88,7 +89,14 @@ const MainOverlay = styled.div`
   }
 `;
 
-const Layout = ({ activeMenu, children, isArticle, subTitle, title }) => {
+const Layout = ({
+  activeMenu,
+  children,
+  isApp,
+  isArticle,
+  subTitle,
+  title,
+}) => {
   const [isMobileOpen, setMobileOpen] = useState(false);
   const isDarkMode = false;
 
@@ -110,7 +118,14 @@ const Layout = ({ activeMenu, children, isArticle, subTitle, title }) => {
           subTitle={subTitle}
           title={title}
         />
-        <MainContent isArticle={isArticle}>{children}</MainContent>
+        <MainContent
+          className={clsx({
+            isApp,
+          })}
+          isArticle={isArticle}
+        >
+          {children}
+        </MainContent>
       </Main>
     </ThemeProvider>
   );

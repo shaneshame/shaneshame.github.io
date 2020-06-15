@@ -1,0 +1,17 @@
+#root {
+  height: 100%;
+  width: 100%;
+}
+
+#root > * {
+  box-sizing: border-box;
+}
+
+:root {
+  --backgroundPurple: #800080;
+  --borderColor: #000;
+  /* --skillColor: #afd2e9; */
+  --skillColor: #93cef5;
+  --subHeadingColor: #bfbfc8;
+  --textColor: #f6f5f7;
+}
