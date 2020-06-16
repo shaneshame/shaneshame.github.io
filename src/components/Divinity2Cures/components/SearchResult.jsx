@@ -1,7 +1,9 @@
 import clsx from 'clsx';
-import { lowerCase, startsWith } from 'lodash';
+import { lowerCase } from 'lodash';
 import React from 'react';
 import styled from 'styled-components';
+
+import { startsWith } from '../util';
 
 const Result = styled.div`
   --searchResultPaddingX: 1em;
