@@ -1,6 +1,7 @@
-import { keyBy, lowerCase, startsWith } from 'lodash';
+import { keyBy, lowerCase } from 'lodash';
 
 import mapEffectToSkills from './mapEffectToSkills';
+import startsWith from './startsWith';
 
 const searchCures = (_ailment, { skills = [], statusEffects = [] }) => {
   const ailment = lowerCase(_ailment);
