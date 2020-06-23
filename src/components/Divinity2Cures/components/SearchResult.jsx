@@ -53,7 +53,7 @@ const SkillNameContainer = styled.div`
 
 const SkillImage = styled.img`
   display: block;
-  margin: 0;
+  margin: 0 auto;
   min-width: 64px;
 `;
 
@@ -91,14 +91,13 @@ const AfflictionItem = styled.li`
   }
 `;
 
-const Column = styled.div`
-  width: 60%;
-`;
+const Column = styled.div``;
 
 const Description = styled.p`
   color: var(--descriptionColor);
   margin: 0;
   padding: 0;
+  width: 14em;
 `;
 
 const Cost = styled.div`
