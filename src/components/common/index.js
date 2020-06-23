@@ -8,7 +8,6 @@ export { default as Circle } from './Circle';
 export { default as Code } from './Code';
 export { default as DetectButtonWindow } from './DetectButtonWindow';
 export { default as Header } from './Header';
-export { default as Image } from './Image';
 export { default as Input } from './Input';
 export { default as Label } from './Label';
 export { default as P } from './P';
