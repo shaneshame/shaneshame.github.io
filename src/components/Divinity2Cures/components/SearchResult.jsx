@@ -1,9 +1,11 @@
 import clsx from 'clsx';
-import { lowerCase } from 'lodash';
+import { lowerCase, times } from 'lodash';
 import React from 'react';
 import styled from 'styled-components';
 
 import { startsWith } from '../util';
+import AP from './AP';
+import SP from './SP';
 
 const Result = styled.div`
   --searchResultPaddingX: 1em;
@@ -13,6 +15,7 @@ const Result = styled.div`
   align-items: flex-start;
   box-sizing: border-box;
   display: flex;
+  line-height: 1.3;
   height: 100%;
   margin: 0;
   overflow: hidden;
@@ -44,23 +47,25 @@ const Result = styled.div`
 `;
 
 const SkillNameContainer = styled.div`
-  align-items: center;
+  /* align-items: center; */
   display: flex;
 `;
 
 const SkillImage = styled.img`
-  margin: 0 1em 0 0;
+  display: block;
+  margin: 0;
+  min-width: 64px;
 `;
 
 const SkillName = styled.h3`
   color: var(--skillColor);
-  margin: 0 1em 0 0;
-  max-width: 125px;
-  min-width: 125px;
+  margin: 0 0 0.25em 0;
+  max-width: 160px;
+  min-width: 160px;
   text-transform: uppercase;
 `;
 
-const SkillDescription = styled.div`
+const AfflictionContainer = styled.div`
   color: var(--textColor);
   display: flex;
   flex-direction: column;
@@ -86,12 +91,38 @@ const AfflictionItem = styled.li`
   }
 `;
 
+const Column = styled.div`
+  width: 60%;
+`;
+
+const Description = styled.p`
+  color: var(--descriptionColor);
+  margin: 0;
+  padding: 0;
+`;
+
+const Cost = styled.div`
+  align-items: flex-start;
+  display: flex;
+  margin: 0.2rem 0 0 0;
+  justify-content: center;
+`;
+
+const SkillImageContainer = styled.div``;
+
+const NameContainer = styled.div`
+  margin: 0 0 0 1rem;
+`;
+
 const SearchResult = ({
+  actionPoints,
+  description,
   imageSrc = '',
   immunities = [],
   name,
   removes = [],
   searchValue: _searchValue = '',
+  sourcePoints,
 }) => {
   const searchValue = lowerCase(_searchValue);
   const cures = Array.from(
@@ -102,11 +133,26 @@ const SearchResult = ({
 
   return (
     <Result>
-      <SkillNameContainer>
-        <SkillImage alt={`Thumbnail for ${name}`} src={imageSrc} />
-        <SkillName>{name}</SkillName>
-      </SkillNameContainer>
-      <SkillDescription>
+      <Column>
+        <SkillNameContainer>
+          <SkillImageContainer>
+            <SkillImage alt={`Thumbnail for ${name}`} src={imageSrc} />
+            <Cost>
+              {times(actionPoints, () => (
+                <AP />
+              ))}
+              {times(sourcePoints, () => (
+                <SP />
+              ))}
+            </Cost>
+          </SkillImageContainer>
+          <NameContainer>
+            <SkillName>{name}</SkillName>
+            <Description>{description}</Description>
+          </NameContainer>
+        </SkillNameContainer>
+      </Column>
+      <AfflictionContainer>
         <ListTitle htmlFor="curesList">Removes:</ListTitle>
         <ListAfflictionCures id="curesList">
           {cures.map(cure => (
@@ -121,7 +167,7 @@ const SearchResult = ({
             </AfflictionItem>
           ))}
         </ListAfflictionCures>
-      </SkillDescription>
+      </AfflictionContainer>
     </Result>
   );
 };
