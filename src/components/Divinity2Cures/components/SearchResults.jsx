@@ -46,7 +46,7 @@ const SearchResults = ({ results, searchValue }) => {
         {results.map((result, index) => (
           <ListItem key={result.name}>
             <SearchResult {...result} searchValue={searchValue} />
-            <Divider />
+            {index < results.length - 1 && <Divider />}
           </ListItem>
         ))}
       </List>

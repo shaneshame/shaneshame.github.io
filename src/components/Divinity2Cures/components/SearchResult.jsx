@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { lowerCase, times } from 'lodash';
+import { chunk, lowerCase, times } from 'lodash';
 import React from 'react';
 import styled from 'styled-components';
 
@@ -104,6 +104,7 @@ const Cost = styled.div`
   align-items: flex-start;
   display: flex;
   margin: 0.2rem 0 0 0;
+  max-width: 64px;
   justify-content: center;
 `;
 
@@ -112,6 +113,22 @@ const SkillImageContainer = styled.div``;
 const NameContainer = styled.div`
   margin: 0 0 0 1rem;
 `;
+
+const Costs = ({ ap = 0, sp = 0 }) => {
+  const pointsPerRow = 4;
+
+  const apGroup = times(ap, () => <AP />);
+  const spGroup = times(sp, () => <SP />);
+  const points = [...apGroup, ...spGroup];
+
+  return (
+    <React.Fragment>
+      {chunk(points, pointsPerRow).map(row => (
+        <Cost>{row}</Cost>
+      ))}
+    </React.Fragment>
+  );
+};
 
 const SearchResult = ({
   actionPoints,
@@ -136,14 +153,7 @@ const SearchResult = ({
         <SkillNameContainer>
           <SkillImageContainer>
             <SkillImage alt={`Thumbnail for ${name}`} src={imageSrc} />
-            <Cost>
-              {times(actionPoints, () => (
-                <AP />
-              ))}
-              {times(sourcePoints, () => (
-                <SP />
-              ))}
-            </Cost>
+            <Costs ap={actionPoints} sp={sourcePoints} />
           </SkillImageContainer>
           <NameContainer>
             <SkillName>{name}</SkillName>
