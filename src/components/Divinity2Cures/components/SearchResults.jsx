@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
+import { media } from '../../../utils';
 import SearchResult from './SearchResult';
 
 const Container = styled.div`
@@ -9,7 +10,6 @@ const Container = styled.div`
   max-height: 85%;
   margin: 1em 0 4em;
   padding: 0.5em 0 4em;
-  overflow: hidden;
   width: 100%;
 `;
 
@@ -21,10 +21,14 @@ const List = styled.ul`
   height: 100%;
   margin: 0;
   padding: 0;
-  overflow-x: hidden;
+  overflow-x: auto;
   overflow-y: auto;
   text-align: left;
   width: 100%;
+
+  ${media.tablet} {
+    overflow-x: hidden;
+  }
 `;
 
 const ListItem = styled.li`

@@ -3,6 +3,8 @@ import { chunk, lowerCase, times } from 'lodash';
 import React from 'react';
 import styled from 'styled-components';
 
+import { useMediaQuery } from '../../../hooks';
+import { media } from '../../../utils';
 import { startsWith } from '../util';
 import AP from './AP';
 import SP from './SP';
@@ -15,16 +17,22 @@ const Result = styled.div`
   align-items: flex-start;
   box-sizing: border-box;
   display: flex;
+  flex-direction: column;
   line-height: 1.3;
   height: 100%;
   margin: 0;
-  overflow: hidden;
+  overflow: auto;
   padding: var(--searchResultPaddingY) var(--searchResultPaddingX);
   position: relative;
   transition: box-shadow var(--searchResultTransitionTiming),
     margin var(--searchResultTransitionTiming),
     padding var(--searchResultTransitionTiming);
   width: 100%;
+
+  ${media.tablet} {
+    flex-direction: row;
+    overflow: hidden;
+  }
 
   &::first-child {
     margin-top: 0;
@@ -61,7 +69,6 @@ const SkillName = styled.h3`
   color: var(--skillColor);
   margin: 0 0 0.25em 0;
   max-width: 160px;
-  min-width: 160px;
   text-transform: uppercase;
 `;
 
@@ -91,8 +98,6 @@ const AfflictionItem = styled.li`
   }
 `;
 
-const Column = styled.div``;
-
 const Description = styled.p`
   color: var(--descriptionColor);
   margin: 0;
@@ -110,8 +115,13 @@ const Cost = styled.div`
 
 const SkillImageContainer = styled.div``;
 
-const NameContainer = styled.div`
-  margin: 0 0 0 1rem;
+const ColumnTwo = styled.div`
+  margin: 0 0.1em 0 1em;
+  width: 8em;
+
+  ${media.tablet} {
+    width: auto;
+  }
 `;
 
 const Costs = ({ ap = 0, sp = 0 }) => {
@@ -140,6 +150,7 @@ const SearchResult = ({
   searchValue: _searchValue = '',
   sourcePoints,
 }) => {
+  const mq = useMediaQuery();
   const searchValue = lowerCase(_searchValue);
   const cures = Array.from(
     new Set([...removes, ...immunities].map(lowerCase))
@@ -149,34 +160,65 @@ const SearchResult = ({
 
   return (
     <Result>
-      <Column>
-        <SkillNameContainer>
-          <SkillImageContainer>
-            <SkillImage alt={`Thumbnail for ${name}`} src={imageSrc} />
-            <Costs ap={actionPoints} sp={sourcePoints} />
-          </SkillImageContainer>
-          <NameContainer>
-            <SkillName>{name}</SkillName>
+      {mq.atLeast('tablet') ? (
+        <>
+          <SkillNameContainer>
+            <SkillImageContainer>
+              <SkillImage alt={`Thumbnail for ${name}`} src={imageSrc} />
+              <Costs ap={actionPoints} sp={sourcePoints} />
+            </SkillImageContainer>
+            <ColumnTwo>
+              <SkillName>{name}</SkillName>
+              <Description>{description}</Description>
+            </ColumnTwo>
+          </SkillNameContainer>
+          <AfflictionContainer>
+            <ListTitle htmlFor="curesList">Cures:</ListTitle>
+            <ListAfflictionCures id="curesList">
+              {cures.map(cure => (
+                <AfflictionItem
+                  className={clsx({
+                    isResult: startsWith(cure, searchValue),
+                  })}
+                  id={cure}
+                  key={cure}
+                >
+                  {cure}
+                </AfflictionItem>
+              ))}
+            </ListAfflictionCures>
+          </AfflictionContainer>
+        </>
+      ) : (
+        <>
+          <SkillNameContainer>
+            <SkillImageContainer>
+              <SkillImage alt={`Thumbnail for ${name}`} src={imageSrc} />
+              <Costs ap={actionPoints} sp={sourcePoints} />
+            </SkillImageContainer>
+            <ColumnTwo>
+              <SkillName>{name}</SkillName>
+              <AfflictionContainer>
+                <ListTitle htmlFor="curesList">Cures:</ListTitle>
+                <ListAfflictionCures id="curesList">
+                  {cures.map(cure => (
+                    <AfflictionItem
+                      className={clsx({
+                        isResult: startsWith(cure, searchValue),
+                      })}
+                      id={cure}
+                      key={cure}
+                    >
+                      {cure}
+                    </AfflictionItem>
+                  ))}
+                </ListAfflictionCures>
+              </AfflictionContainer>
+            </ColumnTwo>
             <Description>{description}</Description>
-          </NameContainer>
-        </SkillNameContainer>
-      </Column>
-      <AfflictionContainer>
-        <ListTitle htmlFor="curesList">Removes:</ListTitle>
-        <ListAfflictionCures id="curesList">
-          {cures.map(cure => (
-            <AfflictionItem
-              className={clsx({
-                isResult: startsWith(cure, searchValue),
-              })}
-              id={cure}
-              key={cure}
-            >
-              {cure}
-            </AfflictionItem>
-          ))}
-        </ListAfflictionCures>
-      </AfflictionContainer>
+          </SkillNameContainer>
+        </>
+      )}
     </Result>
   );
 };
