@@ -25,8 +25,6 @@ const searchCures = (_ailment, { skills = [], statusEffects = [] }) => {
   const results = Object.values({
     ...keyBy(skillCures, sk => sk.name.toLowerCase()),
     ...keyBy(skillCuresFromEffects, sk => sk.name.toLowerCase()),
-  }).sort((skillA, skillB) => {
-    return skillA.actionPoints - skillB.actionPoints;
   });
 
   return results;

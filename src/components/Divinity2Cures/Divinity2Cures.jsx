@@ -1,4 +1,4 @@
-import { debounce } from 'lodash';
+import { debounce, sortBy } from 'lodash';
 import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 
@@ -93,7 +93,8 @@ const Divinity2Cures = () => {
         searchValue.length > 0
           ? searchCures(searchValue.toLowerCase(), data)
           : [];
-      setCureResults(cureResults);
+
+      setCureResults(sortBy(cureResults, ['school', 'actionPoints', 'name']));
     }, 300),
     [data, searchValue]
   );
